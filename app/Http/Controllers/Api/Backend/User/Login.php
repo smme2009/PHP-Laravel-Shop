@@ -45,6 +45,8 @@ class Login extends Controller
                 ->setHttpCode(400)
                 ->setMessage('帳號或密碼錯誤')
                 ->get();
+
+            return $response;
         }
 
         $response = ToolResponseJson::init()
