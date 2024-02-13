@@ -18,6 +18,11 @@ class User extends Authenticatable
     protected $table = 'user';
 
     /**
+     * 主鍵
+     */
+    protected $primaryKey = 'user_id';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
