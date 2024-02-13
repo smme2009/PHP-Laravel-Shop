@@ -3,6 +3,7 @@
 namespace App\Http\Service\User;
 
 use App\Tool\ValidateData as ToolValidateData;
+use App\Tool\Jwt as ToolJwt;
 
 /**
  * 登入
@@ -48,5 +49,27 @@ class Login
         $isLogin = auth()->attempt($loginData);
 
         return $isLogin;
+    }
+
+    /**
+     * 取得Jwt Token
+     * 
+     * @return string
+     */
+    public function getJwtToken(): string
+    {
+        $userId = auth()->id();
+
+        if (!$userId) {
+            return '';
+        }
+
+        $data = [
+            'userId' => $userId,
+        ];
+
+        $jwtToken = ToolJwt::encode($data);
+
+        return $jwtToken;
     }
 }

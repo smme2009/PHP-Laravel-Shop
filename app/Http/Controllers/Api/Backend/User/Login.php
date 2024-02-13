@@ -49,9 +49,26 @@ class Login extends Controller
             return $response;
         }
 
+        // 取得Jwt Token
+        $jwtToken = $this->srcLogin->getJwtToken();
+
+        if (!$jwtToken) {
+            $response = ToolResponseJson::init()
+                ->setHttpCode(400)
+                ->setMessage('登入失敗')
+                ->get();
+
+            return $response;
+        }
+
+        $data = [
+            'jwtToken' => $jwtToken,
+        ];
+
         $response = ToolResponseJson::init()
             ->setHttpCode(200)
             ->setMessage('登入成功')
+            ->setData($data)
             ->get();
 
         return $response;
