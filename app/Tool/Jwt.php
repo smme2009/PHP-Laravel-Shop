@@ -2,9 +2,10 @@
 
 namespace App\Tool;
 
+use Exception;
+
 use Firebase\JWT\JWT as FirebaseJwt;
 use Firebase\JWT\Key;
-use Firebase\JWT\SignatureInvalidException;
 
 /**
  * Jwt
@@ -53,7 +54,7 @@ class Jwt
         $data = [];
         try {
             $data = (array)FirebaseJwt::decode($jwtToken, new Key($key, 'HS256'));
-        } catch (SignatureInvalidException $e) {
+        } catch (Exception $e) {
             // 解碼錯誤，暫不處理，先回傳空陣列
         }
 
