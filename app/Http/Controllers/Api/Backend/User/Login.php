@@ -73,4 +73,18 @@ class Login extends Controller
 
         return $response;
     }
+
+    /**
+     * 確認登入
+     */
+    public function checkLogin()
+    {
+        // 有確認登入中介層檢查後才會來這裡，所以直接回傳登入中資訊
+        $response = ToolResponseJson::init()
+            ->setHttpCode(200)
+            ->setMessage('目前登入中')
+            ->get();
+
+        return $response;
+    }
 }

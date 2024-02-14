@@ -16,3 +16,7 @@ use App\Http\Controllers\Api\Backend\User\Login;
 */
 
 Route::post('login', [Login::class, 'login']);
+
+Route::middleware('userAuth')->group(function () {
+    Route::get('check-login', [Login::class, 'checkLogin']);
+});
