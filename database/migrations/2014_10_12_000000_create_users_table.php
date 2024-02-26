@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
+        Schema::create('user', function (Blueprint $table) {
+            $table->id('user_id')->comment('使用者ID');
+            $table->string('name')->comment('名稱');
+            $table->string('email')->unique()->comment('Email(帳號)');
+            $table->string('password')->comment('密碼');
+            $table->boolean('status')->comment('狀態(0:關閉，1:開啟)');
+            $table->timestamps(); // 時間相關欄位
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('user');
     }
 };
