@@ -10,13 +10,27 @@ use App\Models\Product as ModelProduct;
 class Product
 {
     /**
-     * 取得商品Collection
+     * 取得商品分頁
      * 
      * @return mixed
      */
-    public function getProductColl(): mixed
+    public function getProductPage(): mixed
     {
-        $product = ModelProduct::paginate();
+        $productPage = ModelProduct::paginate();
+
+        return $productPage;
+    }
+
+    /**
+     * 取得商品
+     * 
+     * @param int $productId 商品ID
+     * 
+     * @return mixed
+     */
+    public function getProduct(int $productId): mixed
+    {
+        $product = ModelProduct::find($productId);
 
         return $product;
     }

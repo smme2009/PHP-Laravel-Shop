@@ -15,25 +15,54 @@ class Product
     }
 
     /**  
-     * 取得商品列表
+     * 取得商品分頁
      * 
      * @return array
      */
-    public function getProductList(): array
+    public function getProductPage(): array
     {
-        $productColl = $this->repoProduct->getProductColl();
+        $page = $this->repoProduct->getProductPage();
 
-        $productList = [];
-        foreach ($productColl as $product) {
-            $productList[] = [
-                'productId' => $product->product_id,
-                'name' => $product->name,
-                'price' => $product->price,
-                'quantity' => $product->quantity,
-                'description' => $product->description,
-            ];
+        $productPage = [];
+        foreach ($page as $product) {
+            $productPage[] = $this->setProduct($product);
         }
 
-        return $productList;
+        return $productPage;
+    }
+
+    /**
+     * 取得商品
+     * 
+     * @param int $productId 商品ID
+     * 
+     * @return array
+     */
+    public function getProduct(int $productId): array
+    {
+        $product = $this->repoProduct->getProduct($productId);
+        $product = $this->setProduct($product);
+
+        return $product;
+    }
+
+    /**
+     * 設定商品資料結構
+     * 
+     * @param mixed $product 商品資料
+     * 
+     * @return array
+     */
+    private function setProduct(mixed $product)
+    {
+        $product = [
+            'productId' => $product->product_id,
+            'name' => $product->name,
+            'price' => $product->price,
+            'quantity' => $product->quantity,
+            'description' => $product->description,
+        ];
+
+        return $product;
     }
 }

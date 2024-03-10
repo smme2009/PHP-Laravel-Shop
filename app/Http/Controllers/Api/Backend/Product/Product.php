@@ -20,15 +20,38 @@ class Product extends Controller
 
     /**
      * 取得商品列表
+     * 
+     * @return mixed
      */
-    public function getProductList()
+    public function getProductPage(): mixed
     {
-        $productList = $this->srcProduct->getProductList();
+        $productPage = $this->srcProduct->getProductPage();
 
         $response = ToolResponseJson::init()
-            ->setMessage('成功取得商品列表')
+            ->setMessage('成功取得商品分頁資料')
             ->setData([
-                'productList' => $productList,
+                'productPage' => $productPage,
+            ])
+            ->get();
+
+        return $response;
+    }
+
+    /**
+     * 取得商品
+     * 
+     * @param int $productId
+     * 
+     * @return mixed
+     */
+    public function getProduct(int $productId): mixed
+    {
+        $product = $this->srcProduct->getProduct($productId);
+
+        $response = ToolResponseJson::init()
+            ->setMessage('成功取得商品資料')
+            ->setData([
+                'product' => $product,
             ])
             ->get();
 

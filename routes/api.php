@@ -21,7 +21,8 @@ Route::post('login', [Login::class, 'login']);
 Route::middleware('userAuth')->group(function () {
     Route::get('check-login', [Login::class, 'checkLogin']);
 
-    Route::prefix('product')->group(function () {
-        Route::get('', [Product::class, 'getProductList']);
+    Route::controller(Product::class)->prefix('product')->group(function () {
+        Route::get('', 'getProductPage');
+        Route::get('{productId}', 'getProduct')->whereNumber('productId');
     });
 });
