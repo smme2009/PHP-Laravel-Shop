@@ -4,6 +4,9 @@ namespace App\Http\Service\Product;
 
 use App\Http\Repository\Product\Product as RepoProduct;
 
+use App\Tool\ValidateData as ToolValidateData;
+use App\Tool\File as ToolFile;
+
 /**
  * 商品
  */
@@ -44,6 +47,54 @@ class Product
         $product = $this->setProduct($product);
 
         return $product;
+    }
+
+    /**  
+     * 驗證資料
+     * 
+     * @param array $productData 商品資料
+     * 
+     * @return array
+     */
+    public function validateData(array $productData): array
+    {
+        // 驗證規則
+        $rule = [
+            'name' => ['required', 'string'],
+            'photo_file' => ['required', 'image', 'max:10240'],
+            'price' => ['required', 'integer'],
+            'quantity' => ['required', 'integer'],
+            'description' => ['required', 'string'],
+            'status' => ['required', 'boolean'],
+        ];
+
+        $result = ToolValidateData::validateData($productData, $rule);
+
+        return $result;
+    }
+
+    /**
+     * 新增商品
+     * 
+     * @param array $productData 商品資料
+     * 
+     * @return int|false 商品ID
+     */
+    public function addProduct(array $productData): int|false
+    {
+        // 上傳商品照片
+        $photo_file_id = ToolFile::uploadFile($productData['photo_file']);
+
+        if (!$photo_file_id) {
+            return false;
+        }
+
+        $productData['photo_file_id'] = $photo_file_id;
+
+        // 新增商品
+        $product_id = $this->repoProduct->addProduct($productData);
+
+        return $product_id;
     }
 
     /**

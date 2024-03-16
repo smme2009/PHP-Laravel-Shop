@@ -57,4 +57,53 @@ class Product extends Controller
 
         return $response;
     }
+
+    /**
+     * 新增商品
+     * 
+     * @return mixed
+     */
+    public function addProduct(): mixed
+    {
+        $productData = [
+            'name' => request()->get('name'),
+            'photo_file' => request()->file('photo_file'),
+            'price' => request()->get('price'),
+            'quantity' => request()->get('quantity'),
+            'description' => request()->get('description'),
+            'status' => request()->get('status'),
+        ];
+
+        $result = $this->srcProduct->validateData($productData);
+
+        if (!$result['status']) {
+            $response = ToolResponseJson::init()
+                ->setHttpCode(400)
+                ->setMessage($result['errorMessage'])
+                ->get();
+
+            return $response;
+        }
+
+        $productId = $this->srcProduct->addProduct($productData);
+
+        if (!$productId) {
+            $response = ToolResponseJson::init()
+                ->setHttpCode(400)
+                ->setMessage('新增商品失敗')
+                ->get();
+
+            return $response;
+        }
+
+        $response = ToolResponseJson::init()
+            ->setHttpCode(200)
+            ->setMessage('成功新增商品')
+            ->setData([
+                'productId' => $productId,
+            ])
+            ->get();
+
+        return $response;
+    }
 }

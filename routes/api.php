@@ -24,5 +24,6 @@ Route::middleware('userAuth')->group(function () {
     Route::controller(Product::class)->prefix('product')->group(function () {
         Route::get('', 'getProductPage');
         Route::get('{productId}', 'getProduct')->whereNumber('productId');
+        Route::post('', 'addProduct');
     });
 });

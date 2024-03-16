@@ -34,4 +34,33 @@ class Product
 
         return $product;
     }
+
+    /**
+     * 新增商品
+     * 
+     * @param array $productData 商品資料
+     * 
+     * @return int|false
+     */
+    public function addProduct(array $productData): int|false
+    {
+        $model = new ModelProduct();
+
+        $model->name = $productData['name'];
+        $model->photo_fid = $productData['photo_file_id'];
+        $model->price = $productData['price'];
+        $model->quantity = $productData['quantity'];
+        $model->description = $productData['description'];
+        $model->status = $productData['status'];
+
+        $isSave = $model->save();
+
+        if (!$isSave) {
+            return false;
+        }
+
+        $product_id = $model->product_id;
+
+        return $product_id;
+    }
 }
