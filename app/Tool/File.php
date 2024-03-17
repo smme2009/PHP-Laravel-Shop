@@ -17,9 +17,9 @@ class File
      * @param mixed $file 檔案
      * @param string $path 檔案路徑
      * 
-     * @return int 檔案ID
+     * @return array|false
      */
-    public static function uploadFile(mixed $file, string $path = '')
+    public static function uploadFile(mixed $file, string $path = ''): array|false
     {
         $filePath = Storage::putFile($path, $file);
 
@@ -41,8 +41,11 @@ class File
             return false;
         }
 
-        $file_id = $model->file_id;
+        $fileInfo = [
+            'fileId' => $model->file_id,
+            'path' => $filePath,
+        ];
 
-        return $file_id;
+        return $fileInfo;
     }
 }
