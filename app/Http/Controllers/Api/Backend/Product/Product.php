@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Backend\Product;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 use App\Http\Service\Product\Product as SrcProduct;
 
@@ -107,14 +108,7 @@ class Product extends Controller
      */
     public function addProduct(): mixed
     {
-        $productData = [
-            'name' => request()->get('name'),
-            'photoFileId' => request()->get('photoFileId'),
-            'price' => request()->get('price'),
-            'quantity' => request()->get('quantity'),
-            'description' => request()->get('description'),
-            'status' => request()->get('status'),
-        ];
+        $productData = $this->setProductData();
 
         $result = $this->srcProduct->validateData($productData);
 
@@ -147,5 +141,69 @@ class Product extends Controller
             ->get();
 
         return $response;
+    }
+
+    /**
+     * 編輯商品
+     * 
+     * @param int $productId 商品ID
+     * 
+     * @return mixed
+     */
+    public function editProduct(int $productId): mixed
+    {
+        $productData = $this->setProductData();
+
+        $result = $this->srcProduct->validateData($productData);
+
+        if (!$result['status']) {
+            $response = ToolResponseJson::init()
+                ->setHttpCode(400)
+                ->setMessage($result['errorMessage'])
+                ->get();
+
+            return $response;
+        }
+
+        DB::beginTransaction();
+
+        $isEdit = $this->srcProduct->editProduct($productId, $productData);
+
+        DB::commit();
+
+        if (!$isEdit) {
+            $response = ToolResponseJson::init()
+                ->setHttpCode(400)
+                ->setMessage('編輯商品失敗')
+                ->get();
+
+            return $response;
+        }
+
+        $response = ToolResponseJson::init()
+            ->setHttpCode(200)
+            ->setMessage('成功編輯商品')
+            ->get();
+
+        return $response;
+    }
+
+    /**
+     * 設定商品資料
+     * 
+     * @return array
+     */
+    private function setProductData(): array
+    {
+        $productData = [
+            'name' => request()->get('name'),
+            'photoFileId' => request()->get('photoFileId'),
+            'price' => request()->get('price'),
+            'quantity' => request()->get('quantity'),
+            'description' => request()->get('description'),
+            'status' => request()->get('status'),
+        ];
+
+        return $productData;
     }
 }

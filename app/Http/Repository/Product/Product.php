@@ -46,12 +46,7 @@ class Product
     {
         $model = new ModelProduct();
 
-        $model->name = $productData['name'];
-        $model->photo_fid = $productData['photoFileId'];
-        $model->price = $productData['price'];
-        $model->quantity = $productData['quantity'];
-        $model->description = $productData['description'];
-        $model->status = $productData['status'];
+        $model = $this->setModel($model, $productData);
 
         $isSave = $model->save();
 
@@ -62,5 +57,49 @@ class Product
         $product_id = $model->product_id;
 
         return $product_id;
+    }
+
+    /**
+     * 編輯商品
+     * 
+     * @param int $productId 商品ID
+     * @param array $productData 商品資料
+     * 
+     * @return bool
+     */
+    public function editProduct(int $productId, array $productData): bool
+    {
+        $model = ModelProduct::lockForUpdate()
+            ->find($productId);
+
+        if (!$model) {
+            return false;
+        }
+
+        $model = $this->setModel($model, $productData);
+
+        $isSave = $model->save();
+
+        return $isSave;
+    }
+
+    /**
+     * 設定商品Model
+     * 
+     * @param mixed $model
+     * @param array $productData 商品資料
+     * 
+     * @return mixed
+     */
+    public function setModel(mixed $model, array $productData): mixed
+    {
+        $model->name = $productData['name'];
+        $model->photo_fid = $productData['photoFileId'];
+        $model->price = $productData['price'];
+        $model->quantity = $productData['quantity'];
+        $model->description = $productData['description'];
+        $model->status = $productData['status'];
+
+        return $model;
     }
 }

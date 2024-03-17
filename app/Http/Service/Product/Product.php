@@ -127,6 +127,22 @@ class Product
     }
 
     /**
+     * 編輯商品
+     * 
+     * @param int $productId 商品ID
+     * @param array $productData 商品資料
+     * 
+     * @return bool
+     */
+    public function editProduct(int $productId, array $productData): bool
+    {
+        // 編輯商品
+        $isEdit = $this->repoProduct->editProduct($productId, $productData);
+
+        return $isEdit;
+    }
+
+    /**
      * 設定商品資料結構
      * 
      * @param mixed $product 商品資料

@@ -26,5 +26,6 @@ Route::middleware('userAuth')->group(function () {
         Route::get('{productId}', 'getProduct')->whereNumber('productId');
         Route::post('photo', 'uploadProductPhoto');
         Route::post('', 'addProduct');
+        Route::put('{productId}', 'editProduct')->whereNumber('productId');
     });
 });
