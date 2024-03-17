@@ -73,6 +73,44 @@ class Product
         return $result;
     }
 
+    /**  
+     * 驗證照片
+     * 
+     * @param mixed $photo 照片
+     * 
+     * @return array|false
+     */
+    public function validatePhoto(mixed $photo): array|false
+    {
+        // 驗證資料
+        $data = [
+            'photo' => $photo,
+        ];
+
+        // 驗證規則
+        $rule = [
+            'photo' => ['required', 'image', 'max:10240'],
+        ];
+
+        $result = ToolValidateData::validateData($data, $rule);
+
+        return $result;
+    }
+
+    /**
+     * 上傳商品圖片
+     * 
+     * @param mixed $photo 照片
+     * 
+     * @return array
+     */
+    public function uploadProductPhoto(mixed $photo): array
+    {
+        $fileInfo = ToolFile::uploadFile($photo, 'product');
+
+        return $fileInfo;
+    }
+
     /**
      * 新增商品
      * 

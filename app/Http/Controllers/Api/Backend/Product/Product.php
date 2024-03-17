@@ -59,6 +59,48 @@ class Product extends Controller
     }
 
     /**
+     * 上傳商品圖片
+     * 
+     * @return mixed
+     */
+    public function uploadProductPhoto(): mixed
+    {
+        $photo = request()->file('photo');
+
+        $result = $this->srcProduct->validatePhoto($photo);
+
+        if (!$result['status']) {
+            $response = ToolResponseJson::init()
+                ->setHttpCode(400)
+                ->setMessage($result['errorMessage'])
+                ->get();
+
+            return $response;
+        }
+
+        $fileInfo = $this->srcProduct->uploadProductPhoto($photo);
+
+        if (!$fileInfo) {
+            $response = ToolResponseJson::init()
+                ->setHttpCode(400)
+                ->setMessage('上傳商品圖片失敗')
+                ->get();
+
+            return $response;
+        }
+
+        $response = ToolResponseJson::init()
+            ->setHttpCode(200)
+            ->setMessage('成功上傳商品圖片')
+            ->setData([
+                'fileInfo' => $fileInfo,
+            ])
+            ->get();
+
+        return $response;
+    }
+
+    /**
      * 新增商品
      * 
      * @return mixed

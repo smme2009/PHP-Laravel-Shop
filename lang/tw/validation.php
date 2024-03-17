@@ -187,6 +187,7 @@ return [
         'quantity' => '數量',
         'description' => '說明',
         'status' => '狀態',
+        'photo' => '照片',
     ],
 
 ];
