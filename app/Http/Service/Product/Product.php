@@ -61,7 +61,7 @@ class Product
         // 驗證規則
         $rule = [
             'name' => ['required', 'string'],
-            'photo_file' => ['required', 'image', 'max:10240'],
+            'photoFileId' => ['required', 'integer', 'exists:file,file_id'],
             'price' => ['required', 'integer'],
             'quantity' => ['required', 'integer'],
             'description' => ['required', 'string'],
@@ -120,15 +120,6 @@ class Product
      */
     public function addProduct(array $productData): int|false
     {
-        // 上傳商品照片
-        $photo_file_id = ToolFile::uploadFile($productData['photo_file']);
-
-        if (!$photo_file_id) {
-            return false;
-        }
-
-        $productData['photo_file_id'] = $photo_file_id;
-
         // 新增商品
         $product_id = $this->repoProduct->addProduct($productData);
 

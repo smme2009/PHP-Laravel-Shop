@@ -109,7 +109,7 @@ class Product extends Controller
     {
         $productData = [
             'name' => request()->get('name'),
-            'photo_file' => request()->file('photo_file'),
+            'photoFileId' => request()->get('photoFileId'),
             'price' => request()->get('price'),
             'quantity' => request()->get('quantity'),
             'description' => request()->get('description'),

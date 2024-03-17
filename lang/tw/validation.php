@@ -51,7 +51,7 @@ return [
     'email' => ':attribute 欄位格式錯誤 請填寫Email',
     'ends_with' => 'The :attribute field must end with one of the following: :values.',
     'enum' => 'The selected :attribute is invalid.',
-    'exists' => 'The selected :attribute is invalid.',
+    'exists' => '所選 :attribute 不存在',
     'file' => 'The :attribute field must be a file.',
     'filled' => 'The :attribute field must have a value.',
     'gt' => [
@@ -182,7 +182,7 @@ return [
 
     'attributes' => [
         'name' => '名稱',
-        'photo_file' => '照片',
+        'photoFileId' => '照片',
         'price' => '價格',
         'quantity' => '數量',
         'description' => '說明',

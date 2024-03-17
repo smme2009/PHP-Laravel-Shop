@@ -47,7 +47,7 @@ class Product
         $model = new ModelProduct();
 
         $model->name = $productData['name'];
-        $model->photo_fid = $productData['photo_file_id'];
+        $model->photo_fid = $productData['photoFileId'];
         $model->price = $productData['price'];
         $model->quantity = $productData['quantity'];
         $model->description = $productData['description'];
