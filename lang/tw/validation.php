@@ -31,7 +31,7 @@ return [
         'numeric' => 'The :attribute field must be between :min and :max.',
         'string' => ':attribute 欄位格式錯誤 請填寫字串',
     ],
-    'boolean' => 'The :attribute field must be true or false.',
+    'boolean' => ':attribute 欄位格式錯誤 請填寫布林值',
     'can' => 'The :attribute field contains an unauthorized value.',
     'confirmed' => 'The :attribute field confirmation does not match.',
     'current_password' => 'The password is incorrect.',
@@ -51,7 +51,7 @@ return [
     'email' => ':attribute 欄位格式錯誤 請填寫Email',
     'ends_with' => 'The :attribute field must end with one of the following: :values.',
     'enum' => 'The selected :attribute is invalid.',
-    'exists' => 'The selected :attribute is invalid.',
+    'exists' => '所選 :attribute 不存在',
     'file' => 'The :attribute field must be a file.',
     'filled' => 'The :attribute field must have a value.',
     'gt' => [
@@ -66,10 +66,10 @@ return [
         'numeric' => 'The :attribute field must be greater than or equal to :value.',
         'string' => 'The :attribute field must be greater than or equal to :value characters.',
     ],
-    'image' => 'The :attribute field must be an image.',
+    'image' => ':attribute 欄位格式錯誤 請上傳圖片',
     'in' => 'The selected :attribute is invalid.',
     'in_array' => 'The :attribute field must exist in :other.',
-    'integer' => 'The :attribute field must be an integer.',
+    'integer' => ':attribute 欄位格式錯誤 請填寫整數',
     'ip' => 'The :attribute field must be a valid IP address.',
     'ipv4' => 'The :attribute field must be a valid IPv4 address.',
     'ipv6' => 'The :attribute field must be a valid IPv6 address.',
@@ -90,7 +90,7 @@ return [
     'mac_address' => 'The :attribute field must be a valid MAC address.',
     'max' => [
         'array' => 'The :attribute field must not have more than :max items.',
-        'file' => 'The :attribute field must not be greater than :max kilobytes.',
+        'file' => ':attribute 檔案大小不可超過 :max KB',
         'numeric' => 'The :attribute field must not be greater than :max.',
         'string' => 'The :attribute field must not be greater than :max characters.',
     ],
@@ -180,6 +180,14 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => '名稱',
+        'photoFileId' => '照片',
+        'price' => '價格',
+        'quantity' => '數量',
+        'description' => '說明',
+        'status' => '狀態',
+        'photo' => '照片',
+    ],
 
 ];
