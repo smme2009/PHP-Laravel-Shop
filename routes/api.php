@@ -27,5 +27,6 @@ Route::middleware('userAuth')->group(function () {
         Route::post('photo', 'uploadProductPhoto');
         Route::post('', 'addProduct');
         Route::put('{productId}', 'editProduct')->whereNumber('productId');
+        Route::delete('{productId}', 'deleteProduct')->whereNumber('productId');
     });
 });

@@ -143,6 +143,21 @@ class Product
     }
 
     /**
+     * 刪除商品
+     * 
+     * @param int $productId 商品ID
+     * 
+     * @return bool
+     */
+    public function deletePeoduct(int $productId): bool
+    {
+        // 刪除商品
+        $isDelete = $this->repoProduct->deleteProduct($productId);
+
+        return $isDelete;
+    }
+
+    /**
      * 設定商品資料結構
      * 
      * @param mixed $product 商品資料

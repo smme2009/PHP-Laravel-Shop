@@ -84,6 +84,27 @@ class Product
     }
 
     /**
+     * 刪除商品
+     * 
+     * @param int $productId 商品ID
+     * 
+     * @return bool
+     */
+    public function deleteProduct(int $productId): bool
+    {
+        $model = ModelProduct::lockForUpdate()
+            ->find($productId);
+
+        if (!$model) {
+            return false;
+        }
+
+        $isDelete = $model->delete();
+
+        return $isDelete;
+    }
+
+    /**
      * 設定商品Model
      * 
      * @param mixed $model

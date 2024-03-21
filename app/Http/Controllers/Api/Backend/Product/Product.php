@@ -189,6 +189,38 @@ class Product extends Controller
     }
 
     /**
+     * 刪除商品
+     * 
+     * @param int $productId 商品ID
+     * 
+     * @return mixed
+     */
+    public function deleteProduct(int $productId)
+    {
+        DB::beginTransaction();
+
+        $isDelete = $this->srcProduct->deletePeoduct($productId);
+
+        DB::commit();
+
+        if (!$isDelete) {
+            $response = ToolResponseJson::init()
+                ->setHttpCode(400)
+                ->setMessage('刪除商品失敗')
+                ->get();
+
+            return $response;
+        }
+
+        $response = ToolResponseJson::init()
+            ->setHttpCode(200)
+            ->setMessage('成功刪除商品')
+            ->get();
+
+        return $response;
+    }
+
+    /**
      * 設定商品資料
      * 
      * @return array
