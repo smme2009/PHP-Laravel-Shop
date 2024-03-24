@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 use App\Http\Service\Product\Product as SrcProduct;
 
-use App\Tool\Response\Json as ToolResponseJson;
-
 /**
  * 商品
  */
@@ -28,7 +26,7 @@ class Product extends Controller
     {
         $productPage = $this->srcProduct->getProductPage();
 
-        $response = ToolResponseJson::init()
+        $response = $this->toolResponseJson()
             ->setMessage('成功取得商品分頁資料')
             ->setData([
                 'productPage' => $productPage,
@@ -49,7 +47,7 @@ class Product extends Controller
     {
         $product = $this->srcProduct->getProduct($productId);
 
-        $response = ToolResponseJson::init()
+        $response = $this->toolResponseJson()
             ->setMessage('成功取得商品資料')
             ->setData([
                 'product' => $product,
@@ -71,7 +69,7 @@ class Product extends Controller
         $result = $this->srcProduct->validatePhoto($photo);
 
         if (!$result['status']) {
-            $response = ToolResponseJson::init()
+            $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage($result['errorMessage'])
                 ->get();
@@ -82,7 +80,7 @@ class Product extends Controller
         $fileInfo = $this->srcProduct->uploadProductPhoto($photo);
 
         if (!$fileInfo) {
-            $response = ToolResponseJson::init()
+            $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('上傳商品圖片失敗')
                 ->get();
@@ -90,7 +88,7 @@ class Product extends Controller
             return $response;
         }
 
-        $response = ToolResponseJson::init()
+        $response = $this->toolResponseJson()
             ->setHttpCode(200)
             ->setMessage('成功上傳商品圖片')
             ->setData([
@@ -113,7 +111,7 @@ class Product extends Controller
         $result = $this->srcProduct->validateData($productData);
 
         if (!$result['status']) {
-            $response = ToolResponseJson::init()
+            $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage($result['errorMessage'])
                 ->get();
@@ -124,7 +122,7 @@ class Product extends Controller
         $productId = $this->srcProduct->addProduct($productData);
 
         if (!$productId) {
-            $response = ToolResponseJson::init()
+            $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('新增商品失敗')
                 ->get();
@@ -132,7 +130,7 @@ class Product extends Controller
             return $response;
         }
 
-        $response = ToolResponseJson::init()
+        $response = $this->toolResponseJson()
             ->setHttpCode(200)
             ->setMessage('成功新增商品')
             ->setData([
@@ -157,7 +155,7 @@ class Product extends Controller
         $result = $this->srcProduct->validateData($productData);
 
         if (!$result['status']) {
-            $response = ToolResponseJson::init()
+            $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage($result['errorMessage'])
                 ->get();
@@ -172,7 +170,7 @@ class Product extends Controller
         DB::commit();
 
         if (!$isEdit) {
-            $response = ToolResponseJson::init()
+            $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('編輯商品失敗')
                 ->get();
@@ -180,7 +178,7 @@ class Product extends Controller
             return $response;
         }
 
-        $response = ToolResponseJson::init()
+        $response = $this->toolResponseJson()
             ->setHttpCode(200)
             ->setMessage('成功編輯商品')
             ->get();
@@ -204,7 +202,7 @@ class Product extends Controller
         DB::commit();
 
         if (!$isDelete) {
-            $response = ToolResponseJson::init()
+            $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('刪除商品失敗')
                 ->get();
@@ -212,7 +210,7 @@ class Product extends Controller
             return $response;
         }
 
-        $response = ToolResponseJson::init()
+        $response = $this->toolResponseJson()
             ->setHttpCode(200)
             ->setMessage('成功刪除商品')
             ->get();

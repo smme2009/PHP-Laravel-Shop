@@ -28,20 +28,6 @@ class Json
     private array $data = [];
 
     /**
-     * 初始化
-     * 
-     * @param string $type 回傳類型
-     * 
-     * @return self
-     */
-    public static function init(): self
-    {
-        $tool = new self();
-
-        return $tool;
-    }
-
-    /**
      * 設定HttpCode
      * 
      * @param int $httpCode HttpCode
