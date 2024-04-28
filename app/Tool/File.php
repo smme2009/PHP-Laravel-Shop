@@ -49,4 +49,63 @@ class File
 
         return $fileInfo;
     }
+
+    /**
+     * 取得檔案資訊
+     * 
+     * @param int $fileId 檔案ID
+     * 
+     * @return array 檔案資訊
+     */
+    public static function getFileInfo(int $fileId): array
+    {
+        $fileData = ModelFile::where('file_id', $fileId)->first();
+
+        $fileInfo = self::setFileInfo($fileData);
+
+        return $fileInfo;
+    }
+
+    /**
+     * 取得檔案資訊列表
+     * 
+     * @param array $fileIdList 檔案ID列表
+     * 
+     * @return array 檔案資訊列表
+     */
+    public static function getFileInfoList(array $fileIdList): array
+    {
+        $fileColl = ModelFile::whereIn('file_id', $fileIdList)->get();
+
+        $fileInfoList = [];
+        foreach ($fileColl as $fileData) {
+            $fileInfoList[$fileData->file_id] = self::setFileInfo($fileData);
+        }
+
+        return $fileInfoList;
+    }
+
+    /**
+     * 設定檔案資訊
+     * 
+     * @param mixed $fileData 檔案資料
+     * 
+     * @return array 檔案資訊
+     */
+    private static function setFileInfo(mixed $fileData): array
+    {
+        $url = Storage::url($fileData->path);
+        $url = asset($url);
+
+        $fileInfo = [
+            'name' => $fileData->name,
+            'exten' => $fileData->exten,
+            'type' => $fileData->type,
+            'size' => $fileData->size,
+            'path' => $fileData->path,
+            'url' => $url,
+        ];
+
+        return $fileInfo;
+    }
 }
