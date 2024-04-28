@@ -26,9 +26,14 @@ class Product
     {
         $page = $this->repoProduct->getProductPage();
 
+        $photoFidList = $page->pluck('photo_fid')->all();
+        $fileInfoList = ToolFile::getFileInfoList($photoFidList);
+
         $productPage = [];
         foreach ($page as $product) {
-            $productPage[] = $this->setProduct($product);
+            $fileInfo = $fileInfoList[$product->photo_fid];
+
+            $productPage[] = $this->setProduct($product, $fileInfo);
         }
 
         return $productPage;
@@ -44,7 +49,10 @@ class Product
     public function getProduct(int $productId): array
     {
         $product = $this->repoProduct->getProduct($productId);
-        $product = $this->setProduct($product);
+
+        $fileInfo = ToolFile::getFileInfo($product->photo_fid);
+
+        $product = $this->setProduct($product, $fileInfo);
 
         return $product;
     }
@@ -161,10 +169,11 @@ class Product
      * 設定商品資料結構
      * 
      * @param mixed $product 商品資料
+     * @param array $fileInfo 商品照片檔案資訊
      * 
-     * @return array
+     * @return array 商品資料結構
      */
-    private function setProduct(mixed $product)
+    private function setProduct(mixed $product, array $fileInfo)
     {
         $product = [
             'productId' => $product->product_id,
@@ -172,6 +181,7 @@ class Product
             'price' => $product->price,
             'quantity' => $product->quantity,
             'description' => $product->description,
+            'photoUrl' => $fileInfo['url'],
         ];
 
         return $product;
