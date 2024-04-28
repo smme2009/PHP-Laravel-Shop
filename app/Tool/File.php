@@ -21,7 +21,8 @@ class File
      */
     public static function uploadFile(mixed $file, string $path = ''): array|false
     {
-        $filePath = Storage::putFile($path, $file);
+        $publicPath = 'public/' . $path;
+        $filePath = Storage::putFile($publicPath, $file);
 
         if (!$filePath) {
             return false;
