@@ -189,6 +189,7 @@ class Product
             'quantity' => $product->quantity,
             'description' => $product->description,
             'photoUrl' => $fileInfo['url'],
+            'status' => (bool) $product->status,
         ];
 
         return $product;
