@@ -175,9 +175,16 @@ class Product
      */
     private function setProduct(mixed $product, array $fileInfo)
     {
+        $startTime = $product->start_at;
+        $startTime = is_null($startTime) ? null : strtotime($startTime);
+        $endTime = $product->end_at;
+        $endTime = is_null($endTime) ? null : strtotime($endTime);
+
         $product = [
             'productId' => $product->product_id,
             'name' => $product->name,
+            'startTime' => $startTime,
+            'endTime' => $endTime,
             'price' => $product->price,
             'quantity' => $product->quantity,
             'description' => $product->description,
