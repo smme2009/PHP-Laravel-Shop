@@ -28,7 +28,7 @@ class UserAuth
 
         if (!$data) {
             $response = $toolResponseJson
-                ->setHttpCode(400)
+                ->setHttpCode(401)
                 ->setMessage('Token驗證失敗')
                 ->get();
 
@@ -40,7 +40,7 @@ class UserAuth
 
         if (!$isLogin) {
             $response = $toolResponseJson
-                ->setHttpCode(400)
+                ->setHttpCode(401)
                 ->setMessage('登入失敗')
                 ->get();
 
@@ -52,7 +52,7 @@ class UserAuth
 
         if (!$user->status) {
             $response = $toolResponseJson
-                ->setHttpCode(400)
+                ->setHttpCode(401)
                 ->setMessage('帳號已被關閉')
                 ->get();
 
