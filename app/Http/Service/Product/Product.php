@@ -20,11 +20,13 @@ class Product
     /**  
      * 取得商品分頁
      * 
+     * @param array $searchData 搜尋資料
+     * 
      * @return array
      */
-    public function getProductPage(): array
+    public function getProductPage(array $searchData): array
     {
-        $page = $this->repoProduct->getProductPage();
+        $page = $this->repoProduct->getProductPage($searchData);
 
         $photoFidList = $page->pluck('photo_fid')->all();
         $fileInfoList = ToolFile::getFileInfoList($photoFidList);

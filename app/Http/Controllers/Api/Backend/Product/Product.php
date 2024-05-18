@@ -24,7 +24,12 @@ class Product extends Controller
      */
     public function getProductPage(): mixed
     {
-        $productPage = $this->srcProduct->getProductPage();
+        // 取得搜尋資料
+        $searchData = [
+            'keyword' => request()->get('keyword'),
+        ];
+
+        $productPage = $this->srcProduct->getProductPage($searchData);
 
         $response = $this->toolResponseJson()
             ->setMessage('成功取得商品分頁資料')

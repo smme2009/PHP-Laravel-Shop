@@ -12,11 +12,19 @@ class Product
     /**
      * 取得商品分頁
      * 
+     * @param array $searchData 搜尋資料
+     * 
      * @return mixed
      */
-    public function getProductPage(): mixed
+    public function getProductPage(array $searchData): mixed
     {
-        $productPage = ModelProduct::paginate();
+        $productPage = ModelProduct::when(
+            $searchData['keyword'],
+            function ($query) use ($searchData) {
+                $query->where('name', 'like', '%' . $searchData['keyword'] . '%');
+            }
+        )
+            ->paginate();
 
         return $productPage;
     }
