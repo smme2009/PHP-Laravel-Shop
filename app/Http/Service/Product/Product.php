@@ -31,12 +31,17 @@ class Product
         $photoFidList = $page->pluck('photo_fid')->all();
         $fileInfoList = ToolFile::getFileInfoList($photoFidList);
 
-        $productPage = [];
+        $data = [];
         foreach ($page as $product) {
             $fileInfo = $fileInfoList[$product->photo_fid];
 
-            $productPage[] = $this->setProduct($product, $fileInfo);
+            $data[] = $this->setProduct($product, $fileInfo);
         }
+
+        $productPage = [
+            'data' => $data,
+            'total' => $page->total(),
+        ];
 
         return $productPage;
     }
