@@ -28,5 +28,6 @@ Route::middleware('userAuth')->group(function () {
         Route::post('', 'addProduct');
         Route::put('{productId}', 'editProduct')->whereNumber('productId');
         Route::delete('{productId}', 'deleteProduct')->whereNumber('productId');
+        Route::put('{productId}/status', 'editProductStatus')->whereNumber('productId');
     });
 });

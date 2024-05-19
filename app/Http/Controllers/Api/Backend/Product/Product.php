@@ -224,6 +224,39 @@ class Product extends Controller
     }
 
     /**
+     * 編輯商品狀態
+     * 
+     * @param int $productId 商品ID
+     * 
+     * @return mixed
+     */
+    public function editProductStatus(int $productId)
+    {
+        $status = request()->get('status');
+
+        DB::beginTransaction();
+
+        $isEdit = $this->srcProduct->editProductStatus($productId, $status);
+
+        DB::commit();
+
+        if (!$isEdit) {
+            $response = $this->toolResponseJson()
+                ->setHttpCode(400)
+                ->setMessage('編輯商品狀態失敗')
+                ->get();
+
+            return $response;
+        }
+
+        $response = $this->toolResponseJson()
+            ->setHttpCode(200)
+            ->setMessage('成功編輯商品狀態')
+            ->get();
+
+        return $response;
+    }
+    /**
      * 設定商品資料
      * 
      * @return array
