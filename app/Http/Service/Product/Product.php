@@ -218,6 +218,7 @@ class Product
             'description' => $product->description,
             'photoUrl' => $fileInfo['url'],
             'status' => (bool) $product->status,
+            'photoFileId' => $product->photo_fid,
         ];
 
         return $product;
