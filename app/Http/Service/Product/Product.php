@@ -51,11 +51,15 @@ class Product
      * 
      * @param int $productId 商品ID
      * 
-     * @return array
+     * @return false|array
      */
-    public function getProduct(int $productId): array
+    public function getProduct(int $productId): false|array
     {
         $product = $this->repoProduct->getProduct($productId);
+
+        if (!$product) {
+            return false;
+        }
 
         $fileInfo = ToolFile::getFileInfo($product->photo_fid);
 

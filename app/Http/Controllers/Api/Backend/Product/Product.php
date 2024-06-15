@@ -52,6 +52,15 @@ class Product extends Controller
     {
         $product = $this->srcProduct->getProduct($productId);
 
+        if (!$product) {
+            $response = $this->toolResponseJson()
+                ->setHttpCode(404)
+                ->setMessage('取得商品資料失敗')
+                ->get();
+
+            return $response;
+        }
+
         $response = $this->toolResponseJson()
             ->setMessage('成功取得商品資料')
             ->setData([
