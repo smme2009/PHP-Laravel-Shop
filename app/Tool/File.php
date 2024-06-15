@@ -42,9 +42,11 @@ class File
             return false;
         }
 
+        $url = self::getFileUrl($filePath);
+
         $fileInfo = [
             'fileId' => $model->file_id,
-            'path' => $filePath,
+            'url' => $url,
         ];
 
         return $fileInfo;
@@ -94,8 +96,7 @@ class File
      */
     private static function setFileInfo(mixed $fileData): array
     {
-        $url = Storage::url($fileData->path);
-        $url = asset($url);
+        $url = self::getFileUrl($fileData->path);
 
         $fileInfo = [
             'name' => $fileData->name,
@@ -107,5 +108,20 @@ class File
         ];
 
         return $fileInfo;
+    }
+
+    /**
+     * 取得檔案網址
+     * 
+     * @param string $path 檔案路徑
+     * 
+     * @return string 檔案網址
+     */
+    private static function getFileUrl(string $path): string
+    {
+        $url = Storage::url($path);
+        $url = asset($url);
+
+        return $url;
     }
 }
