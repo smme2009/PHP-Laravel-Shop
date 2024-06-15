@@ -81,6 +81,8 @@ class Product
             'quantity' => ['required', 'integer'],
             'description' => ['required', 'string'],
             'status' => ['required', 'boolean'],
+            'startTime' => ['nullable', 'date', 'date_format:Y-m-d H:i:s'],
+            'endTime' => ['nullable', 'date', 'date_format:Y-m-d H:i:s', 'after:startTime'],
         ];
 
         $result = ToolValidateData::validateData($productData, $rule);

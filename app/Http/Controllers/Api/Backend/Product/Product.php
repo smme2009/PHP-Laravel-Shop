@@ -270,6 +270,8 @@ class Product extends Controller
             'quantity' => request()->get('quantity'),
             'description' => request()->get('description'),
             'status' => request()->get('status'),
+            'startTime' => request()->get('startTime'),
+            'endTime' => request()->get('endTime'),
         ];
 
         return $productData;

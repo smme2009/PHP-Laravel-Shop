@@ -153,6 +153,8 @@ class Product
         $model->quantity = $productData['quantity'];
         $model->description = $productData['description'];
         $model->status = $productData['status'];
+        $model->start_at = $productData['startTime'];
+        $model->end_at = $productData['endTime'];
 
         return $model;
     }
