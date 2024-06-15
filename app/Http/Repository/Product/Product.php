@@ -24,6 +24,7 @@ class Product
                 $query->where('name', 'like', '%' . $searchData['keyword'] . '%');
             }
         )
+            ->orderByDesc('product_id')
             ->paginate();
 
         return $productPage;
