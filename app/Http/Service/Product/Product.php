@@ -87,6 +87,7 @@ class Product
             'status' => ['required', 'boolean'],
             'startTime' => ['nullable', 'date', 'date_format:Y-m-d H:i:s'],
             'endTime' => ['nullable', 'date', 'date_format:Y-m-d H:i:s', 'after:startTime'],
+            'productTypeId' => ['nullable', 'integer', 'exists:App\Models\ProductType,product_type_id'],
         ];
 
         $result = ToolValidateData::validateData($productData, $rule);
@@ -219,6 +220,8 @@ class Product
             'photoUrl' => $fileInfo['url'],
             'status' => (bool) $product->status,
             'photoFileId' => $product->photo_fid,
+            'productTypeId' => $product->product_type_id,
+            'productTypeName' => $product->productType->name ?? '',
         ];
 
         return $product;
