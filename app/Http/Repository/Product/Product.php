@@ -12,11 +12,20 @@ class Product
     /**
      * 取得商品分頁
      * 
+     * @param array $searchData 搜尋資料
+     * 
      * @return mixed
      */
-    public function getProductPage(): mixed
+    public function getProductPage(array $searchData): mixed
     {
-        $productPage = ModelProduct::paginate();
+        $productPage = ModelProduct::when(
+            $searchData['keyword'],
+            function ($query) use ($searchData) {
+                $query->where('name', 'like', '%' . $searchData['keyword'] . '%');
+            }
+        )
+            ->orderByDesc('product_id')
+            ->paginate();
 
         return $productPage;
     }
@@ -105,6 +114,30 @@ class Product
     }
 
     /**
+     * 編輯商品狀態
+     * 
+     * @param int $productId 商品ID
+     * @param bool $status 狀態
+     * 
+     * @return bool 是否編輯成功
+     */
+    public function editProductStatus(int $productId, bool $status)
+    {
+        $model = ModelProduct::lockForUpdate()
+            ->find($productId);
+
+        if (!$model) {
+            return false;
+        }
+
+        $model->status = $status;
+
+        $isEdit = $model->save();
+
+        return $isEdit;
+    }
+
+    /**
      * 設定商品Model
      * 
      * @param mixed $model
@@ -120,6 +153,8 @@ class Product
         $model->quantity = $productData['quantity'];
         $model->description = $productData['description'];
         $model->status = $productData['status'];
+        $model->start_at = $productData['startTime'];
+        $model->end_at = $productData['endTime'];
 
         return $model;
     }

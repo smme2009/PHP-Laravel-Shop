@@ -20,16 +20,28 @@ class Product
     /**  
      * 取得商品分頁
      * 
+     * @param array $searchData 搜尋資料
+     * 
      * @return array
      */
-    public function getProductPage(): array
+    public function getProductPage(array $searchData): array
     {
-        $page = $this->repoProduct->getProductPage();
+        $page = $this->repoProduct->getProductPage($searchData);
 
-        $productPage = [];
+        $photoFidList = $page->pluck('photo_fid')->all();
+        $fileInfoList = ToolFile::getFileInfoList($photoFidList);
+
+        $data = [];
         foreach ($page as $product) {
-            $productPage[] = $this->setProduct($product);
+            $fileInfo = $fileInfoList[$product->photo_fid];
+
+            $data[] = $this->setProduct($product, $fileInfo);
         }
+
+        $productPage = [
+            'data' => $data,
+            'total' => $page->total(),
+        ];
 
         return $productPage;
     }
@@ -39,12 +51,19 @@ class Product
      * 
      * @param int $productId 商品ID
      * 
-     * @return array
+     * @return false|array
      */
-    public function getProduct(int $productId): array
+    public function getProduct(int $productId): false|array
     {
         $product = $this->repoProduct->getProduct($productId);
-        $product = $this->setProduct($product);
+
+        if (!$product) {
+            return false;
+        }
+
+        $fileInfo = ToolFile::getFileInfo($product->photo_fid);
+
+        $product = $this->setProduct($product, $fileInfo);
 
         return $product;
     }
@@ -66,6 +85,8 @@ class Product
             'quantity' => ['required', 'integer'],
             'description' => ['required', 'string'],
             'status' => ['required', 'boolean'],
+            'startTime' => ['nullable', 'date', 'date_format:Y-m-d H:i:s'],
+            'endTime' => ['nullable', 'date', 'date_format:Y-m-d H:i:s', 'after:startTime'],
         ];
 
         $result = ToolValidateData::validateData($productData, $rule);
@@ -158,20 +179,46 @@ class Product
     }
 
     /**
+     * 編輯商品狀態
+     * 
+     * @param int $productId 商品ID
+     * @param bool $status 狀態
+     * 
+     * @return bool 是否編輯成功
+     */
+    public function editProductStatus(int $productId, bool $status): bool
+    {
+        $isEdit = $this->repoProduct->editProductStatus($productId, $status);
+
+        return $isEdit;
+    }
+
+    /**
      * 設定商品資料結構
      * 
      * @param mixed $product 商品資料
+     * @param array $fileInfo 商品照片檔案資訊
      * 
-     * @return array
+     * @return array 商品資料結構
      */
-    private function setProduct(mixed $product)
+    private function setProduct(mixed $product, array $fileInfo)
     {
+        $startTime = $product->start_at;
+        $startTime = is_null($startTime) ? null : strtotime($startTime);
+        $endTime = $product->end_at;
+        $endTime = is_null($endTime) ? null : strtotime($endTime);
+
         $product = [
             'productId' => $product->product_id,
             'name' => $product->name,
+            'startTime' => $startTime,
+            'endTime' => $endTime,
             'price' => $product->price,
             'quantity' => $product->quantity,
             'description' => $product->description,
+            'photoUrl' => $fileInfo['url'],
+            'status' => (bool) $product->status,
+            'photoFileId' => $product->photo_fid,
         ];
 
         return $product;

@@ -18,14 +18,17 @@ class UserAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Response Json 工具
+        $toolResponseJson = new ToolResponseJson();
+
         // 驗證Jwt Token
         $jwtToken = $this->getJwtToken();
 
         $data = ToolJwt::decode($jwtToken);
 
         if (!$data) {
-            $response = ToolResponseJson::init()
-                ->setHttpCode(400)
+            $response = $toolResponseJson
+                ->setHttpCode(401)
                 ->setMessage('Token驗證失敗')
                 ->get();
 
@@ -36,8 +39,8 @@ class UserAuth
         $isLogin = auth()->loginUsingId($data['userId']);
 
         if (!$isLogin) {
-            $response = ToolResponseJson::init()
-                ->setHttpCode(400)
+            $response = $toolResponseJson
+                ->setHttpCode(401)
                 ->setMessage('登入失敗')
                 ->get();
 
@@ -48,8 +51,8 @@ class UserAuth
         $user = auth()->user();
 
         if (!$user->status) {
-            $response = ToolResponseJson::init()
-                ->setHttpCode(400)
+            $response = $toolResponseJson
+                ->setHttpCode(401)
                 ->setMessage('帳號已被關閉')
                 ->get();
 
