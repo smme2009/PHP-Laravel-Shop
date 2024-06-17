@@ -281,6 +281,7 @@ class Product extends Controller
             'status' => request()->get('status'),
             'startTime' => request()->get('startTime'),
             'endTime' => request()->get('endTime'),
+            'productTypeId' => request()->get('productTypeId'),
         ];
 
         return $productData;

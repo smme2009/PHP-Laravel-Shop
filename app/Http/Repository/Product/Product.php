@@ -155,6 +155,7 @@ class Product
         $model->status = $productData['status'];
         $model->start_at = $productData['startTime'];
         $model->end_at = $productData['endTime'];
+        $model->product_type_id = $productData['productTypeId'];
 
         return $model;
     }
