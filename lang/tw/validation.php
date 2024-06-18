@@ -190,6 +190,8 @@ return [
         'photo' => '照片',
         'startTime' => '上架時間',
         'endTime' => '下架時間',
+        'account' => '帳號',
+        'password' => '密碼',
     ],
 
 ];
