@@ -138,6 +138,37 @@ class Product
     }
 
     /**
+     * 編輯商品數量
+     * 
+     * @param int $productId 商品ID
+     * @param bool $type 類型(0為減少，1為增加)
+     * @param int $quantity 數量
+     * 
+     * @return bool 是否成功
+     */
+    public function editProductQuantity(int $productId, bool $type, int $quantity)
+    {
+        $model = ModelProduct::lockForUpdate()
+            ->find($productId);
+
+        if (!$model) {
+            return false;
+        }
+
+        $isEdit = false;
+        if ($type) {
+            $isEdit = $model->increment('quantity', $quantity);
+        } else {
+            // 若減少數量小於零，則判定為失敗
+            if ($quantity <= $model->quantity) {
+                $isEdit = $model->decrement('quantity', $quantity);
+            }
+        }
+
+        return $isEdit;
+    }
+
+    /**
      * 設定商品Model
      * 
      * @param mixed $model

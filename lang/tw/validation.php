@@ -192,6 +192,7 @@ return [
         'endTime' => '下架時間',
         'account' => '帳號',
         'password' => '密碼',
+        'productStockTypeId' => '商品庫存單類型',
     ],
 
 ];
