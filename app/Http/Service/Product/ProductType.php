@@ -152,7 +152,7 @@ class ProductType
         }
 
         // 刪除商品類型
-        $isDelete = $this->repoProductType->deleteProductType($productTypeId);
+        $isDelete = $this->repoProductType->deleteProductType();
 
         return $isDelete;
     }
@@ -175,7 +175,7 @@ class ProductType
         }
 
         $isEdit = $this->repoProductType
-            ->editProductTypeStatus($productTypeId, $status);
+            ->editProductTypeStatus($status);
 
         return $isEdit;
     }
