@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Backend\User;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 
 use App\Http\Service\User\Login as SrcLogin;
 
@@ -15,8 +16,10 @@ class Login extends Controller
 
     /**
      * 登入
+     * 
+     * @return JsonResponse
      */
-    public function login()
+    public function login(): JsonResponse
     {
         $requestData = [
             'account' => request()->get('account'),
@@ -74,8 +77,10 @@ class Login extends Controller
 
     /**
      * 確認登入
+     * 
+     * @return JsonResponse
      */
-    public function checkLogin()
+    public function checkLogin(): JsonResponse
     {
         // 有確認登入中介層檢查後才會來這裡，所以直接回傳登入中資訊
         $response = $this->toolResponseJson()

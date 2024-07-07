@@ -100,9 +100,9 @@ class Product
      * 
      * @param mixed $photo 照片
      * 
-     * @return array|false
+     * @return false|array
      */
-    public function validatePhoto(mixed $photo): array|false
+    public function validatePhoto(mixed $photo): false|array
     {
         // 驗證資料
         $data = [
@@ -138,9 +138,9 @@ class Product
      * 
      * @param array $productData 商品資料
      * 
-     * @return int|false 商品ID
+     * @return false|int 商品ID
      */
-    public function addProduct(array $productData): int|false
+    public function addProduct(array $productData): false|int
     {
         // 新增商品
         $product_id = $this->repoProduct->addProduct($productData);
@@ -202,7 +202,7 @@ class Product
      * 
      * @return array 商品資料結構
      */
-    private function setProduct(mixed $product, array $fileInfo)
+    private function setProduct(mixed $product, array $fileInfo): array
     {
         $startTime = $product->start_at;
         $startTime = is_null($startTime) ? null : strtotime($startTime);

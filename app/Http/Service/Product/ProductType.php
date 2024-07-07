@@ -98,9 +98,9 @@ class ProductType
      * 
      * @param array $productTypeData 商品類型資料
      * 
-     * @return int|false 商品類型ID
+     * @return false|int 商品類型ID
      */
-    public function addProductType(array $productTypeData): int|false
+    public function addProductType(array $productTypeData): false|int
     {
         // 新增商品類型
         $product_id = $this->repoProductType
@@ -164,7 +164,7 @@ class ProductType
      * 
      * @return array 商品類型資料結構
      */
-    private function setProductType(mixed $productType)
+    private function setProductType(mixed $productType): array
     {
         $productType = [
             'productTypeId' => $productType->product_type_id,

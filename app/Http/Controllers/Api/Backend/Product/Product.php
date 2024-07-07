@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Backend\Product;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
 
 use App\Http\Service\Product\Product as SrcProduct;
 
@@ -20,9 +21,9 @@ class Product extends Controller
     /**
      * 取得商品列表
      * 
-     * @return mixed
+     * @return JsonResponse
      */
-    public function getProductPage(): mixed
+    public function getProductPage(): JsonResponse
     {
         // 取得搜尋資料
         $searchData = [
@@ -46,9 +47,9 @@ class Product extends Controller
      * 
      * @param int $productId
      * 
-     * @return mixed
+     * @return JsonResponse
      */
-    public function getProduct(int $productId): mixed
+    public function getProduct(int $productId): JsonResponse
     {
         $product = $this->srcProduct->getProduct($productId);
 
@@ -74,9 +75,9 @@ class Product extends Controller
     /**
      * 上傳商品圖片
      * 
-     * @return mixed
+     * @return JsonResponse
      */
-    public function uploadProductPhoto(): mixed
+    public function uploadProductPhoto(): JsonResponse
     {
         $photo = request()->file('photo');
 
@@ -116,9 +117,9 @@ class Product extends Controller
     /**
      * 新增商品
      * 
-     * @return mixed
+     * @return JsonResponse
      */
-    public function addProduct(): mixed
+    public function addProduct(): JsonResponse
     {
         $productData = $this->setProductData();
 
@@ -160,9 +161,9 @@ class Product extends Controller
      * 
      * @param int $productId 商品ID
      * 
-     * @return mixed
+     * @return JsonResponse
      */
-    public function editProduct(int $productId): mixed
+    public function editProduct(int $productId): JsonResponse
     {
         $productData = $this->setProductData();
 
@@ -205,9 +206,9 @@ class Product extends Controller
      * 
      * @param int $productId 商品ID
      * 
-     * @return mixed
+     * @return JsonResponse
      */
-    public function deleteProduct(int $productId)
+    public function deleteProduct(int $productId): JsonResponse
     {
         DB::beginTransaction();
 
@@ -237,9 +238,9 @@ class Product extends Controller
      * 
      * @param int $productId 商品ID
      * 
-     * @return mixed
+     * @return JsonResponse
      */
-    public function editProductStatus(int $productId)
+    public function editProductStatus(int $productId): JsonResponse
     {
         $status = request()->get('status');
 
@@ -268,7 +269,7 @@ class Product extends Controller
     /**
      * 設定商品資料
      * 
-     * @return array
+     * @return array 商品資料
      */
     private function setProductData(): array
     {

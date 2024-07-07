@@ -44,9 +44,9 @@ class ProductStock
      * @param int $productId 商品ID
      * @param array $productStockData 商品庫存單資料
      * 
-     * @return int|false 商品庫存單ID
+     * @return false|int 商品庫存單ID
      */
-    public function addProductStock(int $productId, array $productStockData): int|false
+    public function addProductStock(int $productId, array $productStockData): false|int
     {
         $productStockData['productId'] = $productId;
 

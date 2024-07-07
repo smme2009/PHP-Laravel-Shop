@@ -17,9 +17,9 @@ class File
      * @param mixed $file 檔案
      * @param string $path 檔案路徑
      * 
-     * @return array|false
+     * @return false|array
      */
-    public static function uploadFile(mixed $file, string $path = ''): array|false
+    public static function uploadFile(mixed $file, string $path = ''): false|array
     {
         $publicPath = 'public/' . $path;
         $filePath = Storage::putFile($publicPath, $file);

@@ -2,6 +2,8 @@
 
 namespace App\Http\Repository\Product;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
 use App\Models\Product as ModelProduct;
 
 /**
@@ -14,9 +16,9 @@ class Product
      * 
      * @param array $searchData 搜尋資料
      * 
-     * @return mixed
+     * @return LengthAwarePaginator
      */
-    public function getProductPage(array $searchData): mixed
+    public function getProductPage(array $searchData): LengthAwarePaginator
     {
         $productPage = ModelProduct::when(
             $searchData['keyword'],
@@ -35,9 +37,9 @@ class Product
      * 
      * @param int $productId 商品ID
      * 
-     * @return mixed
+     * @return null|ModelProduct
      */
-    public function getProduct(int $productId): mixed
+    public function getProduct(int $productId): null|ModelProduct
     {
         $product = ModelProduct::find($productId);
 
@@ -49,9 +51,9 @@ class Product
      * 
      * @param array $productData 商品資料
      * 
-     * @return int|false
+     * @return false|int
      */
-    public function addProduct(array $productData): int|false
+    public function addProduct(array $productData): false|int
     {
         $model = new ModelProduct();
 
@@ -121,7 +123,7 @@ class Product
      * 
      * @return bool 是否編輯成功
      */
-    public function editProductStatus(int $productId, bool $status)
+    public function editProductStatus(int $productId, bool $status): bool
     {
         $model = ModelProduct::lockForUpdate()
             ->find($productId);
@@ -146,7 +148,7 @@ class Product
      * 
      * @return bool 是否成功
      */
-    public function editProductQuantity(int $productId, bool $type, int $quantity)
+    public function editProductQuantity(int $productId, bool $type, int $quantity): bool
     {
         $model = ModelProduct::lockForUpdate()
             ->find($productId);
@@ -174,9 +176,9 @@ class Product
      * @param mixed $model
      * @param array $productData 商品資料
      * 
-     * @return mixed
+     * @return ModelProduct
      */
-    public function setModel(mixed $model, array $productData): mixed
+    public function setModel(ModelProduct $model, array $productData): ModelProduct
     {
         $model->name = $productData['name'];
         $model->photo_fid = $productData['photoFileId'];

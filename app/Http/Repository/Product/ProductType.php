@@ -2,6 +2,8 @@
 
 namespace App\Http\Repository\Product;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
 use App\Models\ProductType as ModelProductType;
 
 /**
@@ -14,9 +16,9 @@ class ProductType
      * 
      * @param array $searchData 搜尋資料
      * 
-     * @return mixed
+     * @return LengthAwarePaginator
      */
-    public function getProductTypePage(array $searchData): mixed
+    public function getProductTypePage(array $searchData): LengthAwarePaginator
     {
         $productTypePage = ModelProductType::when(
             $searchData['keyword'],
@@ -35,9 +37,9 @@ class ProductType
      * 
      * @param int $productTypeId 商品類型ID
      * 
-     * @return mixed
+     * @return null|ModelProductType
      */
-    public function getProductType(int $productTypeId): mixed
+    public function getProductType(int $productTypeId): null|ModelProductType
     {
         $productType = ModelProductType::find($productTypeId);
 
@@ -121,7 +123,7 @@ class ProductType
      * 
      * @return bool 是否編輯成功
      */
-    public function editProductTypeStatus(int $productTypeId, bool $status)
+    public function editProductTypeStatus(int $productTypeId, bool $status): bool
     {
         $model = ModelProductType::lockForUpdate()
             ->find($productTypeId);
@@ -143,9 +145,9 @@ class ProductType
      * @param mixed $model
      * @param array $productTypeData 商品類型資料
      * 
-     * @return mixed
+     * @return ModelProductType
      */
-    public function setModel(mixed $model, array $productTypeData): mixed
+    public function setModel(mixed $model, array $productTypeData): ModelProductType
     {
         $model->name = $productTypeData['name'];
         $model->status = $productTypeData['status'];

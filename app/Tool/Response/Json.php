@@ -2,6 +2,8 @@
 
 namespace App\Tool\Response;
 
+use Illuminate\Http\JsonResponse;
+
 /**
  * 回應
  */
@@ -93,9 +95,9 @@ class Json
     /**
      * 取得結果
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function get(): \Illuminate\Http\JsonResponse
+    public function get(): JsonResponse
     {
         $jsonData = [
             'message' => $this->message,
