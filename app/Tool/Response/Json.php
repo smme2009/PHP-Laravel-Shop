@@ -53,7 +53,7 @@ class Json
      */
     public function setHeader(string $name, string $value): self
     {
-        $this->httpCode[$name] = $value;
+        $this->header[$name] = $value;
 
         return $this;
     }
