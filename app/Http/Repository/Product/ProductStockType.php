@@ -11,14 +11,20 @@ use App\Models\ProductStockType as ModelProductStockType;
  */
 class ProductStockType
 {
+    public function __construct(
+        public ModelProductStockType $productStockType,
+    ) {
+
+    }
+
     /**
      * 取得商品庫存類型Collection
      * 
-     * @return Collection
+     * @return Collection 商品庫存類型Collection
      */
     public function getProductStockTypeColl(): Collection
     {
-        $productStockType = ModelProductStockType::all();
+        $productStockType = $this->productStockType->all();
 
         return $productStockType;
     }

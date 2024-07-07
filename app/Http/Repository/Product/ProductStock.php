@@ -9,44 +9,47 @@ use App\Models\ProductStock as ModelProductStock;
  */
 class ProductStock
 {
+    public function __construct(
+        public ModelProductStock $productStock,
+    ) {
+
+    }
+
     /**
      * 新增商品庫存單
      * 
      * @param array $productStockData 商品庫存單資料
      * 
-     * @return false|int
+     * @return false|int 商品庫存單ID
      */
     public function addProductStock(array $productStockData): false|int
     {
-        $model = new ModelProductStock();
-
-        $model = $this->setModel($model, $productStockData);
-
-        $isSave = $model->save();
+        $isSave = $this->saveModel($productStockData);
 
         if (!$isSave) {
             return false;
         }
 
-        $productStockId = $model->product_stock_id;
+        $productStockId = $this->productStock->product_stock_id;
 
         return $productStockId;
     }
 
     /**
-     * 設定商品Model
+     * 儲存商品庫存單Model
      * 
-     * @param mixed $model
      * @param array $productStockData 商品庫存單資料
      * 
-     * @return ModelProductStock
+     * @return bool 是否儲存
      */
-    private function setModel(mixed $model, array $productData): ModelProductStock
+    private function saveModel(array $productData): bool
     {
-        $model->product_stock_type_id = $productData['productStockTypeId'];
-        $model->product_id = $productData['productId'];
-        $model->quantity = $productData['quantity'];
+        $this->productStock->product_stock_type_id = $productData['productStockTypeId'];
+        $this->productStock->product_id = $productData['productId'];
+        $this->productStock->quantity = $productData['quantity'];
 
-        return $model;
+        $isSave = $this->productStock->save();
+
+        return $isSave;
     }
 }

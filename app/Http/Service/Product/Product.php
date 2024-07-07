@@ -55,15 +55,17 @@ class Product
      */
     public function getProduct(int $productId): false|array
     {
-        $product = $this->repoProduct->getProduct($productId);
+        $isSet = $this->repoProduct->setProduct($productId);
 
-        if (!$product) {
+        if (!$isSet) {
             return false;
         }
 
-        $fileInfo = ToolFile::getFileInfo($product->photo_fid);
+        $productModel = $this->repoProduct->product;
 
-        $product = $this->setProduct($product, $fileInfo);
+        $fileInfo = ToolFile::getFileInfo($productModel->photo_fid);
+
+        $product = $this->setProduct($productModel, $fileInfo);
 
         return $product;
     }
@@ -158,8 +160,14 @@ class Product
      */
     public function editProduct(int $productId, array $productData): bool
     {
+        $isSet = $this->repoProduct->setProduct($productId, true);
+
+        if (!$isSet) {
+            return false;
+        }
+
         // 編輯商品
-        $isEdit = $this->repoProduct->editProduct($productId, $productData);
+        $isEdit = $this->repoProduct->editProduct($productData);
 
         return $isEdit;
     }
@@ -173,8 +181,14 @@ class Product
      */
     public function deletePeoduct(int $productId): bool
     {
+        $isSet = $this->repoProduct->setProduct($productId, true);
+
+        if (!$isSet) {
+            return false;
+        }
+
         // 刪除商品
-        $isDelete = $this->repoProduct->deleteProduct($productId);
+        $isDelete = $this->repoProduct->deleteProduct();
 
         return $isDelete;
     }
@@ -189,7 +203,13 @@ class Product
      */
     public function editProductStatus(int $productId, bool $status): bool
     {
-        $isEdit = $this->repoProduct->editProductStatus($productId, $status);
+        $isSet = $this->repoProduct->setProduct($productId, true);
+
+        if (!$isSet) {
+            return false;
+        }
+
+        $isEdit = $this->repoProduct->editProductStatus($status);
 
         return $isEdit;
     }

@@ -48,6 +48,12 @@ class ProductStock
      */
     public function addProductStock(int $productId, array $productStockData): false|int
     {
+        $isSet = $this->repoProduct->setProduct($productId, true);
+
+        if (!$isSet) {
+            return false;
+        }
+
         $productStockData['productId'] = $productId;
 
         $productStockId = $this->repoProductStock->addProductStock($productStockData);
@@ -67,7 +73,7 @@ class ProductStock
         }
 
         $isEdit = $this->repoProduct
-            ->editProductQuantity($productId, $editType, $productStockData['quantity']);
+            ->editProductQuantity($editType, $productStockData['quantity']);
 
         if (!$isEdit) {
             return false;
