@@ -6,7 +6,7 @@ use Illuminate\Validation\Rule;
 
 use App\Http\Repository\Product\ProductType as RepoProductType;
 
-use App\Tool\ValidateData as ToolValidateData;
+use App\Tool\Validation\Validation as ToolValidation;
 
 /**
  * 商品類型
@@ -72,9 +72,9 @@ class ProductType
      * @param array $productTypeData 商品類型資料
      * @param null|int $productTypeId 商品類型ID
      * 
-     * @return array 驗證資料
+     * @return \App\Tool\Validation\Result 驗證結果
      */
-    public function validateData(array $productTypeData, null|int $productTypeId = null): array
+    public function validateData(array $productTypeData, null|int $productTypeId = null)
     {
         // 驗證規則
         $rule = [
@@ -90,7 +90,7 @@ class ProductType
 
         $rule['name'][] = $ruleNameUnique;
 
-        $result = ToolValidateData::validateData($productTypeData, $rule);
+        $result = ToolValidation::validateData($productTypeData, $rule);
 
         return $result;
     }

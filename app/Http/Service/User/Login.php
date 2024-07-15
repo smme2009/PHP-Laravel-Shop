@@ -2,7 +2,7 @@
 
 namespace App\Http\Service\User;
 
-use App\Tool\ValidateData as ToolValidateData;
+use App\Tool\Validation\Validation as ToolValidation;
 use App\Tool\Jwt as ToolJwt;
 
 /**
@@ -15,9 +15,9 @@ class Login
      * 
      * @param array $data 資料
      * 
-     * @return array
+     * @return \App\Tool\Validation\Result 驗證結果
      */
-    public function validateData(array $data): array
+    public function validateData(array $data)
     {
         // 驗證規則
         $rule = [
@@ -25,7 +25,7 @@ class Login
             'password' => ['required', 'string'],
         ];
 
-        $result = ToolValidateData::validateData($data, $rule);
+        $result = ToolValidation::validateData($data, $rule);
 
         return $result;
     }
@@ -40,7 +40,7 @@ class Login
      */
     public function login(string $account, string $password): bool
     {
-        $loginData =  [
+        $loginData = [
             'email' => $account,
             'password' => $password,
             'status' => 1, // 檢查帳號是否啟用

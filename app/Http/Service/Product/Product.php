@@ -4,7 +4,7 @@ namespace App\Http\Service\Product;
 
 use App\Http\Repository\Product\Product as RepoProduct;
 
-use App\Tool\ValidateData as ToolValidateData;
+use App\Tool\Validation\Validation as ToolValidation;
 use App\Tool\File as ToolFile;
 
 /**
@@ -75,9 +75,9 @@ class Product
      * 
      * @param array $productData 商品資料
      * 
-     * @return array
+     * @return \App\Tool\Validation\Result 驗證結果
      */
-    public function validateData(array $productData): array
+    public function validateData(array $productData)
     {
         // 驗證規則
         $rule = [
@@ -92,7 +92,7 @@ class Product
             'productTypeId' => ['nullable', 'integer', 'exists:App\Models\ProductType,product_type_id'],
         ];
 
-        $result = ToolValidateData::validateData($productData, $rule);
+        $result = ToolValidation::validateData($productData, $rule);
 
         return $result;
     }
@@ -102,9 +102,9 @@ class Product
      * 
      * @param mixed $photo 照片
      * 
-     * @return false|array
+     * @return \App\Tool\Validation\Result 驗證結果
      */
-    public function validatePhoto(mixed $photo): false|array
+    public function validatePhoto(mixed $photo)
     {
         // 驗證資料
         $data = [
@@ -116,7 +116,7 @@ class Product
             'photo' => ['required', 'image', 'max:10240'],
         ];
 
-        $result = ToolValidateData::validateData($data, $rule);
+        $result = ToolValidation::validateData($data, $rule);
 
         return $result;
     }

@@ -29,10 +29,10 @@ class Login extends Controller
         // 驗證資料
         $result = $this->srcLogin->validateData($requestData);
 
-        if (!$result['status']) {
+        if (!$result->status) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage($result['errorMessage'])
+                ->setMessage($result->message)
                 ->get();
 
             return $response;

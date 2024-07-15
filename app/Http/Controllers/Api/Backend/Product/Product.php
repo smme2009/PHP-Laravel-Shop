@@ -83,10 +83,10 @@ class Product extends Controller
 
         $result = $this->srcProduct->validatePhoto($photo);
 
-        if (!$result['status']) {
+        if (!$result->status) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage($result['errorMessage'])
+                ->setMessage($result->message)
                 ->get();
 
             return $response;
@@ -125,10 +125,10 @@ class Product extends Controller
 
         $result = $this->srcProduct->validateData($productData);
 
-        if (!$result['status']) {
+        if (!$result->status) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage($result['errorMessage'])
+                ->setMessage($result->message)
                 ->get();
 
             return $response;
@@ -169,10 +169,10 @@ class Product extends Controller
 
         $result = $this->srcProduct->validateData($productData);
 
-        if (!$result['status']) {
+        if (!$result->status) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage($result['errorMessage'])
+                ->setMessage($result->message)
                 ->get();
 
             return $response;

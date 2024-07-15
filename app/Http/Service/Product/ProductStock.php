@@ -5,7 +5,7 @@ namespace App\Http\Service\Product;
 use App\Http\Repository\Product\Product as RepoProduct;
 use App\Http\Repository\Product\ProductStock as RepoProductStock;
 
-use App\Tool\ValidateData as ToolValidateData;
+use App\Tool\Validation\Validation as ToolValidation;
 
 /**
  * 商品庫存單
@@ -23,9 +23,9 @@ class ProductStock
      * 
      * @param array $productStockData 商品庫存單資料
      * 
-     * @return array
+     * @return \App\Tool\Validation\Result 驗證結果
      */
-    public function validateData(array $productStockData): array
+    public function validateData(array $productStockData)
     {
         // 驗證規則
         $rule = [
@@ -33,7 +33,7 @@ class ProductStock
             'quantity' => ['required', 'integer'],
         ];
 
-        $result = ToolValidateData::validateData($productStockData, $rule);
+        $result = ToolValidation::validateData($productStockData, $rule);
 
         return $result;
     }

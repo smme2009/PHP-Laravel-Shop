@@ -31,10 +31,10 @@ class ProductStock extends Controller
 
         $result = $this->srcProductStock->validateData($productStockData);
 
-        if (!$result['status']) {
+        if (!$result->status) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage($result['errorMessage'])
+                ->setMessage($result->message)
                 ->get();
 
             return $response;

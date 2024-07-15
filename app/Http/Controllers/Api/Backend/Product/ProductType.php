@@ -85,10 +85,10 @@ class ProductType extends Controller
         $result = $this->srcProductType
             ->validateData($productTypeData);
 
-        if (!$result['status']) {
+        if (!$result->status) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage($result['errorMessage'])
+                ->setMessage($result->message)
                 ->get();
 
             return $response;
@@ -131,10 +131,10 @@ class ProductType extends Controller
         $result = $this->srcProductType
             ->validateData($productTypeData, $productTypeId);
 
-        if (!$result['status']) {
+        if (!$result->status) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage($result['errorMessage'])
+                ->setMessage($result->message)
                 ->get();
 
             return $response;
