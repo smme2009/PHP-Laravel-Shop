@@ -2,16 +2,15 @@
 
 namespace App\Http\Service\Product;
 
+use App\Http\Service\Service;
 use Illuminate\Validation\Rule;
 
 use App\Http\Repository\Product\ProductType as RepoProductType;
 
-use App\Tool\Validation\Validation as ToolValidation;
-
 /**
  * 商品類型
  */
-class ProductType
+class ProductType extends Service
 {
     public function __construct(
         private RepoProductType $repoProductType,
@@ -90,7 +89,7 @@ class ProductType
 
         $rule['name'][] = $ruleNameUnique;
 
-        $result = ToolValidation::validateData($productTypeData, $rule);
+        $result = $this->toolValidation()->validateData($productTypeData, $rule);
 
         return $result;
     }

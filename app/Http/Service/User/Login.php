@@ -2,13 +2,12 @@
 
 namespace App\Http\Service\User;
 
-use App\Tool\Validation\Validation as ToolValidation;
-use App\Tool\Jwt as ToolJwt;
+use App\Http\Service\Service;
 
 /**
  * 登入
  */
-class Login
+class Login extends Service
 {
     /**  
      * 驗證資料
@@ -25,7 +24,7 @@ class Login
             'password' => ['required', 'string'],
         ];
 
-        $result = ToolValidation::validateData($data, $rule);
+        $result = $this->toolValidation()->validateData($data, $rule);
 
         return $result;
     }
@@ -68,7 +67,7 @@ class Login
             'userId' => $userId,
         ];
 
-        $jwtToken = ToolJwt::encode($data);
+        $jwtToken = $this->toolJwt()->encode($data);
 
         return $jwtToken;
     }

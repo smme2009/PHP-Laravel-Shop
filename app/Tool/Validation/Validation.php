@@ -17,7 +17,7 @@ class Validation
      * 
      * @return Result
      */
-    public static function validateData(array $data, array $rule)
+    public function validateData(array $data, array $rule)
     {
         $validator = validator($data, $rule);
 

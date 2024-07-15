@@ -2,15 +2,15 @@
 
 namespace App\Http\Service\Product;
 
+use App\Http\Service\Service;
+
 use App\Http\Repository\Product\Product as RepoProduct;
 use App\Http\Repository\Product\ProductStock as RepoProductStock;
-
-use App\Tool\Validation\Validation as ToolValidation;
 
 /**
  * 商品庫存單
  */
-class ProductStock
+class ProductStock extends Service
 {
     public function __construct(
         private RepoProduct $repoProduct,
@@ -33,7 +33,7 @@ class ProductStock
             'quantity' => ['required', 'integer'],
         ];
 
-        $result = ToolValidation::validateData($productStockData, $rule);
+        $result = $this->toolValidation()->validateData($productStockData, $rule);
 
         return $result;
     }

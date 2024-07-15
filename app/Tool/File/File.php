@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tool;
+namespace App\Tool\File;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -19,7 +19,7 @@ class File
      * 
      * @return false|array
      */
-    public static function uploadFile(mixed $file, string $path = ''): false|array
+    public function uploadFile(mixed $file, string $path = ''): false|array
     {
         $publicPath = 'public/' . $path;
         $filePath = Storage::putFile($publicPath, $file);
@@ -42,7 +42,7 @@ class File
             return false;
         }
 
-        $url = self::getFileUrl($filePath);
+        $url = $this->getFileUrl($filePath);
 
         $fileInfo = [
             'fileId' => $model->file_id,
@@ -59,11 +59,11 @@ class File
      * 
      * @return array 檔案資訊
      */
-    public static function getFileInfo(int $fileId): array
+    public function getFileInfo(int $fileId): array
     {
         $fileData = ModelFile::where('file_id', $fileId)->first();
 
-        $fileInfo = self::setFileInfo($fileData);
+        $fileInfo = $this->setFileInfo($fileData);
 
         return $fileInfo;
     }
@@ -75,13 +75,13 @@ class File
      * 
      * @return array 檔案資訊列表
      */
-    public static function getFileInfoList(array $fileIdList): array
+    public function getFileInfoList(array $fileIdList): array
     {
         $fileColl = ModelFile::whereIn('file_id', $fileIdList)->get();
 
         $fileInfoList = [];
         foreach ($fileColl as $fileData) {
-            $fileInfoList[$fileData->file_id] = self::setFileInfo($fileData);
+            $fileInfoList[$fileData->file_id] = $this->setFileInfo($fileData);
         }
 
         return $fileInfoList;
@@ -94,9 +94,9 @@ class File
      * 
      * @return array 檔案資訊
      */
-    private static function setFileInfo(mixed $fileData): array
+    private function setFileInfo(mixed $fileData): array
     {
-        $url = self::getFileUrl($fileData->path);
+        $url = $this->getFileUrl($fileData->path);
 
         $fileInfo = [
             'name' => $fileData->name,
@@ -117,7 +117,7 @@ class File
      * 
      * @return string 檔案網址
      */
-    private static function getFileUrl(string $path): string
+    private function getFileUrl(string $path): string
     {
         $url = Storage::url($path);
         $url = asset($url);

@@ -2,15 +2,14 @@
 
 namespace App\Http\Service\Product;
 
-use App\Http\Repository\Product\Product as RepoProduct;
+use App\Http\Service\Service;
 
-use App\Tool\Validation\Validation as ToolValidation;
-use App\Tool\File as ToolFile;
+use App\Http\Repository\Product\Product as RepoProduct;
 
 /**
  * 商品
  */
-class Product
+class Product extends Service
 {
     public function __construct(
         private RepoProduct $repoProduct,
@@ -29,7 +28,7 @@ class Product
         $page = $this->repoProduct->getProductPage($searchData);
 
         $photoFidList = $page->pluck('photo_fid')->all();
-        $fileInfoList = ToolFile::getFileInfoList($photoFidList);
+        $fileInfoList = $this->toolFile()->getFileInfoList($photoFidList);
 
         $data = [];
         foreach ($page as $product) {
@@ -63,7 +62,7 @@ class Product
 
         $productModel = $this->repoProduct->product;
 
-        $fileInfo = ToolFile::getFileInfo($productModel->photo_fid);
+        $fileInfo = $this->toolFile()->getFileInfo($productModel->photo_fid);
 
         $product = $this->setProduct($productModel, $fileInfo);
 
@@ -92,7 +91,7 @@ class Product
             'productTypeId' => ['nullable', 'integer', 'exists:App\Models\ProductType,product_type_id'],
         ];
 
-        $result = ToolValidation::validateData($productData, $rule);
+        $result = $this->toolValidation()->validateData($productData, $rule);
 
         return $result;
     }
@@ -116,7 +115,7 @@ class Product
             'photo' => ['required', 'image', 'max:10240'],
         ];
 
-        $result = ToolValidation::validateData($data, $rule);
+        $result = $this->toolValidation()->validateData($data, $rule);
 
         return $result;
     }
@@ -130,7 +129,7 @@ class Product
      */
     public function uploadProductPhoto(mixed $photo): array
     {
-        $fileInfo = ToolFile::uploadFile($photo, 'product');
+        $fileInfo = $this->toolFile()->uploadFile($photo, 'product');
 
         return $fileInfo;
     }

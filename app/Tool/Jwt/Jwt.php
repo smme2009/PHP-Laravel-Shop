@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tool;
+namespace App\Tool\Jwt;
 
 use Exception;
 
@@ -19,7 +19,7 @@ class Jwt
      * 
      * @return array
      */
-    public static function encode(array $data): string
+    public function encode(array $data): string
     {
         $key = env('APP_KEY');
 
@@ -47,13 +47,13 @@ class Jwt
      * 
      * @return array
      */
-    public static function decode(string $jwtToken): array
+    public function decode(string $jwtToken): array
     {
         $key = env('APP_KEY');
 
         $data = [];
         try {
-            $data = (array)FirebaseJwt::decode($jwtToken, new Key($key, 'HS256'));
+            $data = (array) FirebaseJwt::decode($jwtToken, new Key($key, 'HS256'));
         } catch (Exception $e) {
             // 解碼錯誤，暫不處理，先回傳空陣列
         }

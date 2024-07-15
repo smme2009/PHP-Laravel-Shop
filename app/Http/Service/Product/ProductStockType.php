@@ -2,12 +2,14 @@
 
 namespace App\Http\Service\Product;
 
+use App\Http\Service\Service;
+
 use App\Http\Repository\Product\ProductStockType as RepoProductStockType;
 
 /**
  * 商品庫存單類型
  */
-class ProductStockType
+class ProductStockType extends Service
 {
     public function __construct(
         private RepoProductStockType $repoProductStockType,
