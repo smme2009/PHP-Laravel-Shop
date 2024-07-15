@@ -19,7 +19,7 @@ class File
      * 
      * @return false|array
      */
-    public function uploadFile(mixed $file, string $path = ''): false|array
+    public function uploadFile(mixed $file, string $path = '')
     {
         $publicPath = 'public/' . $path;
         $filePath = Storage::putFile($publicPath, $file);
@@ -59,7 +59,7 @@ class File
      * 
      * @return array 檔案資訊
      */
-    public function getFileInfo(int $fileId): array
+    public function getFileInfo(int $fileId)
     {
         $fileData = ModelFile::where('file_id', $fileId)->first();
 
@@ -75,7 +75,7 @@ class File
      * 
      * @return array 檔案資訊列表
      */
-    public function getFileInfoList(array $fileIdList): array
+    public function getFileInfoList(array $fileIdList)
     {
         $fileColl = ModelFile::whereIn('file_id', $fileIdList)->get();
 
@@ -94,7 +94,7 @@ class File
      * 
      * @return array 檔案資訊
      */
-    private function setFileInfo(mixed $fileData): array
+    private function setFileInfo(mixed $fileData)
     {
         $url = $this->getFileUrl($fileData->path);
 
@@ -117,7 +117,7 @@ class File
      * 
      * @return string 檔案網址
      */
-    private function getFileUrl(string $path): string
+    private function getFileUrl(string $path)
     {
         $url = Storage::url($path);
         $url = asset($url);

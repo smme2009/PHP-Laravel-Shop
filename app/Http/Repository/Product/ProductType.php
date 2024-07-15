@@ -2,8 +2,6 @@
 
 namespace App\Http\Repository\Product;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-
 use App\Models\ProductType as ModelProductType;
 
 /**
@@ -22,9 +20,9 @@ class ProductType
      * 
      * @param array $searchData 搜尋資料
      * 
-     * @return LengthAwarePaginator
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getProductTypePage(array $searchData): LengthAwarePaginator
+    public function getProductTypePage(array $searchData)
     {
         $productTypePage = $this->productType
             ->when(
@@ -46,7 +44,7 @@ class ProductType
      * 
      * @return bool 是否設定成功
      */
-    public function setProductType(int $productTypeId): bool
+    public function setProductType(int $productTypeId)
     {
         $productType = $this->productType->find($productTypeId);
 
@@ -66,7 +64,7 @@ class ProductType
      * 
      * @return false|int 商品類型ID
      */
-    public function addProductType(array $productTypeData): false|int
+    public function addProductType(array $productTypeData)
     {
         $isSave = $this->saveModel($productTypeData);
 
@@ -86,7 +84,7 @@ class ProductType
      * 
      * @return bool 是否編輯成功
      */
-    public function editProductType(array $productTypeData): bool
+    public function editProductType(array $productTypeData)
     {
         $isSave = $this->saveModel($productTypeData);
 
@@ -98,7 +96,7 @@ class ProductType
      * 
      * @return bool 是否刪除成功
      */
-    public function deleteProductType(): bool
+    public function deleteProductType()
     {
         $isDelete = $this->productType->delete();
 
@@ -112,7 +110,7 @@ class ProductType
      * 
      * @return bool 是否編輯成功
      */
-    public function editProductTypeStatus(bool $status): bool
+    public function editProductTypeStatus(bool $status)
     {
         $this->productType->status = $status;
 
@@ -128,7 +126,7 @@ class ProductType
      * 
      * @return bool 是否儲存成功
      */
-    public function saveModel(array $productTypeData): bool
+    public function saveModel(array $productTypeData)
     {
         $this->productType->name = $productTypeData['name'];
         $this->productType->status = $productTypeData['status'];

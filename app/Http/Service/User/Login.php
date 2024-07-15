@@ -37,7 +37,7 @@ class Login extends Service
      * 
      * @return bool
      */
-    public function login(string $account, string $password): bool
+    public function login(string $account, string $password)
     {
         $loginData = [
             'email' => $account,
@@ -55,7 +55,7 @@ class Login extends Service
      * 
      * @return string
      */
-    public function getJwtToken(): string
+    public function getJwtToken()
     {
         $userId = auth()->id();
 

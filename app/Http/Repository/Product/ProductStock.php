@@ -22,7 +22,7 @@ class ProductStock
      * 
      * @return false|int 商品庫存單ID
      */
-    public function addProductStock(array $productStockData): false|int
+    public function addProductStock(array $productStockData)
     {
         $isSave = $this->saveModel($productStockData);
 
@@ -42,7 +42,7 @@ class ProductStock
      * 
      * @return bool 是否儲存
      */
-    private function saveModel(array $productData): bool
+    private function saveModel(array $productData)
     {
         $this->productStock->product_stock_type_id = $productData['productStockTypeId'];
         $this->productStock->product_id = $productData['productId'];

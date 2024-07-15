@@ -2,8 +2,6 @@
 
 namespace App\Http\Repository\Product;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-
 use App\Models\Product as ModelProduct;
 
 /**
@@ -22,9 +20,9 @@ class Product
      * 
      * @param array $searchData 搜尋資料
      * 
-     * @return LengthAwarePaginator 身品分頁資料
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator 身品分頁資料
      */
-    public function getProductPage(array $searchData): LengthAwarePaginator
+    public function getProductPage(array $searchData)
     {
         $productPage = $this->product
             ->when(
@@ -47,7 +45,7 @@ class Product
      * 
      * @return bool 是否設定成功
      */
-    public function setProduct(int $productId, bool $isLock = false): bool
+    public function setProduct(int $productId, bool $isLock = false)
     {
         if ($isLock) {
             $this->product->lockForUpdate();
@@ -71,7 +69,7 @@ class Product
      * 
      * @return false|int 商品ID
      */
-    public function addProduct(array $productData): false|int
+    public function addProduct(array $productData)
     {
         $isSave = $this->saveModel($productData);
 
@@ -91,7 +89,7 @@ class Product
      * 
      * @return bool 是否編輯成功
      */
-    public function editProduct(array $productData): bool
+    public function editProduct(array $productData)
     {
         $isSave = $this->saveModel($productData);
 
@@ -103,7 +101,7 @@ class Product
      * 
      * @return bool 是否刪除成功
      */
-    public function deleteProduct(): bool
+    public function deleteProduct()
     {
         $isDelete = $this->product->delete();
 
@@ -117,7 +115,7 @@ class Product
      * 
      * @return bool 是否編輯成功
      */
-    public function editProductStatus(bool $status): bool
+    public function editProductStatus(bool $status)
     {
         $this->product->status = $status;
 
@@ -134,7 +132,7 @@ class Product
      * 
      * @return bool 是否編輯成功
      */
-    public function editProductQuantity(bool $type, int $quantity): bool
+    public function editProductQuantity(bool $type, int $quantity)
     {
         $isEdit = false;
         if ($type) {
@@ -156,7 +154,7 @@ class Product
      * 
      * @return bool 是否儲存成功
      */
-    private function saveModel(array $productData): bool
+    private function saveModel(array $productData)
     {
         $this->product->name = $productData['name'];
         $this->product->photo_fid = $productData['photoFileId'];

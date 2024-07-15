@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Backend\Product;
 
 use App\Http\Controllers\Controller;
-use \Illuminate\Http\JsonResponse;
 
 use App\Http\Service\Product\ProductType as SrcProductType;
 
@@ -20,9 +19,9 @@ class ProductType extends Controller
     /**
      * 取得商品類型列表
      * 
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getProductTypePage(): JsonResponse
+    public function getProductTypePage()
     {
         // 取得搜尋資料
         $searchData = [
@@ -47,9 +46,9 @@ class ProductType extends Controller
      * 
      * @param int $productTypeId
      * 
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getProductType(int $productTypeId): JsonResponse
+    public function getProductType(int $productTypeId)
     {
         $productType = $this->srcProductType
             ->getProductType($productTypeId);
@@ -76,9 +75,9 @@ class ProductType extends Controller
     /**
      * 新增商品類型
      * 
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function addProductType(): JsonResponse
+    public function addProductType()
     {
         $productTypeData = $this->setProductTypeData();
 
@@ -122,9 +121,9 @@ class ProductType extends Controller
      * 
      * @param int $productTypeId 商品類型ID
      * 
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function editProductType(int $productTypeId): JsonResponse
+    public function editProductType(int $productTypeId)
     {
         $productTypeData = $this->setProductTypeData();
 
@@ -165,9 +164,9 @@ class ProductType extends Controller
      * 
      * @param int $productTypeId 商品類型ID
      * 
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteProductType(int $productTypeId): JsonResponse
+    public function deleteProductType(int $productTypeId)
     {
         $isDelete = $this->srcProductType
             ->deletePeoductType($productTypeId);
@@ -194,9 +193,9 @@ class ProductType extends Controller
      * 
      * @param int $productTypeId 商品類型ID
      * 
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function editProductTypeStatus(int $productTypeId): JsonResponse
+    public function editProductTypeStatus(int $productTypeId)
     {
         $status = request()->get('status');
 
@@ -224,7 +223,7 @@ class ProductType extends Controller
      * 
      * @return array
      */
-    private function setProductTypeData(): array
+    private function setProductTypeData()
     {
         $productTypeData = [
             'name' => request()->get('name'),

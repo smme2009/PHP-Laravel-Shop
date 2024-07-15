@@ -71,7 +71,7 @@ class UserAuth
      * 
      * @return string
      */
-    private function getJwtToken(): string
+    private function getJwtToken()
     {
         $authorization = request()->header('Authorization');
 

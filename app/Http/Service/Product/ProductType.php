@@ -24,7 +24,7 @@ class ProductType extends Service
      * 
      * @return array 商品類型分頁
      */
-    public function getProductTypePage(array $searchData): array
+    public function getProductTypePage(array $searchData)
     {
         $page = $this->repoProductType
             ->getProductTypePage($searchData);
@@ -49,7 +49,7 @@ class ProductType extends Service
      * 
      * @return false|array 商品類型
      */
-    public function getProductType(int $productTypeId): false|array
+    public function getProductType(int $productTypeId)
     {
         $isSet = $this->repoProductType
             ->setProductType($productTypeId);
@@ -101,7 +101,7 @@ class ProductType extends Service
      * 
      * @return false|int 商品類型ID
      */
-    public function addProductType(array $productTypeData): false|int
+    public function addProductType(array $productTypeData)
     {
         // 新增商品類型
         $product_id = $this->repoProductType
@@ -118,7 +118,7 @@ class ProductType extends Service
      * 
      * @return bool 是否編輯成功
      */
-    public function editProductType(int $productTypeId, array $productTypeData): bool
+    public function editProductType(int $productTypeId, array $productTypeData)
     {
         $isSet = $this->repoProductType
             ->setProductType($productTypeId);
@@ -141,7 +141,7 @@ class ProductType extends Service
      * 
      * @return bool 是否刪除成功
      */
-    public function deletePeoductType(int $productTypeId): bool
+    public function deletePeoductType(int $productTypeId)
     {
         $isSet = $this->repoProductType
             ->setProductType($productTypeId);
@@ -164,7 +164,7 @@ class ProductType extends Service
      * 
      * @return bool 是否編輯成功
      */
-    public function editProductTypeStatus(int $productTypeId, bool $status): bool
+    public function editProductTypeStatus(int $productTypeId, bool $status)
     {
         $isSet = $this->repoProductType
             ->setProductType($productTypeId);
@@ -186,7 +186,7 @@ class ProductType extends Service
      * 
      * @return array 商品類型資料結構
      */
-    private function setProductType(mixed $productType): array
+    private function setProductType(mixed $productType)
     {
         $productType = [
             'productTypeId' => $productType->product_type_id,

@@ -21,7 +21,7 @@ class ProductStockType extends Service
      * 
      * @return array 商品庫存單類型列表
      */
-    public function getProductStockTypeList(): array
+    public function getProductStockTypeList()
     {
         $productStockTypeColl = $this->repoProductStockType
             ->getProductStockTypeColl();

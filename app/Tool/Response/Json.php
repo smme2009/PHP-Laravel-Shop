@@ -2,8 +2,6 @@
 
 namespace App\Tool\Response;
 
-use Illuminate\Http\JsonResponse;
-
 /**
  * 回應
  */
@@ -36,7 +34,7 @@ class Json
      * 
      * @return self
      */
-    public function setHttpCode(int $httpCode): self
+    public function setHttpCode(int $httpCode)
     {
         $this->httpCode = $httpCode;
 
@@ -51,7 +49,7 @@ class Json
      * 
      * @return self
      */
-    public function setHeader(string $name, string $value): self
+    public function setHeader(string $name, string $value)
     {
         $this->header[$name] = $value;
 
@@ -65,7 +63,7 @@ class Json
      * 
      * @return self
      */
-    public function setMessage(string|array $message): self
+    public function setMessage(string|array $message)
     {
         if (is_string($message)) {
             $this->message[] = $message;
@@ -85,7 +83,7 @@ class Json
      * 
      * @return self
      */
-    public function setData(array $data): self
+    public function setData(array $data)
     {
         $this->data = $data;
 
@@ -95,9 +93,9 @@ class Json
     /**
      * 取得結果
      * 
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function get(): JsonResponse
+    public function get()
     {
         $jsonData = [
             'message' => $this->message,

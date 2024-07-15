@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\Backend\Product;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use \Illuminate\Http\JsonResponse;
 
 use App\Http\Service\Product\ProductStock as SrcProductStock;
 
@@ -23,9 +22,9 @@ class ProductStock extends Controller
      * 
      * @param int $productId 商品ID
      * 
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function addProductStock(int $productId): JsonResponse
+    public function addProductStock(int $productId)
     {
         $productStockData = $this->setProductStockData();
 
@@ -71,7 +70,7 @@ class ProductStock extends Controller
      * 
      * @return array
      */
-    private function setProductStockData(): array
+    private function setProductStockData()
     {
         $productStockData = [
             'productStockTypeId' => request()->get('productStockTypeId'),

@@ -46,7 +46,7 @@ class ProductStock extends Service
      * 
      * @return false|int 商品庫存單ID
      */
-    public function addProductStock(int $productId, array $productStockData): false|int
+    public function addProductStock(int $productId, array $productStockData)
     {
         $isSet = $this->repoProduct->setProduct($productId, true);
 

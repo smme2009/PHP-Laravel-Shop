@@ -17,9 +17,9 @@ class Jwt
      * 
      * @param array $data 資料
      * 
-     * @return array
+     * @return string
      */
-    public function encode(array $data): string
+    public function encode(array $data)
     {
         $key = env('APP_KEY');
 
@@ -47,7 +47,7 @@ class Jwt
      * 
      * @return array
      */
-    public function decode(string $jwtToken): array
+    public function decode(string $jwtToken)
     {
         $key = env('APP_KEY');
 

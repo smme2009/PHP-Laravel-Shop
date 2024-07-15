@@ -23,7 +23,7 @@ class Product extends Service
      * 
      * @return array
      */
-    public function getProductPage(array $searchData): array
+    public function getProductPage(array $searchData)
     {
         $page = $this->repoProduct->getProductPage($searchData);
 
@@ -52,7 +52,7 @@ class Product extends Service
      * 
      * @return false|array
      */
-    public function getProduct(int $productId): false|array
+    public function getProduct(int $productId)
     {
         $isSet = $this->repoProduct->setProduct($productId);
 
@@ -127,7 +127,7 @@ class Product extends Service
      * 
      * @return array
      */
-    public function uploadProductPhoto(mixed $photo): array
+    public function uploadProductPhoto(mixed $photo)
     {
         $fileInfo = $this->toolFile()->uploadFile($photo, 'product');
 
@@ -141,7 +141,7 @@ class Product extends Service
      * 
      * @return false|int 商品ID
      */
-    public function addProduct(array $productData): false|int
+    public function addProduct(array $productData)
     {
         // 新增商品
         $product_id = $this->repoProduct->addProduct($productData);
@@ -157,7 +157,7 @@ class Product extends Service
      * 
      * @return bool
      */
-    public function editProduct(int $productId, array $productData): bool
+    public function editProduct(int $productId, array $productData)
     {
         $isSet = $this->repoProduct->setProduct($productId, true);
 
@@ -178,7 +178,7 @@ class Product extends Service
      * 
      * @return bool
      */
-    public function deletePeoduct(int $productId): bool
+    public function deletePeoduct(int $productId)
     {
         $isSet = $this->repoProduct->setProduct($productId, true);
 
@@ -200,7 +200,7 @@ class Product extends Service
      * 
      * @return bool 是否編輯成功
      */
-    public function editProductStatus(int $productId, bool $status): bool
+    public function editProductStatus(int $productId, bool $status)
     {
         $isSet = $this->repoProduct->setProduct($productId, true);
 
@@ -221,7 +221,7 @@ class Product extends Service
      * 
      * @return array 商品資料結構
      */
-    private function setProduct(mixed $product, array $fileInfo): array
+    private function setProduct(mixed $product, array $fileInfo)
     {
         $startTime = $product->start_at;
         $startTime = is_null($startTime) ? null : strtotime($startTime);

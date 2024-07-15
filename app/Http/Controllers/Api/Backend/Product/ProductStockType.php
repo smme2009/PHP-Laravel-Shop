@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Backend\Product;
 
 use App\Http\Controllers\Controller;
-use \Illuminate\Http\JsonResponse;
 
 use App\Http\Service\Product\ProductStockType as SrcProductStockType;
 
@@ -20,9 +19,9 @@ class ProductStockType extends Controller
     /**
      * 取得商品庫存單類型列表
      * 
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getProductStockTypeList(): JsonResponse
+    public function getProductStockTypeList()
     {
         $productStockTypeList = $this->srcProductStockType
             ->getProductStockTypeList();
