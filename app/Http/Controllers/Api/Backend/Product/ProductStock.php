@@ -18,6 +18,27 @@ class ProductStock extends Controller
     }
 
     /**
+     * 取得商品庫存單分頁
+     * 
+     * @param int $productId 商品ID
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getProductStockPage(int $productId)
+    {
+        $productStockPage = $this->srcProductStock->getProductStockPage($productId);
+
+        $response = $this->toolResponseJson()
+            ->setMessage('成功取得商品庫存單分頁資料')
+            ->setData([
+                'productStockPage' => $productStockPage,
+            ])
+            ->get();
+
+        return $response;
+    }
+
+    /**
      * 新增商品庫存單
      * 
      * @param int $productId 商品ID

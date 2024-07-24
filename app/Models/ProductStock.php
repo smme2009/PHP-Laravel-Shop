@@ -21,4 +21,18 @@ class ProductStock extends Model
 
     // 主鍵名稱
     protected $primaryKey = 'product_stock_id';
+
+    /**
+     * 取得商品庫存單類型
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo 商品庫存單類型
+     */
+    public function productStockType()
+    {
+        $key = 'product_stock_type_id';
+
+        $productStockType = $this->belongsTo(ProductStockType::class, $key, $key);
+
+        return $productStockType;
+    }
 }

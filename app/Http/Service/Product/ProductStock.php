@@ -18,6 +18,25 @@ class ProductStock extends Service
     ) {
     }
 
+    /**
+     * 取得商品庫存單分頁
+     * 
+     * @param int $productId
+     * 
+     * @return array 商品庫存單分頁
+     */
+    public function getProductStockPage(int $productId)
+    {
+        $page = $this->repoProductStock->getProductStockPage($productId);
+
+        $productStockPage = [];
+        foreach ($page as $productStock) {
+            $productStockPage[] = $this->setProductStock($productStock);
+        }
+
+        return $productStockPage;
+    }
+
     /**  
      * 驗證資料
      * 
@@ -80,5 +99,28 @@ class ProductStock extends Service
         }
 
         return $productStockId;
+    }
+
+    /**
+     * 設定商品庫存單資料結構
+     * 
+     * @param mixed $productStock 商品庫存單資料
+     * 
+     * @return array 商品庫存單資料結構
+     */
+    private function setProductStock(mixed $productStock)
+    {
+        $createTime = $productStock->created_at;
+        $createTime = is_null($createTime) ? null : strtotime($createTime);
+
+        $productStock = [
+            'productStockId' => $productStock->product_stock_id,
+            'productStockTypeId' => $productStock->product_stock_type_id,
+            'productStockTypeName' => $productStock->productStockType->name,
+            'quantity' => $productStock->quantity,
+            'createTime' => $createTime,
+        ];
+
+        return $productStock;
     }
 }

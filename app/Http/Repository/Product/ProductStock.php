@@ -16,6 +16,23 @@ class ProductStock
     }
 
     /**
+     * 取得商品庫存單分頁
+     * 
+     * @param int $productId 商品ID
+     * 
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator 商品庫存單分頁
+     */
+    public function getProductStockPage(int $productId)
+    {
+        $productStockPage = $this->productStock
+            ->where('product_id', $productId)
+            ->orderByDesc('created_at')
+            ->paginate();
+
+        return $productStockPage;
+    }
+
+    /**
      * 新增商品庫存單
      * 
      * @param array $productStockData 商品庫存單資料

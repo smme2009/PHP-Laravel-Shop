@@ -49,6 +49,7 @@ Route::middleware('userAuth')->group(function () {
             ->prefix('{productId}/stock')
             ->whereNumber('productId')
             ->group(function () {
+                Route::get('', 'getProductStockPage');
                 Route::post('', 'addProductStock');
             });
 
