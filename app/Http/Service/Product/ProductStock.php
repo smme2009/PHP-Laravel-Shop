@@ -29,10 +29,15 @@ class ProductStock extends Service
     {
         $page = $this->repoProductStock->getProductStockPage($productId);
 
-        $productStockPage = [];
+        $data = [];
         foreach ($page as $productStock) {
-            $productStockPage[] = $this->setProductStock($productStock);
+            $data[] = $this->setProductStock($productStock);
         }
+
+        $productStockPage = [
+            'data' => $data,
+            'total' => $page->total(),
+        ];
 
         return $productStockPage;
     }
