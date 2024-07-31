@@ -15,6 +15,8 @@ class Login extends Controller
 
     /**
      * 登入
+     * 
+     * @return \Illuminate\Http\JsonResponse
      */
     public function login()
     {
@@ -26,10 +28,10 @@ class Login extends Controller
         // 驗證資料
         $result = $this->srcLogin->validateData($requestData);
 
-        if (!$result['status']) {
+        if (!$result->status) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage($result['errorMessage'])
+                ->setMessage($result->message)
                 ->get();
 
             return $response;
@@ -74,6 +76,8 @@ class Login extends Controller
 
     /**
      * 確認登入
+     * 
+     * @return \Illuminate\Http\JsonResponse
      */
     public function checkLogin()
     {

@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use App\Tool\Jwt as ToolJwt;
+use App\Tool\Jwt\Jwt as ToolJwt;
 use App\Tool\Response\Json as ToolResponseJson;
 
 class UserAuth
@@ -21,10 +21,12 @@ class UserAuth
         // Response Json 工具
         $toolResponseJson = new ToolResponseJson();
 
+        // Jwt 工具
+        $toolJwt = new ToolJwt();
+
         // 驗證Jwt Token
         $jwtToken = $this->getJwtToken();
-
-        $data = ToolJwt::decode($jwtToken);
+        $data = $toolJwt->decode($jwtToken);
 
         if (!$data) {
             $response = $toolResponseJson
@@ -69,7 +71,7 @@ class UserAuth
      * 
      * @return string
      */
-    private function getJwtToken(): string
+    private function getJwtToken()
     {
         $authorization = request()->header('Authorization');
 

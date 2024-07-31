@@ -9,21 +9,28 @@ use App\Models\ProductType as ModelProductType;
  */
 class ProductType
 {
+    public function __construct(
+        public ModelProductType $productType,
+    ) {
+
+    }
+
     /**
      * 取得商品類型分頁
      * 
      * @param array $searchData 搜尋資料
      * 
-     * @return mixed
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getProductTypePage(array $searchData): mixed
+    public function getProductTypePage(array $searchData)
     {
-        $productTypePage = ModelProductType::when(
-            $searchData['keyword'],
-            function ($query) use ($searchData) {
-                $query->where('name', 'like', '%' . $searchData['keyword'] . '%');
-            }
-        )
+        $productTypePage = $this->productType
+            ->when(
+                $searchData['keyword'],
+                function ($query) use ($searchData) {
+                    $query->where('name', 'like', '%' . $searchData['keyword'] . '%');
+                }
+            )
             ->orderByDesc('product_type_id')
             ->paginate();
 
@@ -31,17 +38,23 @@ class ProductType
     }
 
     /**
-     * 取得商品類型
+     * 設定商品類型
      * 
      * @param int $productTypeId 商品類型ID
      * 
-     * @return mixed
+     * @return bool 是否設定成功
      */
-    public function getProductType(int $productTypeId): mixed
+    public function setProductType(int $productTypeId)
     {
-        $productType = ModelProductType::find($productTypeId);
+        $productType = $this->productType->find($productTypeId);
 
-        return $productType;
+        if (!$productType) {
+            return false;
+        }
+
+        $this->productType = $productType;
+
+        return true;
     }
 
     /**
@@ -49,21 +62,17 @@ class ProductType
      * 
      * @param array $productTypeData 商品類型資料
      * 
-     * @return int|false
+     * @return false|int 商品類型ID
      */
-    public function addProductType(array $productTypeData): int|false
+    public function addProductType(array $productTypeData)
     {
-        $model = new ModelProductType();
-
-        $model = $this->setModel($model, $productTypeData);
-
-        $isSave = $model->save();
+        $isSave = $this->saveModel($productTypeData);
 
         if (!$isSave) {
             return false;
         }
 
-        $product_type_id = $model->product_type_id;
+        $product_type_id = $this->productType->product_type_id;
 
         return $product_type_id;
     }
@@ -71,23 +80,13 @@ class ProductType
     /**
      * 編輯商品類型
      * 
-     * @param int $productTypeId 商品類型ID
      * @param array $productTypeData 商品類型資料
      * 
-     * @return bool
+     * @return bool 是否編輯成功
      */
-    public function editProductType(int $productTypeId, array $productTypeData): bool
+    public function editProductType(array $productTypeData)
     {
-        $model = ModelProductType::lockForUpdate()
-            ->find($productTypeId);
-
-        if (!$model) {
-            return false;
-        }
-
-        $model = $this->setModel($model, $productTypeData);
-
-        $isSave = $model->save();
+        $isSave = $this->saveModel($productTypeData);
 
         return $isSave;
     }
@@ -95,20 +94,11 @@ class ProductType
     /**
      * 刪除商品類型
      * 
-     * @param int $productTypeId 商品類型ID
-     * 
-     * @return bool
+     * @return bool 是否刪除成功
      */
-    public function deleteProductType(int $productTypeId): bool
+    public function deleteProductType()
     {
-        $model = ModelProductType::lockForUpdate()
-            ->find($productTypeId);
-
-        if (!$model) {
-            return false;
-        }
-
-        $isDelete = $model->delete();
+        $isDelete = $this->productType->delete();
 
         return $isDelete;
     }
@@ -116,40 +106,33 @@ class ProductType
     /**
      * 編輯商品類型狀態
      * 
-     * @param int $productTypeId 商品類型ID
      * @param bool $status 狀態
      * 
      * @return bool 是否編輯成功
      */
-    public function editProductTypeStatus(int $productTypeId, bool $status)
+    public function editProductTypeStatus(bool $status)
     {
-        $model = ModelProductType::lockForUpdate()
-            ->find($productTypeId);
+        $this->productType->status = $status;
 
-        if (!$model) {
-            return false;
-        }
-
-        $model->status = $status;
-
-        $isEdit = $model->save();
+        $isEdit = $this->productType->save();
 
         return $isEdit;
     }
 
     /**
-     * 設定商品類型Model
+     * 儲存商品類型Model
      * 
-     * @param mixed $model
      * @param array $productTypeData 商品類型資料
      * 
-     * @return mixed
+     * @return bool 是否儲存成功
      */
-    public function setModel(mixed $model, array $productTypeData): mixed
+    public function saveModel(array $productTypeData)
     {
-        $model->name = $productTypeData['name'];
-        $model->status = $productTypeData['status'];
+        $this->productType->name = $productTypeData['name'];
+        $this->productType->status = $productTypeData['status'];
 
-        return $model;
+        $isSave = $this->productType->save();
+
+        return $isSave;
     }
 }

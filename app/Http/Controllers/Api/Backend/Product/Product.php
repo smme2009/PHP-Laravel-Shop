@@ -20,9 +20,9 @@ class Product extends Controller
     /**
      * 取得商品列表
      * 
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getProductPage(): mixed
+    public function getProductPage()
     {
         // 取得搜尋資料
         $searchData = [
@@ -46,9 +46,9 @@ class Product extends Controller
      * 
      * @param int $productId
      * 
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getProduct(int $productId): mixed
+    public function getProduct(int $productId)
     {
         $product = $this->srcProduct->getProduct($productId);
 
@@ -74,18 +74,18 @@ class Product extends Controller
     /**
      * 上傳商品圖片
      * 
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function uploadProductPhoto(): mixed
+    public function uploadProductPhoto()
     {
         $photo = request()->file('photo');
 
         $result = $this->srcProduct->validatePhoto($photo);
 
-        if (!$result['status']) {
+        if (!$result->status) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage($result['errorMessage'])
+                ->setMessage($result->message)
                 ->get();
 
             return $response;
@@ -116,18 +116,18 @@ class Product extends Controller
     /**
      * 新增商品
      * 
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function addProduct(): mixed
+    public function addProduct()
     {
         $productData = $this->setProductData();
 
         $result = $this->srcProduct->validateData($productData);
 
-        if (!$result['status']) {
+        if (!$result->status) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage($result['errorMessage'])
+                ->setMessage($result->message)
                 ->get();
 
             return $response;
@@ -160,18 +160,18 @@ class Product extends Controller
      * 
      * @param int $productId 商品ID
      * 
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function editProduct(int $productId): mixed
+    public function editProduct(int $productId)
     {
         $productData = $this->setProductData();
 
         $result = $this->srcProduct->validateData($productData);
 
-        if (!$result['status']) {
+        if (!$result->status) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage($result['errorMessage'])
+                ->setMessage($result->message)
                 ->get();
 
             return $response;
@@ -205,7 +205,7 @@ class Product extends Controller
      * 
      * @param int $productId 商品ID
      * 
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
     public function deleteProduct(int $productId)
     {
@@ -237,7 +237,7 @@ class Product extends Controller
      * 
      * @param int $productId 商品ID
      * 
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
     public function editProductStatus(int $productId)
     {
@@ -268,9 +268,9 @@ class Product extends Controller
     /**
      * 設定商品資料
      * 
-     * @return array
+     * @return array 商品資料
      */
-    private function setProductData(): array
+    private function setProductData()
     {
         $productData = [
             'name' => request()->get('name'),

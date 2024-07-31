@@ -9,21 +9,28 @@ use App\Models\Product as ModelProduct;
  */
 class Product
 {
+    public function __construct(
+        public ModelProduct $product,
+    ) {
+
+    }
+
     /**
      * 取得商品分頁
      * 
      * @param array $searchData 搜尋資料
      * 
-     * @return mixed
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator 身品分頁資料
      */
-    public function getProductPage(array $searchData): mixed
+    public function getProductPage(array $searchData)
     {
-        $productPage = ModelProduct::when(
-            $searchData['keyword'],
-            function ($query) use ($searchData) {
-                $query->where('name', 'like', '%' . $searchData['keyword'] . '%');
-            }
-        )
+        $productPage = $this->product
+            ->when(
+                $searchData['keyword'],
+                function ($query) use ($searchData) {
+                    $query->where('name', 'like', '%' . $searchData['keyword'] . '%');
+                }
+            )
             ->orderByDesc('product_id')
             ->paginate();
 
@@ -31,17 +38,28 @@ class Product
     }
 
     /**
-     * 取得商品
+     * 設定商品資料
      * 
      * @param int $productId 商品ID
+     * @param bool $isLock 是否鎖表
      * 
-     * @return mixed
+     * @return bool 是否設定成功
      */
-    public function getProduct(int $productId): mixed
+    public function setProduct(int $productId, bool $isLock = false)
     {
-        $product = ModelProduct::find($productId);
+        if ($isLock) {
+            $this->product->lockForUpdate();
+        }
 
-        return $product;
+        $product = $this->product->find($productId);
+
+        if (!$product) {
+            return false;
+        }
+
+        $this->product = $product;
+
+        return true;
     }
 
     /**
@@ -49,45 +67,31 @@ class Product
      * 
      * @param array $productData 商品資料
      * 
-     * @return int|false
+     * @return false|int 商品ID
      */
-    public function addProduct(array $productData): int|false
+    public function addProduct(array $productData)
     {
-        $model = new ModelProduct();
-
-        $model = $this->setModel($model, $productData);
-
-        $isSave = $model->save();
+        $isSave = $this->saveModel($productData);
 
         if (!$isSave) {
             return false;
         }
 
-        $product_id = $model->product_id;
+        $productId = $this->product->product_id;
 
-        return $product_id;
+        return $productId;
     }
 
     /**
      * 編輯商品
      * 
-     * @param int $productId 商品ID
      * @param array $productData 商品資料
      * 
-     * @return bool
+     * @return bool 是否編輯成功
      */
-    public function editProduct(int $productId, array $productData): bool
+    public function editProduct(array $productData)
     {
-        $model = ModelProduct::lockForUpdate()
-            ->find($productId);
-
-        if (!$model) {
-            return false;
-        }
-
-        $model = $this->setModel($model, $productData);
-
-        $isSave = $model->save();
+        $isSave = $this->saveModel($productData);
 
         return $isSave;
     }
@@ -95,20 +99,11 @@ class Product
     /**
      * 刪除商品
      * 
-     * @param int $productId 商品ID
-     * 
-     * @return bool
+     * @return bool 是否刪除成功
      */
-    public function deleteProduct(int $productId): bool
+    public function deleteProduct()
     {
-        $model = ModelProduct::lockForUpdate()
-            ->find($productId);
-
-        if (!$model) {
-            return false;
-        }
-
-        $isDelete = $model->delete();
+        $isDelete = $this->product->delete();
 
         return $isDelete;
     }
@@ -116,47 +111,63 @@ class Product
     /**
      * 編輯商品狀態
      * 
-     * @param int $productId 商品ID
      * @param bool $status 狀態
      * 
      * @return bool 是否編輯成功
      */
-    public function editProductStatus(int $productId, bool $status)
+    public function editProductStatus(bool $status)
     {
-        $model = ModelProduct::lockForUpdate()
-            ->find($productId);
+        $this->product->status = $status;
 
-        if (!$model) {
-            return false;
-        }
-
-        $model->status = $status;
-
-        $isEdit = $model->save();
+        $isEdit = $this->product->save();
 
         return $isEdit;
     }
 
     /**
-     * 設定商品Model
+     * 編輯商品數量
      * 
-     * @param mixed $model
+     * @param bool $type 類型(0為減少，1為增加)
+     * @param int $quantity 數量
+     * 
+     * @return bool 是否編輯成功
+     */
+    public function editProductQuantity(bool $type, int $quantity)
+    {
+        $isEdit = false;
+        if ($type) {
+            $isEdit = $this->product->increment('quantity', $quantity);
+        } else {
+            // 若減少數量小於零，則判定為失敗
+            if ($quantity <= $this->product->quantity) {
+                $isEdit = $this->product->decrement('quantity', $quantity);
+            }
+        }
+
+        return $isEdit;
+    }
+
+    /**
+     * 儲存商品Model
+     * 
      * @param array $productData 商品資料
      * 
-     * @return mixed
+     * @return bool 是否儲存成功
      */
-    public function setModel(mixed $model, array $productData): mixed
+    private function saveModel(array $productData)
     {
-        $model->name = $productData['name'];
-        $model->photo_fid = $productData['photoFileId'];
-        $model->price = $productData['price'];
-        $model->quantity = $productData['quantity'];
-        $model->description = $productData['description'];
-        $model->status = $productData['status'];
-        $model->start_at = $productData['startTime'];
-        $model->end_at = $productData['endTime'];
-        $model->product_type_id = $productData['productTypeId'];
+        $this->product->name = $productData['name'];
+        $this->product->photo_fid = $productData['photoFileId'];
+        $this->product->price = $productData['price'];
+        $this->product->quantity = $productData['quantity'];
+        $this->product->description = $productData['description'];
+        $this->product->status = $productData['status'];
+        $this->product->start_at = $productData['startTime'];
+        $this->product->end_at = $productData['endTime'];
+        $this->product->product_type_id = $productData['productTypeId'];
 
-        return $model;
+        $isSave = $this->product->save();
+
+        return $isSave;
     }
 }

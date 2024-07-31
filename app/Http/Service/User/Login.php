@@ -2,22 +2,21 @@
 
 namespace App\Http\Service\User;
 
-use App\Tool\ValidateData as ToolValidateData;
-use App\Tool\Jwt as ToolJwt;
+use App\Http\Service\Service;
 
 /**
  * 登入
  */
-class Login
+class Login extends Service
 {
     /**  
      * 驗證資料
      * 
      * @param array $data 資料
      * 
-     * @return array
+     * @return \App\Tool\Validation\Result 驗證結果
      */
-    public function validateData(array $data): array
+    public function validateData(array $data)
     {
         // 驗證規則
         $rule = [
@@ -25,7 +24,7 @@ class Login
             'password' => ['required', 'string'],
         ];
 
-        $result = ToolValidateData::validateData($data, $rule);
+        $result = $this->toolValidation()->validateData($data, $rule);
 
         return $result;
     }
@@ -38,9 +37,9 @@ class Login
      * 
      * @return bool
      */
-    public function login(string $account, string $password): bool
+    public function login(string $account, string $password)
     {
-        $loginData =  [
+        $loginData = [
             'email' => $account,
             'password' => $password,
             'status' => 1, // 檢查帳號是否啟用
@@ -56,7 +55,7 @@ class Login
      * 
      * @return string
      */
-    public function getJwtToken(): string
+    public function getJwtToken()
     {
         $userId = auth()->id();
 
@@ -68,7 +67,7 @@ class Login
             'userId' => $userId,
         ];
 
-        $jwtToken = ToolJwt::encode($data);
+        $jwtToken = $this->toolJwt()->encode($data);
 
         return $jwtToken;
     }

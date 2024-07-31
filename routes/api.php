@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\Backend\User\Login;
 
 use App\Http\Controllers\Api\Backend\Product\Product;
 use App\Http\Controllers\Api\Backend\Product\ProductType;
+use App\Http\Controllers\Api\Backend\Product\ProductStockType;
+use App\Http\Controllers\Api\Backend\Product\ProductStock;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +43,18 @@ Route::middleware('userAuth')->group(function () {
             Route::put('{productTypeId}', 'editProductType')->whereNumber('productTypeId');
             Route::delete('{productTypeId}', 'deleteProductType')->whereNumber('productTypeId');
             Route::put('{productTypeId}/status', 'editProductTypeStatus')->whereNumber('productTypeId');
+        });
+
+        Route::controller(ProductStock::class)
+            ->prefix('{productId}/stock')
+            ->whereNumber('productId')
+            ->group(function () {
+                Route::get('', 'getProductStockPage');
+                Route::post('', 'addProductStock');
+            });
+
+        Route::prefix('stock')->group(function () {
+            Route::get('type', [ProductStockType::class, 'getProductStockTypeList']);
         });
     });
 });

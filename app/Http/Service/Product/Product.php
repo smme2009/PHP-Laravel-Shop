@@ -2,15 +2,14 @@
 
 namespace App\Http\Service\Product;
 
-use App\Http\Repository\Product\Product as RepoProduct;
+use App\Http\Service\Service;
 
-use App\Tool\ValidateData as ToolValidateData;
-use App\Tool\File as ToolFile;
+use App\Http\Repository\Product\Product as RepoProduct;
 
 /**
  * 商品
  */
-class Product
+class Product extends Service
 {
     public function __construct(
         private RepoProduct $repoProduct,
@@ -24,12 +23,12 @@ class Product
      * 
      * @return array
      */
-    public function getProductPage(array $searchData): array
+    public function getProductPage(array $searchData)
     {
         $page = $this->repoProduct->getProductPage($searchData);
 
         $photoFidList = $page->pluck('photo_fid')->all();
-        $fileInfoList = ToolFile::getFileInfoList($photoFidList);
+        $fileInfoList = $this->toolFile()->getFileInfoList($photoFidList);
 
         $data = [];
         foreach ($page as $product) {
@@ -53,17 +52,19 @@ class Product
      * 
      * @return false|array
      */
-    public function getProduct(int $productId): false|array
+    public function getProduct(int $productId)
     {
-        $product = $this->repoProduct->getProduct($productId);
+        $isSet = $this->repoProduct->setProduct($productId);
 
-        if (!$product) {
+        if (!$isSet) {
             return false;
         }
 
-        $fileInfo = ToolFile::getFileInfo($product->photo_fid);
+        $productModel = $this->repoProduct->product;
 
-        $product = $this->setProduct($product, $fileInfo);
+        $fileInfo = $this->toolFile()->getFileInfo($productModel->photo_fid);
+
+        $product = $this->setProduct($productModel, $fileInfo);
 
         return $product;
     }
@@ -73,9 +74,9 @@ class Product
      * 
      * @param array $productData 商品資料
      * 
-     * @return array
+     * @return \App\Tool\Validation\Result 驗證結果
      */
-    public function validateData(array $productData): array
+    public function validateData(array $productData)
     {
         // 驗證規則
         $rule = [
@@ -90,7 +91,7 @@ class Product
             'productTypeId' => ['nullable', 'integer', 'exists:App\Models\ProductType,product_type_id'],
         ];
 
-        $result = ToolValidateData::validateData($productData, $rule);
+        $result = $this->toolValidation()->validateData($productData, $rule);
 
         return $result;
     }
@@ -100,9 +101,9 @@ class Product
      * 
      * @param mixed $photo 照片
      * 
-     * @return array|false
+     * @return \App\Tool\Validation\Result 驗證結果
      */
-    public function validatePhoto(mixed $photo): array|false
+    public function validatePhoto(mixed $photo)
     {
         // 驗證資料
         $data = [
@@ -114,7 +115,7 @@ class Product
             'photo' => ['required', 'image', 'max:10240'],
         ];
 
-        $result = ToolValidateData::validateData($data, $rule);
+        $result = $this->toolValidation()->validateData($data, $rule);
 
         return $result;
     }
@@ -126,9 +127,9 @@ class Product
      * 
      * @return array
      */
-    public function uploadProductPhoto(mixed $photo): array
+    public function uploadProductPhoto(mixed $photo)
     {
-        $fileInfo = ToolFile::uploadFile($photo, 'product');
+        $fileInfo = $this->toolFile()->uploadFile($photo, 'product');
 
         return $fileInfo;
     }
@@ -138,9 +139,9 @@ class Product
      * 
      * @param array $productData 商品資料
      * 
-     * @return int|false 商品ID
+     * @return false|int 商品ID
      */
-    public function addProduct(array $productData): int|false
+    public function addProduct(array $productData)
     {
         // 新增商品
         $product_id = $this->repoProduct->addProduct($productData);
@@ -156,10 +157,16 @@ class Product
      * 
      * @return bool
      */
-    public function editProduct(int $productId, array $productData): bool
+    public function editProduct(int $productId, array $productData)
     {
+        $isSet = $this->repoProduct->setProduct($productId, true);
+
+        if (!$isSet) {
+            return false;
+        }
+
         // 編輯商品
-        $isEdit = $this->repoProduct->editProduct($productId, $productData);
+        $isEdit = $this->repoProduct->editProduct($productData);
 
         return $isEdit;
     }
@@ -171,10 +178,16 @@ class Product
      * 
      * @return bool
      */
-    public function deletePeoduct(int $productId): bool
+    public function deletePeoduct(int $productId)
     {
+        $isSet = $this->repoProduct->setProduct($productId, true);
+
+        if (!$isSet) {
+            return false;
+        }
+
         // 刪除商品
-        $isDelete = $this->repoProduct->deleteProduct($productId);
+        $isDelete = $this->repoProduct->deleteProduct();
 
         return $isDelete;
     }
@@ -187,9 +200,15 @@ class Product
      * 
      * @return bool 是否編輯成功
      */
-    public function editProductStatus(int $productId, bool $status): bool
+    public function editProductStatus(int $productId, bool $status)
     {
-        $isEdit = $this->repoProduct->editProductStatus($productId, $status);
+        $isSet = $this->repoProduct->setProduct($productId, true);
+
+        if (!$isSet) {
+            return false;
+        }
+
+        $isEdit = $this->repoProduct->editProductStatus($status);
 
         return $isEdit;
     }

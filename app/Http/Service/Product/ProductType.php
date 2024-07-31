@@ -2,16 +2,15 @@
 
 namespace App\Http\Service\Product;
 
+use App\Http\Service\Service;
 use Illuminate\Validation\Rule;
 
 use App\Http\Repository\Product\ProductType as RepoProductType;
 
-use App\Tool\ValidateData as ToolValidateData;
-
 /**
  * 商品類型
  */
-class ProductType
+class ProductType extends Service
 {
     public function __construct(
         private RepoProductType $repoProductType,
@@ -23,9 +22,9 @@ class ProductType
      * 
      * @param array $searchData 搜尋資料
      * 
-     * @return array
+     * @return array 商品類型分頁
      */
-    public function getProductTypePage(array $searchData): array
+    public function getProductTypePage(array $searchData)
     {
         $page = $this->repoProductType
             ->getProductTypePage($searchData);
@@ -48,20 +47,22 @@ class ProductType
      * 
      * @param int $productTypeId 商品類型ID
      * 
-     * @return false|array
+     * @return false|array 商品類型
      */
-    public function getProductType(int $productTypeId): false|array
+    public function getProductType(int $productTypeId)
     {
-        $productType = $this->repoProductType
-            ->getProductType($productTypeId);
+        $isSet = $this->repoProductType
+            ->setProductType($productTypeId);
 
-        if (!$productType) {
+        if (!$isSet) {
             return false;
         }
 
-        $product = $this->setProductType($productType);
+        $productTypeModel = $this->repoProductType->productType;
 
-        return $product;
+        $productType = $this->setProductType($productTypeModel);
+
+        return $productType;
     }
 
     /**  
@@ -70,9 +71,9 @@ class ProductType
      * @param array $productTypeData 商品類型資料
      * @param null|int $productTypeId 商品類型ID
      * 
-     * @return array
+     * @return \App\Tool\Validation\Result 驗證結果
      */
-    public function validateData(array $productTypeData, null|int $productTypeId = null): array
+    public function validateData(array $productTypeData, null|int $productTypeId = null)
     {
         // 驗證規則
         $rule = [
@@ -88,7 +89,7 @@ class ProductType
 
         $rule['name'][] = $ruleNameUnique;
 
-        $result = ToolValidateData::validateData($productTypeData, $rule);
+        $result = $this->toolValidation()->validateData($productTypeData, $rule);
 
         return $result;
     }
@@ -98,9 +99,9 @@ class ProductType
      * 
      * @param array $productTypeData 商品類型資料
      * 
-     * @return int|false 商品類型ID
+     * @return false|int 商品類型ID
      */
-    public function addProductType(array $productTypeData): int|false
+    public function addProductType(array $productTypeData)
     {
         // 新增商品類型
         $product_id = $this->repoProductType
@@ -115,13 +116,20 @@ class ProductType
      * @param int $productTypeId 商品類型ID
      * @param array $productTypeData 商品類型資料
      * 
-     * @return bool
+     * @return bool 是否編輯成功
      */
-    public function editProductType(int $productTypeId, array $productTypeData): bool
+    public function editProductType(int $productTypeId, array $productTypeData)
     {
+        $isSet = $this->repoProductType
+            ->setProductType($productTypeId);
+
+        if (!$isSet) {
+            return false;
+        }
+
         // 編輯商品類型
         $isEdit = $this->repoProductType
-            ->editProductType($productTypeId, $productTypeData);
+            ->editProductType($productTypeData);
 
         return $isEdit;
     }
@@ -131,12 +139,19 @@ class ProductType
      * 
      * @param int $productTypeId 商品類型ID
      * 
-     * @return bool
+     * @return bool 是否刪除成功
      */
-    public function deletePeoductType(int $productTypeId): bool
+    public function deletePeoductType(int $productTypeId)
     {
+        $isSet = $this->repoProductType
+            ->setProductType($productTypeId);
+
+        if (!$isSet) {
+            return false;
+        }
+
         // 刪除商品類型
-        $isDelete = $this->repoProductType->deleteProductType($productTypeId);
+        $isDelete = $this->repoProductType->deleteProductType();
 
         return $isDelete;
     }
@@ -149,10 +164,17 @@ class ProductType
      * 
      * @return bool 是否編輯成功
      */
-    public function editProductTypeStatus(int $productTypeId, bool $status): bool
+    public function editProductTypeStatus(int $productTypeId, bool $status)
     {
+        $isSet = $this->repoProductType
+            ->setProductType($productTypeId);
+
+        if (!$isSet) {
+            return false;
+        }
+
         $isEdit = $this->repoProductType
-            ->editProductTypeStatus($productTypeId, $status);
+            ->editProductTypeStatus($status);
 
         return $isEdit;
     }
