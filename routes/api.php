@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Backend\Product\Product;
 use App\Http\Controllers\Api\Backend\Product\ProductType;
 use App\Http\Controllers\Api\Backend\Product\ProductStockType;
 use App\Http\Controllers\Api\Backend\Product\ProductStock;
+use App\Http\Controllers\Api\Backend\Banner\Banner;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,4 +58,16 @@ Route::middleware('userAuth')->group(function () {
             Route::get('type', [ProductStockType::class, 'getProductStockTypeList']);
         });
     });
+
+    Route::controller(Banner::class)
+        ->prefix('banner')
+        ->group(function () {
+            Route::get('', 'getBannerPage');
+            Route::get('{bannerId}', 'getBanner')->whereNumber('bannerId');
+            Route::post('photo', 'uploadBannerPhoto');
+            Route::post('', 'addBanner');
+            Route::put('{bannerId}', 'editBanner')->whereNumber('bannerId');
+            Route::delete('{bannerId}', 'deleteBanner')->whereNumber('bannerId');
+            Route::put('{bannerId}/status', 'editBannerStatus')->whereNumber('bannerId');
+        });
 });

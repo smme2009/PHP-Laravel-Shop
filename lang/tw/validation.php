@@ -148,7 +148,7 @@ return [
     'unique' => ':attribute 已有重複的資料',
     'uploaded' => 'The :attribute failed to upload.',
     'uppercase' => 'The :attribute field must be uppercase.',
-    'url' => 'The :attribute field must be a valid URL.',
+    'url' => ':attribute 欄位格式錯誤 請填寫網址',
     'ulid' => 'The :attribute field must be a valid ULID.',
     'uuid' => 'The :attribute field must be a valid UUID.',
 
@@ -193,6 +193,7 @@ return [
         'account' => '帳號',
         'password' => '密碼',
         'productStockTypeId' => '商品庫存單類型',
+        'url' => '網址',
     ],
 
 ];
