@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Service\User;
+namespace App\Http\Service\Backend\User;
 
 use App\Http\Service\Service;
 

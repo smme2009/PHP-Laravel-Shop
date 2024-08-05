@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Service\Banner;
+namespace App\Http\Service\Backend\Banner;
 
 use App\Http\Service\Service;
 
-use App\Http\Repository\Banner\Banner as RepoBanner;
+use App\Http\Repository\Backend\Banner\Banner as RepoBanner;
 
 /**
  * 橫幅

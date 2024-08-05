@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Service\Product;
+namespace App\Http\Service\Backend\Product;
 
 use App\Http\Service\Service;
 
-use App\Http\Repository\Product\Product as RepoProduct;
+use App\Http\Repository\Backend\Product\Product as RepoProduct;
 
 /**
  * 商品

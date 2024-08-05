@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Backend\Product;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
-use App\Http\Service\Product\Product as SrcProduct;
+use App\Http\Service\Backend\Product\Product as SrcProduct;
 
 /**
  * 商品

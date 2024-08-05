@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Repository\Banner;
+namespace App\Http\Repository\Backend\Banner;
 
 use App\Models\Banner as ModelBanner;
 

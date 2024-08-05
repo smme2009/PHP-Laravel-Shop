@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Repository\Product;
+namespace App\Http\Repository\Backend\Product;
 
 use App\Models\ProductStockType as ModelProductStockType;
 

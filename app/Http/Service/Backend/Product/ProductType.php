@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Service\Product;
+namespace App\Http\Service\Backend\Product;
 
 use App\Http\Service\Service;
 use Illuminate\Validation\Rule;
 
-use App\Http\Repository\Product\ProductType as RepoProductType;
+use App\Http\Repository\Backend\Product\ProductType as RepoProductType;
 
 /**
  * 商品類型

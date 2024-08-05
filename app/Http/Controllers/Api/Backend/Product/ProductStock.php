@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Backend\Product;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
-use App\Http\Service\Product\ProductStock as SrcProductStock;
+use App\Http\Service\Backend\Product\ProductStock as SrcProductStock;
 
 /**
  * 商品庫存單

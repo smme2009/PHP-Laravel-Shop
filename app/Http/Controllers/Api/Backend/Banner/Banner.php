@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Backend\Banner;
 
 use App\Http\Controllers\Controller;
 
-use App\Http\Service\Banner\Banner as SrcBanner;
+use App\Http\Service\Backend\Banner\Banner as SrcBanner;
 
 /**
  * 橫幅
