@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Api\Frontend\Banner\Banner;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -12,3 +14,5 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+Route::get('banner', [Banner::class, 'getBannerList']);
