@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\Frontend\Banner\Banner;
+use App\Http\Controllers\Api\Frontend\Product\Product;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,5 @@ use App\Http\Controllers\Api\Frontend\Banner\Banner;
 */
 
 Route::get('banner', [Banner::class, 'getBannerList']);
+
+Route::get('product', [Product::class, 'getProductPage']);
