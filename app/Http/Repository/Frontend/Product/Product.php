@@ -41,6 +41,9 @@ class Product
             ->when($searchData['productTypeId'], function ($query) use ($searchData) {
                 $query->where('product_type_id', $searchData['productTypeId']);
             })
+            ->when($searchData['keyword'], function ($query) use ($searchData) {
+                $query->where('name', 'like', '%' . $searchData['keyword'] . '%');
+            })
             ->orderByDesc('created_at')
             ->paginate();
 

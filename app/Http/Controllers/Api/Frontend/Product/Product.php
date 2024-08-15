@@ -25,6 +25,7 @@ class Product extends Controller
     {
         $searchData = [
             'productTypeId' => request()->get('productTypeId'),
+            'keyword' => request()->get('keyword'),
         ];
 
         $productPage = $this->srcProduct->getProductPage($searchData);
