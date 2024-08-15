@@ -19,9 +19,11 @@ class Product
     /**
      * 取得商品分頁
      * 
+     * @param array $searchData 搜尋資料
+     * 
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator 商品分頁資料
      */
-    public function getProductPage()
+    public function getProductPage(array $searchData)
     {
         $carbon = new Carbon();
         $nowDate = $carbon->toDateTimeString();
@@ -36,6 +38,9 @@ class Product
                     ->orWhereNull('end_at');
             })
             ->where('status', true)
+            ->when($searchData['productTypeId'], function ($query) use ($searchData) {
+                $query->where('product_type_id', $searchData['productTypeId']);
+            })
             ->orderByDesc('created_at')
             ->paginate();
 

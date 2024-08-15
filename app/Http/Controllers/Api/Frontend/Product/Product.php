@@ -23,7 +23,11 @@ class Product extends Controller
      */
     public function getProductPage()
     {
-        $productPage = $this->srcProduct->getProductPage();
+        $searchData = [
+            'productTypeId' => request()->get('productTypeId'),
+        ];
+
+        $productPage = $this->srcProduct->getProductPage($searchData);
 
         $response = $this->toolResponseJson()
             ->setMessage('成功取得商品分頁資料')
