@@ -32,7 +32,7 @@ class Banner
                     ->orWhereNull('end_at');
             })
             ->where('status', true)
-            ->orderByDesc('sort')
+            ->orderBy('sort')
             ->get();
 
         return $bannerList;
