@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Service\Backend\User;
+namespace App\Http\Service\Backend\Admin;
 
 use App\Http\Service\Service;
 
@@ -20,7 +20,7 @@ class Login extends Service
     {
         // 驗證規則
         $rule = [
-            'account' => ['required', 'string', 'email'],
+            'account' => ['required', 'string',],
             'password' => ['required', 'string'],
         ];
 
@@ -40,12 +40,12 @@ class Login extends Service
     public function login(string $account, string $password)
     {
         $loginData = [
-            'email' => $account,
+            'account' => $account,
             'password' => $password,
             'status' => 1, // 檢查帳號是否啟用
         ];
 
-        $isLogin = auth()->attempt($loginData);
+        $isLogin = auth('admin')->attempt($loginData);
 
         return $isLogin;
     }
@@ -57,14 +57,14 @@ class Login extends Service
      */
     public function getJwtToken()
     {
-        $userId = auth()->id();
+        $userId = auth('admin')->id();
 
         if (!$userId) {
             return '';
         }
 
         $data = [
-            'userId' => $userId,
+            'accountId' => $userId,
         ];
 
         $jwtToken = $this->toolJwt()->encode($data);

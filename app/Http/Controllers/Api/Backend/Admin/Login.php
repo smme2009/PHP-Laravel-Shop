@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\Backend\User;
+namespace App\Http\Controllers\Api\Backend\Admin;
 
 use App\Http\Controllers\Controller;
 
-use App\Http\Service\Backend\User\Login as SrcLogin;
+use App\Http\Service\Backend\Admin\Login as SrcLogin;
 
 class Login extends Controller
 {

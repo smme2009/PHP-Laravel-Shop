@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Api\Backend\User\Login;
+use App\Http\Controllers\Api\Backend\Admin\Login;
 
 use App\Http\Controllers\Api\Backend\Product\Product;
 use App\Http\Controllers\Api\Backend\Product\ProductType;
@@ -23,7 +23,7 @@ use App\Http\Controllers\Api\Backend\Banner\Banner;
 
 Route::post('login', [Login::class, 'login']);
 
-Route::middleware('userAuth')->group(function () {
+Route::middleware('accountAuth:admin')->group(function () {
     Route::get('check-login', [Login::class, 'checkLogin']);
 
     Route::prefix('product')->group(function () {

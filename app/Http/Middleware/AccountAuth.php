@@ -9,14 +9,14 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Tool\Jwt\Jwt as ToolJwt;
 use App\Tool\Response\Json as ToolResponseJson;
 
-class UserAuth
+class AccountAuth
 {
     /**
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, string $guard): Response
     {
         // Response Json 工具
         $toolResponseJson = new ToolResponseJson();
@@ -38,7 +38,7 @@ class UserAuth
         }
 
         // 登入帳號
-        $isLogin = auth()->loginUsingId($data['userId']);
+        $isLogin = auth($guard)->loginUsingId($data['accountId']);
 
         if (!$isLogin) {
             $response = $toolResponseJson
@@ -50,7 +50,7 @@ class UserAuth
         }
 
         // 驗證帳號狀態
-        $user = auth()->user();
+        $user = auth($guard)->user();
 
         if (!$user->status) {
             $response = $toolResponseJson
