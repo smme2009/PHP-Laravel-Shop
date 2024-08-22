@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\Frontend\Member\Register;
+use App\Http\Controllers\Api\Frontend\Member\Login;
 use App\Http\Controllers\Api\Frontend\Banner\Banner;
 use App\Http\Controllers\Api\Frontend\Product\Product;
 use App\Http\Controllers\Api\Frontend\Product\ProductType;
@@ -19,6 +20,7 @@ use App\Http\Controllers\Api\Frontend\Product\ProductType;
 */
 
 Route::post('register', [Register::class, 'registerMember']);
+Route::post('login', [Login::class, 'login']);
 
 Route::get('banner', [Banner::class, 'getBannerList']);
 
