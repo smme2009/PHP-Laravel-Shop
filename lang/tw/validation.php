@@ -20,7 +20,7 @@ return [
     'after_or_equal' => 'The :attribute field must be a date after or equal to :date.',
     'alpha' => 'The :attribute field must only contain letters.',
     'alpha_dash' => 'The :attribute field must only contain letters, numbers, dashes, and underscores.',
-    'alpha_num' => 'The :attribute field must only contain letters and numbers.',
+    'alpha_num' => ':attribute 欄位格式錯誤 請填寫英文或數字',
     'array' => 'The :attribute field must be an array.',
     'ascii' => 'The :attribute field must only contain single-byte alphanumeric characters and symbols.',
     'before' => 'The :attribute field must be a date before :date.',

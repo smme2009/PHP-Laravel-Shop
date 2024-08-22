@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Api\Frontend\Member\Register;
 use App\Http\Controllers\Api\Frontend\Banner\Banner;
 use App\Http\Controllers\Api\Frontend\Product\Product;
 use App\Http\Controllers\Api\Frontend\Product\ProductType;
@@ -16,6 +17,8 @@ use App\Http\Controllers\Api\Frontend\Product\ProductType;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+Route::post('register', [Register::class, 'registerMember']);
 
 Route::get('banner', [Banner::class, 'getBannerList']);
 
