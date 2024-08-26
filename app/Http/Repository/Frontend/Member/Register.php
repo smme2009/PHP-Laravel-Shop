@@ -26,6 +26,8 @@ class Register
     {
         $this->member->account = $memberData['account'];
         $this->member->password = $memberData['password'];
+        $this->member->name = $memberData['name'];
+        $this->member->phone = $memberData['phone'];
         $this->member->status = 1;
 
         $isAdd = $this->member->save();

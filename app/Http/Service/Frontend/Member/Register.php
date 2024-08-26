@@ -28,10 +28,14 @@ class Register extends Service
      */
     public function validateData(array $memberData)
     {
+        $modelPath = 'App\Models\Member';
+
         // 驗證規則
         $rule = [
-            'account' => ['required', 'string', 'alpha_num:ascii', 'unique:App\Models\Member,account'],
+            'account' => ['required', 'string', 'email', 'unique:' . $modelPath],
             'password' => ['required', 'string', 'alpha_num:ascii'],
+            'name' => ['required', 'string'],
+            'phone' => ['required', 'string', 'regex:/^09\d{8}$/', 'unique:' . $modelPath]
         ];
 
         $result = $this->toolValidation()->validateData($memberData, $rule);

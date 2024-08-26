@@ -125,7 +125,7 @@ return [
     'prohibited_if' => 'The :attribute field is prohibited when :other is :value.',
     'prohibited_unless' => 'The :attribute field is prohibited unless :other is in :values.',
     'prohibits' => 'The :attribute field prohibits :other from being present.',
-    'regex' => 'The :attribute field format is invalid.',
+    'regex' => ':attribute 欄位格式錯誤',
     'required' => '請填寫 :attribute 欄位',
     'required_array_keys' => 'The :attribute field must contain entries for: :values.',
     'required_if' => 'The :attribute field is required when :other is :value.',
@@ -194,6 +194,7 @@ return [
         'password' => '密碼',
         'productStockTypeId' => '商品庫存單類型',
         'url' => '網址',
+        'phone' => '手機號碼'
     ],
 
 ];
