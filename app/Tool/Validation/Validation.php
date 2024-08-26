@@ -22,9 +22,9 @@ class Validation
         $validator = validator($data, $rule);
 
         $status = !$validator->fails();
-        $message = $validator->errors()->all();
+        $error = $validator->errors()->toArray();
 
-        $result = new Result($status, $message);
+        $result = new Result($status, $error);
 
         return $result;
     }
