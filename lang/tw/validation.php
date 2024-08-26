@@ -135,7 +135,7 @@ return [
     'required_with_all' => 'The :attribute field is required when :values are present.',
     'required_without' => 'The :attribute field is required when :values is not present.',
     'required_without_all' => 'The :attribute field is required when none of :values are present.',
-    'same' => 'The :attribute field must match :other.',
+    'same' => ':attribute 需與 :other 相同',
     'size' => [
         'array' => 'The :attribute field must contain :size items.',
         'file' => 'The :attribute field must be :size kilobytes.',
@@ -194,7 +194,8 @@ return [
         'password' => '密碼',
         'productStockTypeId' => '商品庫存單類型',
         'url' => '網址',
-        'phone' => '手機號碼'
+        'phone' => '手機號碼',
+        'checkPassword' => '確認密碼',
     ],
 
 ];

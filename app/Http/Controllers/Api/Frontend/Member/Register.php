@@ -26,6 +26,7 @@ class Register extends Controller
         $memberData = [
             'account' => request()->get('account'),
             'password' => request()->get('password'),
+            'checkPassword' => request()->get('checkPassword'),
             'name' => request()->get('name'),
             'phone' => request()->get('phone'),
         ];

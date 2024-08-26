@@ -34,6 +34,7 @@ class Register extends Service
         $rule = [
             'account' => ['required', 'string', 'email', 'unique:' . $modelPath],
             'password' => ['required', 'string', 'alpha_num:ascii'],
+            'checkPassword' => ['required', 'string', 'same:password'],
             'name' => ['required', 'string'],
             'phone' => ['required', 'string', 'regex:/^09\d{8}$/', 'unique:' . $modelPath]
         ];
