@@ -36,7 +36,6 @@ class Register extends Controller
         if (!$result->status) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage($result->message)
                 ->setData($result->error)
                 ->get();
 
