@@ -46,6 +46,28 @@ class Product extends Service
     }
 
     /**
+     * 取得商品
+     * 
+     * @param int $productId 商品ID
+     * 
+     * @return false|array
+     */
+    public function getProduct(int $productId)
+    {
+        $productData = $this->repoProduct->getProduct($productId);
+
+        if (!$productData) {
+            return false;
+        }
+
+        $fileInfo = $this->toolFile()->getFileInfo($productData->photo_fid);
+
+        $product = $this->setProduct($productData, $fileInfo);
+
+        return $product;
+    }
+
+    /**
      * 設定商品資料結構
      * 
      * @param mixed $product 商品資料

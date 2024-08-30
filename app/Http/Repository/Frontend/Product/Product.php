@@ -49,4 +49,32 @@ class Product
 
         return $productPage;
     }
+
+    /**
+     * 取得商品
+     * 
+     * @param int $productId 商品ID
+     * 
+     * @return null|ModelProduct
+     */
+    public function getProduct(int $productId)
+    {
+        $carbon = new Carbon();
+        $nowDate = $carbon->toDateTimeString();
+
+        $product = $this->product
+            ->where('product_id', $productId)
+            ->where(function ($query) use ($nowDate) {
+                $query->where('start_at', '<=', $nowDate)
+                    ->orWhereNull('start_at');
+            })
+            ->where(function ($query) use ($nowDate) {
+                $query->where('end_at', '>=', $nowDate)
+                    ->orWhereNull('end_at');
+            })
+            ->where('status', true)
+            ->first();
+
+        return $product;
+    }
 }

@@ -24,5 +24,11 @@ Route::post('login', [Login::class, 'login']);
 
 Route::get('banner', [Banner::class, 'getBannerList']);
 
-Route::get('product', [Product::class, 'getProductPage']);
+Route::controller(Product::class)
+    ->prefix('product')
+    ->group(function () {
+        Route::get('', 'getProductPage');
+        Route::get('{productId}', 'getProduct')->whereNumber('productId');
+    });
+
 Route::get('product/type', [ProductType::class, 'getProductTypeList']);

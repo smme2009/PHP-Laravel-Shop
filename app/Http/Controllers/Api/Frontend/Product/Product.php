@@ -39,4 +39,34 @@ class Product extends Controller
 
         return $response;
     }
+
+    /**
+     * 取得商品
+     * 
+     * @param int $productId 商品ID
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getProduct(int $productId)
+    {
+        $product = $this->srcProduct->getProduct($productId);
+
+        if (!$product) {
+            $response = $this->toolResponseJson()
+                ->setHttpCode(400)
+                ->setMessage('取得商品失敗')
+                ->get();
+
+            return $response;
+        }
+
+        $response = $this->toolResponseJson()
+            ->setMessage('成功取得商品')
+            ->setData([
+                'product' => $product,
+            ])
+            ->get();
+
+        return $response;
+    }
 }
