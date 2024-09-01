@@ -278,6 +278,7 @@ class Product extends Controller
             'price' => request()->get('price'),
             'quantity' => request()->get('quantity'),
             'description' => request()->get('description'),
+            'pageHtml' => request()->get('pageHtml'),
             'status' => request()->get('status'),
             'startTime' => request()->get('startTime'),
             'endTime' => request()->get('endTime'),

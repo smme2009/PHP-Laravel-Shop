@@ -161,6 +161,7 @@ class Product
         $this->product->price = $productData['price'];
         $this->product->quantity = $productData['quantity'];
         $this->product->description = $productData['description'];
+        $this->product->page_html = $productData['pageHtml'];
         $this->product->status = $productData['status'];
         $this->product->start_at = $productData['startTime'];
         $this->product->end_at = $productData['endTime'];
