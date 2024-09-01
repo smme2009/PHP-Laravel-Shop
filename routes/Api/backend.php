@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Backend\Product\ProductType;
 use App\Http\Controllers\Api\Backend\Product\ProductStockType;
 use App\Http\Controllers\Api\Backend\Product\ProductStock;
 use App\Http\Controllers\Api\Backend\Banner\Banner;
+use App\Http\Controllers\Api\Backend\Other\Editor;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,4 +71,6 @@ Route::middleware('accountAuth:admin')->group(function () {
             Route::delete('{bannerId}', 'deleteBanner')->whereNumber('bannerId');
             Route::put('{bannerId}/status', 'editBannerStatus')->whereNumber('bannerId');
         });
+
+    Route::post('editor/photo', [Editor::class, 'uploadEditorPhoto']);
 });
