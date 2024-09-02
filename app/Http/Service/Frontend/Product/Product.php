@@ -84,6 +84,7 @@ class Product extends Service
             'price' => $product->price,
             'quantity' => $product->quantity,
             'description' => $product->description,
+            'pageHtml' => $product->page_html,
         ];
 
         return $product;
