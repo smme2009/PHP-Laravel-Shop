@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Frontend\Member\Login;
 use App\Http\Controllers\Api\Frontend\Banner\Banner;
 use App\Http\Controllers\Api\Frontend\Product\Product;
 use App\Http\Controllers\Api\Frontend\Product\ProductType;
+use App\Http\Controllers\Api\Frontend\Cart\Cart;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,3 +33,13 @@ Route::controller(Product::class)
     });
 
 Route::get('product/type', [ProductType::class, 'getProductTypeList']);
+
+Route::middleware('accountAuth:member')->group(function () {
+    Route::controller(Cart::class)
+        ->prefix('cart')
+        ->group(function () {
+            Route::get('', 'getCartProductList');
+            Route::post('', 'addCartProduct');
+            Route::delete('', 'deleteCartProduct');
+        });
+});
