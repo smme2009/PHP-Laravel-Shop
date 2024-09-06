@@ -75,18 +75,18 @@ class Cart extends Service
     }
 
     /**
-     * 新增購物車商品
+     * 編輯購物車商品
      * 
      * @param array $cartProductList
      * 
-     * @return bool 是否新增成功
+     * @return bool 是否編輯成功
      */
-    public function addCartProduct(array $cartProductList)
+    public function editCartProduct(array $cartProductList)
     {
-        $isAdd = $this->repoCart
+        $isEdit = $this->repoCart
             ->editCartProduct($cartProductList);
 
-        return $isAdd;
+        return $isEdit;
     }
 
     /**

@@ -36,11 +36,11 @@ class Cart extends Controller
     }
 
     /**
-     * 新增購物車商品
+     * 編輯購物車商品
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addCartProduct()
+    public function editCartProduct()
     {
         $cartProductList = request()->get('cartProductList');
 
@@ -56,13 +56,13 @@ class Cart extends Controller
             return $response;
         }
 
-        $isAdd = $this->srcCart
-            ->addCartProduct($cartProductList);
+        $isEdit = $this->srcCart
+            ->editCartProduct($cartProductList);
 
-        if (!$isAdd) {
+        if (!$isEdit) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage('新增購物車商品失敗')
+                ->setMessage('編輯購物車商品失敗')
                 ->get();
 
             return $response;
@@ -70,7 +70,7 @@ class Cart extends Controller
 
         $response = $this->toolResponseJson()
             ->setHttpCode(200)
-            ->setMessage('成功新增購物車商品')
+            ->setMessage('成功編輯購物車商品')
             ->get();
 
         return $response;

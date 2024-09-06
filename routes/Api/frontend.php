@@ -39,7 +39,7 @@ Route::middleware('accountAuth:member')->group(function () {
         ->prefix('cart')
         ->group(function () {
             Route::get('', 'getCartProductList');
-            Route::post('', 'addCartProduct');
+            Route::put('', 'editCartProduct');
             Route::delete('', 'deleteCartProduct');
         });
 });
