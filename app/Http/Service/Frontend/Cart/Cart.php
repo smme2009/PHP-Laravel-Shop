@@ -40,6 +40,7 @@ class Cart extends Service
                 'productId' => $cart->product->product_id,
                 'productName' => $cart->product->name,
                 'productPhotoUrl' => $fileInfoList[$cart->product->photo_fid]['url'],
+                'productPrice' => $cart->product->price,
                 'productQuantity' => $cart->product->quantity,
                 'productStatus' => $cart->product->status,
             ];
