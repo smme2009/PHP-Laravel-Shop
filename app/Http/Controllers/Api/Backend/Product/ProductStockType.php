@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Backend\Product;
 
 use App\Http\Controllers\Controller;
 
-use App\Http\Service\Product\ProductStockType as SrcProductStockType;
+use App\Http\Service\Backend\Product\ProductStockType as SrcProductStockType;
 
 /**
  * 商品庫存單類型

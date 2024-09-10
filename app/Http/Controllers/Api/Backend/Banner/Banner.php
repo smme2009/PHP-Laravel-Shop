@@ -1,40 +1,39 @@
 <?php
 
-namespace App\Http\Controllers\Api\Backend\Product;
+namespace App\Http\Controllers\Api\Backend\Banner;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 
-use App\Http\Service\Backend\Product\Product as SrcProduct;
+use App\Http\Service\Backend\Banner\Banner as SrcBanner;
 
 /**
- * 商品
+ * 橫幅
  */
-class Product extends Controller
+class Banner extends Controller
 {
     public function __construct(
-        private SrcProduct $srcProduct,
+        private SrcBanner $srcBanner,
     ) {
     }
 
     /**
-     * 取得商品列表
+     * 取得橫幅列表
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getProductPage()
+    public function getBannerPage()
     {
         // 取得搜尋資料
         $searchData = [
             'keyword' => request()->get('keyword'),
         ];
 
-        $productPage = $this->srcProduct->getProductPage($searchData);
+        $bannerPage = $this->srcBanner->getBannerPage($searchData);
 
         $response = $this->toolResponseJson()
-            ->setMessage('成功取得商品分頁資料')
+            ->setMessage('成功取得橫幅分頁資料')
             ->setData([
-                'productPage' => $productPage,
+                'bannerPage' => $bannerPage,
             ])
             ->get();
 
@@ -42,29 +41,29 @@ class Product extends Controller
     }
 
     /**
-     * 取得商品
+     * 取得橫幅
      * 
-     * @param int $productId
+     * @param int $bannerId
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getProduct(int $productId)
+    public function getBanner(int $bannerId)
     {
-        $product = $this->srcProduct->getProduct($productId);
+        $banner = $this->srcBanner->getBanner($bannerId);
 
-        if (!$product) {
+        if (!$banner) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(404)
-                ->setMessage('取得商品資料失敗')
+                ->setMessage('取得橫幅資料失敗')
                 ->get();
 
             return $response;
         }
 
         $response = $this->toolResponseJson()
-            ->setMessage('成功取得商品資料')
+            ->setMessage('成功取得橫幅資料')
             ->setData([
-                'product' => $product,
+                'banner' => $banner,
             ])
             ->get();
 
@@ -72,15 +71,15 @@ class Product extends Controller
     }
 
     /**
-     * 上傳商品圖片
+     * 上傳橫幅圖片
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function uploadProductPhoto()
+    public function uploadBannerPhoto()
     {
         $photo = request()->file('photo');
 
-        $result = $this->srcProduct->validatePhoto($photo);
+        $result = $this->srcBanner->validatePhoto($photo);
 
         if (!$result->status) {
             $response = $this->toolResponseJson()
@@ -91,12 +90,12 @@ class Product extends Controller
             return $response;
         }
 
-        $fileInfo = $this->srcProduct->uploadProductPhoto($photo);
+        $fileInfo = $this->srcBanner->uploadBannerPhoto($photo);
 
         if (!$fileInfo) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage('上傳商品圖片失敗')
+                ->setMessage('上傳橫幅圖片失敗')
                 ->get();
 
             return $response;
@@ -104,7 +103,7 @@ class Product extends Controller
 
         $response = $this->toolResponseJson()
             ->setHttpCode(200)
-            ->setMessage('成功上傳商品圖片')
+            ->setMessage('成功上傳橫幅圖片')
             ->setData([
                 'fileInfo' => $fileInfo,
             ])
@@ -114,15 +113,15 @@ class Product extends Controller
     }
 
     /**
-     * 新增商品
+     * 新增橫幅
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addProduct()
+    public function addBanner()
     {
-        $productData = $this->setProductData();
+        $bannerData = $this->setBannerData();
 
-        $result = $this->srcProduct->validateData($productData);
+        $result = $this->srcBanner->validateData($bannerData);
 
         if (!$result->status) {
             $response = $this->toolResponseJson()
@@ -133,12 +132,12 @@ class Product extends Controller
             return $response;
         }
 
-        $productId = $this->srcProduct->addProduct($productData);
+        $bannerId = $this->srcBanner->addBanner($bannerData);
 
-        if (!$productId) {
+        if (!$bannerId) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage('新增商品失敗')
+                ->setMessage('新增橫幅失敗')
                 ->get();
 
             return $response;
@@ -146,9 +145,9 @@ class Product extends Controller
 
         $response = $this->toolResponseJson()
             ->setHttpCode(200)
-            ->setMessage('成功新增商品')
+            ->setMessage('成功新增橫幅')
             ->setData([
-                'productId' => $productId,
+                'bannerId' => $bannerId,
             ])
             ->get();
 
@@ -156,17 +155,17 @@ class Product extends Controller
     }
 
     /**
-     * 編輯商品
+     * 編輯橫幅
      * 
-     * @param int $productId 商品ID
+     * @param int $bannerId 橫幅ID
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function editProduct(int $productId)
+    public function editBanner(int $bannerId)
     {
-        $productData = $this->setProductData();
+        $bannerData = $this->setBannerData();
 
-        $result = $this->srcProduct->validateData($productData);
+        $result = $this->srcBanner->validateData($bannerData);
 
         if (!$result->status) {
             $response = $this->toolResponseJson()
@@ -177,16 +176,12 @@ class Product extends Controller
             return $response;
         }
 
-        DB::beginTransaction();
-
-        $isEdit = $this->srcProduct->editProduct($productId, $productData);
-
-        DB::commit();
+        $isEdit = $this->srcBanner->editBanner($bannerId, $bannerData);
 
         if (!$isEdit) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage('編輯商品失敗')
+                ->setMessage('編輯橫幅失敗')
                 ->get();
 
             return $response;
@@ -194,31 +189,27 @@ class Product extends Controller
 
         $response = $this->toolResponseJson()
             ->setHttpCode(200)
-            ->setMessage('成功編輯商品')
+            ->setMessage('成功編輯橫幅')
             ->get();
 
         return $response;
     }
 
     /**
-     * 刪除商品
+     * 刪除橫幅
      * 
-     * @param int $productId 商品ID
+     * @param int $bannerId 橫幅ID
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteProduct(int $productId)
+    public function deleteBanner(int $bannerId)
     {
-        DB::beginTransaction();
-
-        $isDelete = $this->srcProduct->deletePeoduct($productId);
-
-        DB::commit();
+        $isDelete = $this->srcBanner->deletePeoduct($bannerId);
 
         if (!$isDelete) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage('刪除商品失敗')
+                ->setMessage('刪除橫幅失敗')
                 ->get();
 
             return $response;
@@ -226,33 +217,29 @@ class Product extends Controller
 
         $response = $this->toolResponseJson()
             ->setHttpCode(200)
-            ->setMessage('成功刪除商品')
+            ->setMessage('成功刪除橫幅')
             ->get();
 
         return $response;
     }
 
     /**
-     * 編輯商品狀態
+     * 編輯橫幅狀態
      * 
-     * @param int $productId 商品ID
+     * @param int $bannerId 橫幅ID
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function editProductStatus(int $productId)
+    public function editBannerStatus(int $bannerId)
     {
         $status = request()->get('status');
 
-        DB::beginTransaction();
-
-        $isEdit = $this->srcProduct->editProductStatus($productId, $status);
-
-        DB::commit();
+        $isEdit = $this->srcBanner->editBannerStatus($bannerId, $status);
 
         if (!$isEdit) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage('編輯商品狀態失敗')
+                ->setMessage('編輯橫幅狀態失敗')
                 ->get();
 
             return $response;
@@ -260,31 +247,29 @@ class Product extends Controller
 
         $response = $this->toolResponseJson()
             ->setHttpCode(200)
-            ->setMessage('成功編輯商品狀態')
+            ->setMessage('成功編輯橫幅狀態')
             ->get();
 
         return $response;
     }
+
     /**
-     * 設定商品資料
+     * 設定橫幅資料
      * 
-     * @return array 商品資料
+     * @return array 橫幅資料
      */
-    private function setProductData()
+    private function setBannerData()
     {
-        $productData = [
-            'name' => request()->get('name'),
+        $bannerData = [
             'photoFileId' => request()->get('photoFileId'),
-            'price' => request()->get('price'),
-            'quantity' => request()->get('quantity'),
-            'description' => request()->get('description'),
-            'pageHtml' => request()->get('pageHtml'),
-            'status' => request()->get('status'),
+            'name' => request()->get('name'),
+            'url' => request()->get('url'),
             'startTime' => request()->get('startTime'),
             'endTime' => request()->get('endTime'),
-            'productTypeId' => request()->get('productTypeId'),
+            'sort' => request()->get('sort'),
+            'status' => request()->get('status'),
         ];
 
-        return $productData;
+        return $bannerData;
     }
 }
