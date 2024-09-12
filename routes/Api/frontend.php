@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\Frontend\Member\Register;
 use App\Http\Controllers\Api\Frontend\Member\Login;
+use App\Http\Controllers\Api\Frontend\Member\Address;
 use App\Http\Controllers\Api\Frontend\Banner\Banner;
 use App\Http\Controllers\Api\Frontend\Product\Product;
 use App\Http\Controllers\Api\Frontend\Product\ProductType;
@@ -42,4 +43,13 @@ Route::middleware('accountAuth:member')->group(function () {
             Route::put('', 'editCartProduct');
             Route::delete('', 'deleteCartProduct');
         });
+
+    Route::prefix('member')->group(function () {
+        Route::controller(Address::class)
+            ->prefix('address')
+            ->group(function () {
+                Route::get('', 'getMemberAddressList');
+                Route::post('', 'addMemberAddress');
+            });
+    });
 });
