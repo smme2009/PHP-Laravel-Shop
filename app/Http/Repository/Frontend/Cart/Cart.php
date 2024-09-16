@@ -18,14 +18,19 @@ class Cart
     /**
      * 取得購物車商品列表
      * 
+     * @param null|array $cartId 購物車ID
+     * 
      * @return \Illuminate\Database\Eloquent\Collection 購物車商品列表
      */
-    public function getCartProductList()
+    public function getCartProductList(null|array $cartId = null)
     {
         $memberId = auth('member')->user()->member_id;
 
         $cartProductList = $this->cart
             ->where('member_id', $memberId)
+            ->when(!is_null($cartId), function ($query) use ($cartId) {
+                $query->whereIn('cart_id', $cartId);
+            })
             ->orderByDesc('created_at')
             ->get();
 

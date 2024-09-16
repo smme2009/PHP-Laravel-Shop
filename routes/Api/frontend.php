@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Frontend\Banner\Banner;
 use App\Http\Controllers\Api\Frontend\Product\Product;
 use App\Http\Controllers\Api\Frontend\Product\ProductType;
 use App\Http\Controllers\Api\Frontend\Cart\Cart;
+use App\Http\Controllers\Api\Frontend\Order\Order;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,4 +53,10 @@ Route::middleware('accountAuth:member')->group(function () {
                 Route::post('', 'addMemberAddress');
             });
     });
+
+    Route::controller(Order::class)
+        ->prefix('order')
+        ->group(function () {
+            Route::post('', 'addOrder');
+        });
 });
