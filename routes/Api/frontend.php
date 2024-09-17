@@ -57,6 +57,7 @@ Route::middleware('accountAuth:member')->group(function () {
     Route::controller(Order::class)
         ->prefix('order')
         ->group(function () {
+            Route::get('', 'getOrderPage');
             Route::post('', 'addOrder');
         });
 });

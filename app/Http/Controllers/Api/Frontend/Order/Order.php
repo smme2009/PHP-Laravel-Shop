@@ -18,6 +18,28 @@ class Order extends Controller
     }
 
     /**
+     * 取得訂單分頁
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getOrderPage()
+    {
+        $keyword = request()->get('keyword');
+
+        $orderPage = $this->srcOrder->getOrderPage($keyword);
+
+        $response = $this->toolResponseJson()
+            ->setHttpCode(200)
+            ->setData([
+                'orderPage' => $orderPage,
+            ])
+            ->setMessage('成功取得訂單分頁')
+            ->get();
+
+        return $response;
+    }
+
+    /**
      * 新增訂單
      * 
      * @return \Illuminate\Http\JsonResponse

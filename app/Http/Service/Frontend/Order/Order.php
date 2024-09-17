@@ -22,6 +22,35 @@ class Order extends Service
     }
 
     /**
+     * 取得訂單分頁
+     * 
+     * @param null|string $keyword 關鍵字
+     * 
+     * @return array 訂單分頁
+     */
+    public function getOrderPage(null|string $keyword)
+    {
+        $page = $this->repoOrder
+            ->getOrderPage($keyword);
+
+        $orderPage = [];
+        foreach ($page as $order) {
+            $createdTime = $order->created_at;
+            $createdTime = is_null($createdTime) ? null : strtotime($createdTime);
+
+            $orderPage[] = [
+                'code' => $order->code,
+                'createdTime' => $createdTime,
+                'orderShip' => $order->orderShip->name,
+                'orderPayment' => $order->orderPayment->name,
+                'orderProductList' => $this->getOrderProductList($order->orderProduct),
+            ];
+        }
+
+        return $orderPage;
+    }
+
+    /**
      * 驗證資料
      * 
      * @param array $orderData 訂單資料
@@ -68,6 +97,32 @@ class Order extends Service
         $isAdd = $this->addOrderProduct($orderData['cartIdList']);
 
         return $isAdd;
+    }
+
+    /**
+     * 取得訂單商品列表
+     * 
+     * @param object $orderProductList
+     * 
+     * @return array 訂單商品列表
+     */
+    private function getOrderProductList(object $orderProductList)
+    {
+        $list = [];
+        foreach ($orderProductList as $orderProduct) {
+            $photoUrl = $this->toolFile()
+                ->getFileUrl($orderProduct->productPhoto->path);
+
+            $list[] = [
+                'name' => $orderProduct->name,
+                'photoUrl' => $photoUrl,
+                'quantity' => $orderProduct->quantity,
+                'price' => $orderProduct->price,
+                'total' => $orderProduct->total,
+            ];
+        }
+
+        return $list;
     }
 
     /**

@@ -30,16 +30,14 @@ class OrderProduct extends Model
     ];
 
     /**
-     * 取得商品
+     * 取得商品圖片
      * 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo 商品
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function product()
+    public function productPhoto()
     {
-        $key = 'product_id';
+        $productPhoto = $this->belongsTo(File::class, 'photo_fid', 'file_id');
 
-        $product = $this->belongsTo(Product::class, $key, $key);
-
-        return $product;
+        return $productPhoto;
     }
 }

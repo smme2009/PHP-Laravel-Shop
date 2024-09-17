@@ -25,9 +25,9 @@ class Order extends Model
      */
     public function orderProduct()
     {
-        $key = 'order_product_id';
+        $key = 'order_id';
 
-        $orderProduct = $this->hasMany(OrderShip::class, $key, $key);
+        $orderProduct = $this->hasMany(orderProduct::class, $key, $key);
 
         return $orderProduct;
     }

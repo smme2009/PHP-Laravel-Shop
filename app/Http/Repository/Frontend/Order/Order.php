@@ -17,6 +17,28 @@ class Order
     }
 
     /**
+     * 取得訂單分頁
+     * 
+     * @param null|string $keyword 關鍵字
+     * 
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getOrderPage(null|string $keyword)
+    {
+        $memberId = auth()->user()->member_id;
+
+        $orderPage = $this->order
+            ->where('member_id', $memberId)
+            ->when($keyword, function ($query) use ($keyword) {
+                $query->where('code', 'like', '%' . $keyword . '%');
+            })
+            ->orderByDesc('code')
+            ->paginate();
+
+        return $orderPage;
+    }
+
+    /**
      * 取得最後的訂單編號
      * 
      * @param string $Ymd 年月日
