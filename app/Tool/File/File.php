@@ -117,7 +117,7 @@ class File
      * 
      * @return string 檔案網址
      */
-    private function getFileUrl(string $path)
+    public function getFileUrl(string $path)
     {
         $url = Storage::url($path);
         $url = asset($url);
