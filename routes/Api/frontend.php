@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Frontend\Product\Product;
 use App\Http\Controllers\Api\Frontend\Product\ProductType;
 use App\Http\Controllers\Api\Frontend\Cart\Cart;
 use App\Http\Controllers\Api\Frontend\Order\Order;
+use App\Http\Controllers\Api\Frontend\Order\OrderShip;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,10 +55,18 @@ Route::middleware('accountAuth:member')->group(function () {
             });
     });
 
-    Route::controller(Order::class)
-        ->prefix('order')
+    Route::prefix('order')
         ->group(function () {
-            Route::get('', 'getOrderPage');
-            Route::post('', 'addOrder');
+            Route::controller(Order::class)
+                ->group(function () {
+                    Route::get('', 'getOrderPage');
+                    Route::post('', 'addOrder');
+                });
+
+            Route::controller(OrderShip::class)
+                ->prefix('ship')
+                ->group(function () {
+                    Route::get('', 'getOrderShipList');
+                });
         });
 });
