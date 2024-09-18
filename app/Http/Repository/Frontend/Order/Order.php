@@ -71,7 +71,11 @@ class Order
         $this->order->address = $orderData['address'];
         $this->order->order_ship_id = $orderData['orderShipId'];
         $this->order->order_payment_id = $orderData['orderPaymentId'];
+        $this->order->order_ship_price = $orderData['orderShipPrice'];
+        $this->order->order_product_total = $orderData['orderProductTotal'];
+        $this->order->order_total = $orderData['orderTotal'];
         $this->order->order_status_id = 1;
+
         $isSave = $this->order->save();
 
         if (!$isSave) {

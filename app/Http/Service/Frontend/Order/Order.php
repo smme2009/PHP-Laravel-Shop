@@ -3,9 +3,11 @@
 namespace App\Http\Service\Frontend\Order;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use App\Http\Service\Service;
 
 use App\Http\Repository\Frontend\Order\Order as RepoOrder;
+use App\Http\Repository\Frontend\Order\OrderShip as RepoOrderShip;
 use App\Http\Repository\Frontend\Cart\Cart as RepoCart;
 use App\Http\Repository\Frontend\Product\Product as RepoProduct;
 
@@ -14,8 +16,12 @@ use App\Http\Repository\Frontend\Product\Product as RepoProduct;
  */
 class Order extends Service
 {
+    // 原始商品列表
+    private Collection $cartList;
+
     public function __construct(
         private RepoOrder $repoOrder,
+        private RepoOrderShip $repoOrderShip,
         private RepoCart $repoCart,
         private RepoProduct $repoProduct,
     ) {
@@ -88,13 +94,19 @@ class Order extends Service
      */
     public function addFullOrder(array $orderData)
     {
+        $isSet = $this->setCartList($orderData['cartIdList']);
+
+        if (!$isSet) {
+            return false;
+        }
+
         $isAdd = $this->addOrder($orderData);
 
         if (!$isAdd) {
             return false;
         }
 
-        $isAdd = $this->addOrderProduct($orderData['cartIdList']);
+        $isAdd = $this->addOrderProduct();
 
         return $isAdd;
     }
@@ -134,7 +146,13 @@ class Order extends Service
      */
     private function addOrder(array $orderData)
     {
+        $orderShipPrice = $this->getOrderShipPrice($orderData['orderShipId']);
+        $orderProductTotal = $this->getOrderProductTotal();
+
         $orderData['code'] = $this->getOrderCode();
+        $orderData['orderShipPrice'] = $orderShipPrice;
+        $orderData['orderProductTotal'] = $orderProductTotal;
+        $orderData['orderTotal'] = $orderShipPrice + $orderProductTotal;
 
         $isAdd = $this->repoOrder->addOrder($orderData);
 
@@ -144,34 +162,16 @@ class Order extends Service
     /**
      * 新增訂單商品
      * 
-     * @param array $cartIdList 購物車ID列表
-     * 
      * @return bool 是否新增成功
      */
-    private function addOrderProduct(array $cartIdList)
+    private function addOrderProduct()
     {
-        $cartList = $this->repoCart
-            ->getCartProductList($cartIdList);
-
-        // 取得原始商品
-        $originalProductList = $this->getOriginalProductList($cartList);
-
         $orderProductList = [];
-        foreach ($cartList as $cart) {
-            $originalProduct = $originalProductList
-                ->where('product_id', $cart->product_id)
-                ->first();
-
-            $result = $this->checkCartProduct($cart, $originalProduct);
-
-            if (!$result) {
-                return false;
-            }
-
+        foreach ($this->cartList as $cart) {
             $orderProductList[] = [
-                'productId' => $cart['product_id'],
-                'quantity' => $cart['quantity'],
-                'originalProduct' => $originalProduct,
+                'productId' => $cart->product_id,
+                'quantity' => $cart->quantity,
+                'originalProduct' => $cart->originalProduct,
             ];
         }
 
@@ -191,10 +191,55 @@ class Order extends Service
             return false;
         }
 
+        $cartIdList = $this->cartList->pluck('cart_id')->all();
+
         $isDelete = $this->repoCart
             ->deleteCartProduct($cartIdList);
 
         return $isDelete;
+    }
+
+    /**
+     * 設定購物車列表
+     * 
+     * @param array $cartIdList 購物車ID列表
+     * 
+     * @return bool 是否設定成功
+     */
+    private function setCartList(array $cartIdList)
+    {
+        $cartList = $this->repoCart
+            ->getCartProductList($cartIdList);
+
+        $productIdList = $cartList
+            ->pluck('product_id')
+            ->all();
+
+        // 批次取得商品並鎖定
+        $productList = $this->repoProduct
+            ->getProduct($productIdList, true);
+
+        foreach ($cartList as $key => $cart) {
+            $originalProduct = $productList
+                ->where('product_id', $cart->product_id)
+                ->first();
+
+            // 檢查商品狀態
+            if (!$originalProduct || !$originalProduct->status) {
+                return false;
+            }
+
+            // 檢查商品數量
+            if ($cart->quantity > $originalProduct->quantity) {
+                return false;
+            }
+
+            $cartList[$key]->originalProduct = $originalProduct;
+        }
+
+        $this->cartList = $cartList;
+
+        return true;
     }
 
     /**
@@ -219,43 +264,37 @@ class Order extends Service
     }
 
     /**
-     * 取得原始商品列表
+     * 取得訂單運費
      * 
-     * @param object $cartList 購物車列表
+     * @param int $orderShipId 訂單運送方式ID
      * 
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return int 運費
      */
-    private function getOriginalProductList(object $cartList)
+    private function getOrderShipPrice(int $orderShipId)
     {
-        $productIdList = $cartList
-            ->pluck('product_id')
-            ->all();
+        $orderShipList = $this->repoOrderShip
+            ->getOrderShipList();
 
-        // 批次取得商品並鎖定
-        $productList = $this->repoProduct
-            ->getProduct($productIdList, true);
+        $orderShipPrice = $orderShipList
+            ->where('order_ship_id', $orderShipId)
+            ->first()
+            ->price;
 
-        return $productList;
+        return $orderShipPrice;
     }
 
     /**
-     * 檢查購物車商品
+     * 取得訂單商品總額
      * 
-     * @param object $cartProduct 購物車商品
-     * @param null|object $originalProduct 原始商品
-     * 
-     * @return bool 檢查結果
+     * @return int 訂單商品總額
      */
-    private function checkCartProduct(object $cartProduct, null|object $originalProduct)
+    private function getOrderProductTotal()
     {
-        if (!$originalProduct || !$originalProduct->status) {
-            return false;
+        $total = 0;
+        foreach ($this->cartList as $cart) {
+            $total += $cart->quantity * $cart->originalProduct->price;
         }
 
-        if ($cartProduct->quantity > $originalProduct->quantity) {
-            return false;
-        }
-
-        return true;
+        return $total;
     }
 }
