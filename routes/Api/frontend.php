@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Frontend\Product\ProductType;
 use App\Http\Controllers\Api\Frontend\Cart\Cart;
 use App\Http\Controllers\Api\Frontend\Order\Order;
 use App\Http\Controllers\Api\Frontend\Order\OrderShip;
+use App\Http\Controllers\Api\Frontend\Order\OrderStatus;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +68,12 @@ Route::middleware('accountAuth:member')->group(function () {
                 ->prefix('ship')
                 ->group(function () {
                     Route::get('', 'getOrderShipList');
+                });
+
+            Route::controller(OrderStatus::class)
+                ->prefix('status')
+                ->group(function () {
+                    Route::get('', 'getOrderStatusList');
                 });
         });
 });
