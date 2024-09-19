@@ -47,8 +47,8 @@ class Order extends Service
             $orderPage[] = [
                 'code' => $order->code,
                 'createdTime' => $createdTime,
-                'orderShip' => $order->orderShip->name,
-                'orderPayment' => $order->orderPayment->name,
+                'orderShipName' => $order->orderShip->name,
+                'orderPaymentName' => $order->orderPayment->name,
                 'orderStatusId' => $order->order_status_id,
                 'orderProductList' => $this->getOrderProductList($order->orderProduct),
             ];
