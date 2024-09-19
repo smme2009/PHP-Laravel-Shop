@@ -50,6 +50,9 @@ class Order extends Service
                 'orderShipName' => $order->orderShip->name,
                 'orderPaymentName' => $order->orderPayment->name,
                 'orderStatusId' => $order->order_status_id,
+                'orderShipPrice' => $order->order_ship_price,
+                'orderProductTotal' => $order->order_product_total,
+                'orderTotal' => $order->order_total,
                 'orderProductList' => $this->getOrderProductList($order->orderProduct),
             ];
         }
