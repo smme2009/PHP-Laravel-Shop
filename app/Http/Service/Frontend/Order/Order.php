@@ -49,6 +49,7 @@ class Order extends Service
                 'createdTime' => $createdTime,
                 'orderShip' => $order->orderShip->name,
                 'orderPayment' => $order->orderPayment->name,
+                'orderStatusId' => $order->order_status_id,
                 'orderProductList' => $this->getOrderProductList($order->orderProduct),
             ];
         }
