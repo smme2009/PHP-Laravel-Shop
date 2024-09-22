@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Backend\Product\ProductStockType;
 use App\Http\Controllers\Api\Backend\Product\ProductStock;
 use App\Http\Controllers\Api\Backend\Banner\Banner;
 use App\Http\Controllers\Api\Backend\Other\Editor;
+use App\Http\Controllers\Api\Backend\Order\Order;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,4 +74,10 @@ Route::middleware('accountAuth:admin')->group(function () {
         });
 
     Route::post('editor/photo', [Editor::class, 'uploadEditorPhoto']);
+
+    Route::controller(Order::class)
+        ->prefix('order')
+        ->group(function () {
+            Route::get('', 'getOrderPage');
+        });
 });
