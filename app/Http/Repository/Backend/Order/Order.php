@@ -36,4 +36,24 @@ class Order
 
         return $orderPage;
     }
+
+    /**
+     * 設定訂單
+     * 
+     * @param int $orderId 訂單ID
+     * 
+     * @return bool 是否設定成功
+     */
+    public function setOrder(int $orderId)
+    {
+        $order = $this->order->find($orderId);
+
+        if (!$order) {
+            return false;
+        }
+
+        $this->order = $order;
+
+        return true;
+    }
 }

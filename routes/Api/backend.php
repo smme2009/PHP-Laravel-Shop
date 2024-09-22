@@ -79,5 +79,6 @@ Route::middleware('accountAuth:admin')->group(function () {
         ->prefix('order')
         ->group(function () {
             Route::get('', 'getOrderPage');
+            Route::get('{orderId}', 'getOrder')->whereNumber('orderId');
         });
 });

@@ -41,7 +41,30 @@ class Order extends Service
     }
 
     /**
-     * 設定訂單資料
+     * 取得訂單
+     * 
+     * @param int $orderId 訂單ID
+     * 
+     * @return false|array
+     */
+    public function getOrder(int $orderId)
+    {
+        $isSet = $this->repoOrder
+            ->setOrder($orderId);
+
+        if (!$isSet) {
+            return $isSet;
+        }
+
+        $orderModel = $this->repoOrder->order;
+
+        $order = $this->getOrderData($orderModel);
+
+        return $order;
+    }
+
+    /**
+     * 取得訂單資料
      * 
      * @param object $orderModel 訂單Model
      * 
@@ -52,7 +75,13 @@ class Order extends Service
         $createTime = $orderModel->created_at;
         $createTime = is_null($createTime) ? null : strtotime($createTime);
 
+        $orderProductList = [];
+        foreach ($orderModel->orderProduct as $orderProductModel) {
+            $orderProductList[] = $this->getOrderProductList($orderProductModel);
+        }
+
         $orderData = [
+            'orderId' => $orderModel->order_id,
             'code' => $orderModel->code,
             'address' => $orderModel->address,
             'orderShipName' => $orderModel->orderShip->name,
@@ -62,8 +91,32 @@ class Order extends Service
             'orderTotal' => $orderModel->order_total,
             'orderStatusName' => $orderModel->orderStatus->name,
             'createTime' => $createTime,
+            'orderProductList' => $orderProductList,
         ];
 
         return $orderData;
+    }
+
+    /**
+     * 取得訂單商品列表
+     * 
+     * @param object $orderProductModel 訂單商品Model
+     * 
+     * @return array
+     */
+    private function getOrderProductList(object $orderProductModel)
+    {
+        $photoUrl = $this->toolFile()
+            ->getFileUrl($orderProductModel->productPhoto->path);
+
+        $orderProductData = [
+            'photoUrl' => $photoUrl,
+            'name' => $orderProductModel->name,
+            'quantity' => $orderProductModel->quantity,
+            'price' => $orderProductModel->price,
+            'total' => $orderProductModel->total,
+        ];
+
+        return $orderProductData;
     }
 }

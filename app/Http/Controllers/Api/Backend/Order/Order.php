@@ -36,4 +36,35 @@ class Order extends Controller
 
         return $response;
     }
+
+    /**
+     * 取得訂單
+     * 
+     * @param int $orderId 訂單ID
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getOrder(int $orderId)
+    {
+        $order = $this->srcOrder
+            ->getOrder($orderId);
+
+        if (!$order) {
+            $response = $this->toolResponseJson()
+                ->setHttpCode(404)
+                ->setMessage('取得訂單失敗')
+                ->get();
+
+            return $response;
+        }
+
+        $response = $this->toolResponseJson()
+            ->setMessage('成功取得訂單')
+            ->setData([
+                'order' => $order,
+            ])
+            ->get();
+
+        return $response;
+    }
 }
