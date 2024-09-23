@@ -4,10 +4,14 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\Frontend\Member\Register;
 use App\Http\Controllers\Api\Frontend\Member\Login;
+use App\Http\Controllers\Api\Frontend\Member\Address;
 use App\Http\Controllers\Api\Frontend\Banner\Banner;
 use App\Http\Controllers\Api\Frontend\Product\Product;
 use App\Http\Controllers\Api\Frontend\Product\ProductType;
 use App\Http\Controllers\Api\Frontend\Cart\Cart;
+use App\Http\Controllers\Api\Frontend\Order\Order;
+use App\Http\Controllers\Api\Frontend\Order\OrderShip;
+use App\Http\Controllers\Api\Frontend\Order\OrderStatus;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,5 +45,35 @@ Route::middleware('accountAuth:member')->group(function () {
             Route::get('', 'getCartProductList');
             Route::put('', 'editCartProduct');
             Route::delete('', 'deleteCartProduct');
+        });
+
+    Route::prefix('member')->group(function () {
+        Route::controller(Address::class)
+            ->prefix('address')
+            ->group(function () {
+                Route::get('', 'getMemberAddressList');
+                Route::post('', 'addMemberAddress');
+            });
+    });
+
+    Route::prefix('order')
+        ->group(function () {
+            Route::controller(Order::class)
+                ->group(function () {
+                    Route::get('', 'getOrderPage');
+                    Route::post('', 'addOrder');
+                });
+
+            Route::controller(OrderShip::class)
+                ->prefix('ship')
+                ->group(function () {
+                    Route::get('', 'getOrderShipList');
+                });
+
+            Route::controller(OrderStatus::class)
+                ->prefix('status')
+                ->group(function () {
+                    Route::get('', 'getOrderStatusList');
+                });
         });
 });

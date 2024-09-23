@@ -196,6 +196,7 @@ return [
         'url' => '網址',
         'phone' => '手機號碼',
         'checkPassword' => '確認密碼',
+        'address' => '地址',
     ],
 
 ];
