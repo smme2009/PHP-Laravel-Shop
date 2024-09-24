@@ -127,7 +127,7 @@ class Product extends Controller
         if (!$result->status) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage($result->message)
+                ->setData(['errorList' => $result->error])
                 ->get();
 
             return $response;
@@ -171,7 +171,7 @@ class Product extends Controller
         if (!$result->status) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setMessage($result->message)
+                ->setData(['errorList' => $result->error])
                 ->get();
 
             return $response;
