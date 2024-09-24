@@ -31,7 +31,7 @@ class Login extends Controller
         if (!$result->status) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setData($result->error)
+                ->setData(['errorList' => $result->error])
                 ->get();
 
             return $response;
