@@ -49,7 +49,7 @@ class Banner
     {
         $banner = $this->banner->find($bannerId);
 
-        if ($banner === false) {
+        if (is_null($banner)) {
             return false;
         }
 

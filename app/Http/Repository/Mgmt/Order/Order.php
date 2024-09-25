@@ -49,7 +49,7 @@ class Order
     {
         $order = $this->order->find($orderId);
 
-        if ($order === false) {
+        if (is_null($order)) {
             return false;
         }
 
