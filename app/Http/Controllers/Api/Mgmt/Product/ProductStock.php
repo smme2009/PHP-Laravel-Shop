@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api\Mgmt\Product;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
 use App\Http\Service\Mgmt\Product\ProductStock as SrcProductStock;
 
 /**
@@ -22,11 +22,12 @@ class ProductStock extends Controller
      * 
      * @param int $productId 商品ID
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getProductStockPage(int $productId)
+    public function getProductStockPage(int $productId): JsonResponse
     {
-        $productStockPage = $this->srcProductStock->getProductStockPage($productId);
+        $productStockPage = $this->srcProductStock
+            ->getProductStockPage($productId);
 
         $response = $this->toolResponseJson()
             ->setMessage('成功取得商品庫存單分頁資料')
@@ -43,18 +44,21 @@ class ProductStock extends Controller
      * 
      * @param int $productId 商品ID
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function addProductStock(int $productId)
+    public function addProductStock(int $productId): JsonResponse
     {
         $productStockData = $this->setProductStockData();
 
-        $result = $this->srcProductStock->validateData($productStockData);
+        $result = $this->srcProductStock
+            ->validateData($productStockData);
 
-        if (!$result->status) {
+        if ($result->status === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setData(['errorList' => $result->error])
+                ->setData([
+                    'errorList' => $result->error
+                ])
                 ->get();
 
             return $response;
@@ -62,9 +66,10 @@ class ProductStock extends Controller
 
         DB::beginTransaction();
 
-        $productStockId = $this->srcProductStock->addProductStock($productId, $productStockData);
+        $productStockId = $this->srcProductStock
+            ->addProductStock($productId, $productStockData);
 
-        if (!$productStockId) {
+        if ($productStockId === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('新增商品庫存單失敗')
@@ -91,7 +96,7 @@ class ProductStock extends Controller
      * 
      * @return array
      */
-    private function setProductStockData()
+    private function setProductStockData(): array
     {
         $productStockData = [
             'productStockTypeId' => request()->get('productStockTypeId'),

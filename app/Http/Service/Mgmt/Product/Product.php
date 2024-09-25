@@ -3,8 +3,9 @@
 namespace App\Http\Service\Mgmt\Product;
 
 use App\Http\Service\Service;
-
 use App\Http\Repository\Mgmt\Product\Product as RepoProduct;
+use App\Models\Product as ModelProduct;
+use App\Tool\Validation\Result;
 
 /**
  * 商品
@@ -21,20 +22,16 @@ class Product extends Service
      * 
      * @param array $searchData 搜尋資料
      * 
-     * @return array
+     * @return array 商品分頁
      */
-    public function getProductPage(array $searchData)
+    public function getProductPage(array $searchData): array
     {
-        $page = $this->repoProduct->getProductPage($searchData);
-
-        $photoFidList = $page->pluck('photo_fid')->all();
-        $fileInfoList = $this->toolFile()->getFileInfoList($photoFidList);
+        $page = $this->repoProduct
+            ->getProductPage($searchData);
 
         $data = [];
         foreach ($page as $product) {
-            $fileInfo = $fileInfoList[$product->photo_fid];
-
-            $data[] = $this->setProduct($product, $fileInfo);
+            $data[] = $this->setProduct($product);
         }
 
         $productPage = [
@@ -50,21 +47,19 @@ class Product extends Service
      * 
      * @param int $productId 商品ID
      * 
-     * @return false|array
+     * @return bool|array 商品
      */
-    public function getProduct(int $productId)
+    public function getProduct(int $productId): bool|array
     {
-        $isSet = $this->repoProduct->setProduct($productId);
+        $isSet = $this->repoProduct
+            ->setProduct($productId);
 
-        if (!$isSet) {
+        if ($isSet === false) {
             return false;
         }
 
         $productModel = $this->repoProduct->product;
-
-        $fileInfo = $this->toolFile()->getFileInfo($productModel->photo_fid);
-
-        $product = $this->setProduct($productModel, $fileInfo);
+        $product = $this->setProduct($productModel);
 
         return $product;
     }
@@ -74,9 +69,9 @@ class Product extends Service
      * 
      * @param array $productData 商品資料
      * 
-     * @return \App\Tool\Validation\Result 驗證結果
+     * @return Result 驗證結果
      */
-    public function validateData(array $productData)
+    public function validateData(array $productData): Result
     {
         // 驗證規則
         $rule = [
@@ -92,7 +87,8 @@ class Product extends Service
             'productTypeId' => ['nullable', 'integer', 'exists:App\Models\ProductType,product_type_id'],
         ];
 
-        $result = $this->toolValidation()->validateData($productData, $rule);
+        $result = $this->toolValidation()
+            ->validateData($productData, $rule);
 
         return $result;
     }
@@ -102,9 +98,9 @@ class Product extends Service
      * 
      * @param mixed $photo 照片
      * 
-     * @return \App\Tool\Validation\Result 驗證結果
+     * @return Result 驗證結果
      */
-    public function validatePhoto(mixed $photo)
+    public function validatePhoto(mixed $photo): Result
     {
         // 驗證資料
         $data = [
@@ -116,7 +112,8 @@ class Product extends Service
             'photo' => ['required', 'image', 'max:10240'],
         ];
 
-        $result = $this->toolValidation()->validateData($data, $rule);
+        $result = $this->toolValidation()
+            ->validateData($data, $rule);
 
         return $result;
     }
@@ -126,11 +123,12 @@ class Product extends Service
      * 
      * @param mixed $photo 照片
      * 
-     * @return array
+     * @return bool|array 圖片資訊
      */
-    public function uploadProductPhoto(mixed $photo)
+    public function uploadProductPhoto(mixed $photo): bool|array
     {
-        $fileInfo = $this->toolFile()->uploadFile($photo, 'product');
+        $fileInfo = $this->toolFile()
+            ->uploadFile($photo, 'product');
 
         return $fileInfo;
     }
@@ -140,12 +138,13 @@ class Product extends Service
      * 
      * @param array $productData 商品資料
      * 
-     * @return false|int 商品ID
+     * @return bool|int 商品ID
      */
-    public function addProduct(array $productData)
+    public function addProduct(array $productData): bool|int
     {
         // 新增商品
-        $product_id = $this->repoProduct->addProduct($productData);
+        $product_id = $this->repoProduct
+            ->addProduct($productData);
 
         return $product_id;
     }
@@ -156,11 +155,12 @@ class Product extends Service
      * @param int $productId 商品ID
      * @param array $productData 商品資料
      * 
-     * @return bool
+     * @return bool 是否編輯成功
      */
-    public function editProduct(int $productId, array $productData)
+    public function editProduct(int $productId, array $productData): bool
     {
-        $isSet = $this->repoProduct->setProduct($productId, true);
+        $isSet = $this->repoProduct
+            ->setProduct($productId, true);
 
         if (!$isSet) {
             return false;
@@ -179,16 +179,17 @@ class Product extends Service
      * 
      * @return bool
      */
-    public function deletePeoduct(int $productId)
+    public function deleteProduct(int $productId)
     {
         $isSet = $this->repoProduct->setProduct($productId, true);
 
-        if (!$isSet) {
+        if ($isSet === false) {
             return false;
         }
 
         // 刪除商品
-        $isDelete = $this->repoProduct->deleteProduct();
+        $isDelete = $this->repoProduct
+            ->deleteProduct();
 
         return $isDelete;
     }
@@ -201,15 +202,17 @@ class Product extends Service
      * 
      * @return bool 是否編輯成功
      */
-    public function editProductStatus(int $productId, bool $status)
+    public function editProductStatus(int $productId, bool $status): bool
     {
-        $isSet = $this->repoProduct->setProduct($productId, true);
+        $isSet = $this->repoProduct
+            ->setProduct($productId, true);
 
-        if (!$isSet) {
+        if ($isSet === false) {
             return false;
         }
 
-        $isEdit = $this->repoProduct->editProductStatus($status);
+        $isEdit = $this->repoProduct
+            ->editProductStatus($status);
 
         return $isEdit;
     }
@@ -217,17 +220,28 @@ class Product extends Service
     /**
      * 設定商品資料結構
      * 
-     * @param mixed $product 商品資料
-     * @param array $fileInfo 商品照片檔案資訊
+     * @param ModelProduct $product 商品資料
      * 
      * @return array 商品資料結構
      */
-    private function setProduct(mixed $product, array $fileInfo)
+    private function setProduct(ModelProduct $product): array
     {
+        // 上架時間
         $startTime = $product->start_at;
-        $startTime = is_null($startTime) ? null : strtotime($startTime);
+        $startTime = is_null($startTime)
+            ? null
+            : strtotime($startTime);
+
+        // 下架時間
         $endTime = $product->end_at;
-        $endTime = is_null($endTime) ? null : strtotime($endTime);
+        $endTime = is_null($endTime)
+            ? null
+            : strtotime($endTime);
+
+
+        // 圖片網址
+        $photoUrl = $this->toolFile()
+            ->getFileUrl($product->productPhoto->path);
 
         $product = [
             'productId' => $product->product_id,
@@ -238,7 +252,7 @@ class Product extends Service
             'quantity' => $product->quantity,
             'description' => $product->description,
             'pageHtml' => $product->page_html,
-            'photoUrl' => $fileInfo['url'],
+            'photoUrl' => $photoUrl,
             'status' => (bool) $product->status,
             'photoFileId' => $product->photo_fid,
             'productTypeId' => $product->product_type_id,

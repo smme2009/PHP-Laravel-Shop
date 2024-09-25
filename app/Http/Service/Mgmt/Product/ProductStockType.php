@@ -3,7 +3,6 @@
 namespace App\Http\Service\Mgmt\Product;
 
 use App\Http\Service\Service;
-
 use App\Http\Repository\Mgmt\Product\ProductStockType as RepoProductStockType;
 
 /**
@@ -21,7 +20,7 @@ class ProductStockType extends Service
      * 
      * @return array 商品庫存單類型列表
      */
-    public function getProductStockTypeList()
+    public function getProductStockTypeList(): array
     {
         $productStockTypeColl = $this->repoProductStockType
             ->getProductStockTypeColl();

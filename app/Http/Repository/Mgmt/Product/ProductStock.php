@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Mgmt\Product;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Models\ProductStock as ModelProductStock;
 
 /**
@@ -20,9 +21,9 @@ class ProductStock
      * 
      * @param int $productId 商品ID
      * 
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator 商品庫存單分頁
+     * @return LengthAwarePaginator 商品庫存單分頁
      */
-    public function getProductStockPage(int $productId)
+    public function getProductStockPage(int $productId): LengthAwarePaginator
     {
         $productStockPage = $this->productStock
             ->where('product_id', $productId)
@@ -37,13 +38,13 @@ class ProductStock
      * 
      * @param array $productStockData 商品庫存單資料
      * 
-     * @return false|int 商品庫存單ID
+     * @return bool|int 商品庫存單ID
      */
-    public function addProductStock(array $productStockData)
+    public function addProductStock(array $productStockData): bool|int
     {
         $isSave = $this->saveModel($productStockData);
 
-        if (!$isSave) {
+        if ($isSave === false) {
             return false;
         }
 
@@ -59,7 +60,7 @@ class ProductStock
      * 
      * @return bool 是否儲存
      */
-    private function saveModel(array $productData)
+    private function saveModel(array $productData): bool
     {
         $this->productStock->product_stock_type_id = $productData['productStockTypeId'];
         $this->productStock->product_id = $productData['productId'];

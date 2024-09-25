@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Mgmt\Product;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-
 use App\Http\Service\Mgmt\Product\ProductStockType as SrcProductStockType;
 
 /**
@@ -19,9 +19,9 @@ class ProductStockType extends Controller
     /**
      * 取得商品庫存單類型列表
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getProductStockTypeList()
+    public function getProductStockTypeList(): JsonResponse
     {
         $productStockTypeList = $this->srcProductStockType
             ->getProductStockTypeList();

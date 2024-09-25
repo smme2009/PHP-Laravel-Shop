@@ -2,10 +2,10 @@
 
 namespace App\Http\Service\Mgmt\Product;
 
-use App\Http\Service\Service;
 use Illuminate\Validation\Rule;
-
+use App\Http\Service\Service;
 use App\Http\Repository\Mgmt\Product\ProductType as RepoProductType;
+use App\Tool\Validation\Result;
 
 /**
  * 商品類型
@@ -24,7 +24,7 @@ class ProductType extends Service
      * 
      * @return array 商品類型分頁
      */
-    public function getProductTypePage(array $searchData)
+    public function getProductTypePage(array $searchData): array
     {
         $page = $this->repoProductType
             ->getProductTypePage($searchData);
@@ -47,19 +47,18 @@ class ProductType extends Service
      * 
      * @param int $productTypeId 商品類型ID
      * 
-     * @return false|array 商品類型
+     * @return bool|array 商品類型
      */
-    public function getProductType(int $productTypeId)
+    public function getProductType(int $productTypeId): bool|array
     {
         $isSet = $this->repoProductType
             ->setProductType($productTypeId);
 
-        if (!$isSet) {
+        if ($isSet === false) {
             return false;
         }
 
         $productTypeModel = $this->repoProductType->productType;
-
         $productType = $this->setProductType($productTypeModel);
 
         return $productType;
@@ -71,9 +70,9 @@ class ProductType extends Service
      * @param array $productTypeData 商品類型資料
      * @param null|int $productTypeId 商品類型ID
      * 
-     * @return \App\Tool\Validation\Result 驗證結果
+     * @return Result 驗證結果
      */
-    public function validateData(array $productTypeData, null|int $productTypeId = null)
+    public function validateData(array $productTypeData, null|int $productTypeId = null): Result
     {
         // 驗證規則
         $rule = [
@@ -83,13 +82,14 @@ class ProductType extends Service
 
         $ruleNameUnique = Rule::unique('App\Models\ProductType', 'name');
 
-        if ($productTypeId) {
+        if (is_int($productTypeId)) {
             $ruleNameUnique->ignore($productTypeId, 'product_type_id');
         }
 
         $rule['name'][] = $ruleNameUnique;
 
-        $result = $this->toolValidation()->validateData($productTypeData, $rule);
+        $result = $this->toolValidation()
+            ->validateData($productTypeData, $rule);
 
         return $result;
     }
@@ -99,9 +99,9 @@ class ProductType extends Service
      * 
      * @param array $productTypeData 商品類型資料
      * 
-     * @return false|int 商品類型ID
+     * @return bool|int 商品類型ID
      */
-    public function addProductType(array $productTypeData)
+    public function addProductType(array $productTypeData): bool|int
     {
         // 新增商品類型
         $product_id = $this->repoProductType
@@ -118,12 +118,12 @@ class ProductType extends Service
      * 
      * @return bool 是否編輯成功
      */
-    public function editProductType(int $productTypeId, array $productTypeData)
+    public function editProductType(int $productTypeId, array $productTypeData): bool
     {
         $isSet = $this->repoProductType
             ->setProductType($productTypeId);
 
-        if (!$isSet) {
+        if ($isSet === false) {
             return false;
         }
 
@@ -141,17 +141,18 @@ class ProductType extends Service
      * 
      * @return bool 是否刪除成功
      */
-    public function deletePeoductType(int $productTypeId)
+    public function deletePeoductType(int $productTypeId): bool
     {
         $isSet = $this->repoProductType
             ->setProductType($productTypeId);
 
-        if (!$isSet) {
+        if ($isSet === false) {
             return false;
         }
 
         // 刪除商品類型
-        $isDelete = $this->repoProductType->deleteProductType();
+        $isDelete = $this->repoProductType
+            ->deleteProductType();
 
         return $isDelete;
     }
@@ -164,12 +165,12 @@ class ProductType extends Service
      * 
      * @return bool 是否編輯成功
      */
-    public function editProductTypeStatus(int $productTypeId, bool $status)
+    public function editProductTypeStatus(int $productTypeId, bool $status): bool
     {
         $isSet = $this->repoProductType
             ->setProductType($productTypeId);
 
-        if (!$isSet) {
+        if ($isSet === false) {
             return false;
         }
 
@@ -186,7 +187,7 @@ class ProductType extends Service
      * 
      * @return array 商品類型資料結構
      */
-    private function setProductType(mixed $productType)
+    private function setProductType(mixed $productType): array
     {
         $productType = [
             'productTypeId' => $productType->product_type_id,

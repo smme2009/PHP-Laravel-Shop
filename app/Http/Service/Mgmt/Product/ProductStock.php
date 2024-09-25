@@ -3,9 +3,9 @@
 namespace App\Http\Service\Mgmt\Product;
 
 use App\Http\Service\Service;
-
 use App\Http\Repository\Mgmt\Product\Product as RepoProduct;
 use App\Http\Repository\Mgmt\Product\ProductStock as RepoProductStock;
+use App\Tool\Validation\Result;
 
 /**
  * 商品庫存單
@@ -25,9 +25,10 @@ class ProductStock extends Service
      * 
      * @return array 商品庫存單分頁
      */
-    public function getProductStockPage(int $productId)
+    public function getProductStockPage(int $productId): array
     {
-        $page = $this->repoProductStock->getProductStockPage($productId);
+        $page = $this->repoProductStock
+            ->getProductStockPage($productId);
 
         $data = [];
         foreach ($page as $productStock) {
@@ -47,9 +48,9 @@ class ProductStock extends Service
      * 
      * @param array $productStockData 商品庫存單資料
      * 
-     * @return \App\Tool\Validation\Result 驗證結果
+     * @return Result 驗證結果
      */
-    public function validateData(array $productStockData)
+    public function validateData(array $productStockData): Result
     {
         // 驗證規則
         $rule = [
@@ -57,7 +58,8 @@ class ProductStock extends Service
             'quantity' => ['required', 'integer'],
         ];
 
-        $result = $this->toolValidation()->validateData($productStockData, $rule);
+        $result = $this->toolValidation()
+            ->validateData($productStockData, $rule);
 
         return $result;
     }
@@ -68,21 +70,21 @@ class ProductStock extends Service
      * @param int $productId 商品ID
      * @param array $productStockData 商品庫存單資料
      * 
-     * @return false|int 商品庫存單ID
+     * @return bool|int 商品庫存單ID
      */
-    public function addProductStock(int $productId, array $productStockData)
+    public function addProductStock(int $productId, array $productStockData): bool|int
     {
-        $isSet = $this->repoProduct->setProduct($productId, true);
+        $isSet = $this->repoProduct
+            ->setProduct($productId, true);
 
-        if (!$isSet) {
+        if ($isSet === false) {
             return false;
         }
 
         $productStockData['productId'] = $productId;
-
         $productStockId = $this->repoProductStock->addProductStock($productStockData);
 
-        if (!$productStockId) {
+        if ($productStockId === false) {
             return false;
         }
 
@@ -99,7 +101,7 @@ class ProductStock extends Service
         $isEdit = $this->repoProduct
             ->editProductQuantity($editType, $productStockData['quantity']);
 
-        if (!$isEdit) {
+        if ($isEdit === false) {
             return false;
         }
 
@@ -113,10 +115,12 @@ class ProductStock extends Service
      * 
      * @return array 商品庫存單資料結構
      */
-    private function setProductStock(mixed $productStock)
+    private function setProductStock(mixed $productStock): array
     {
         $createTime = $productStock->created_at;
-        $createTime = is_null($createTime) ? null : strtotime($createTime);
+        $createTime = is_null($createTime)
+            ? null
+            : strtotime($createTime);
 
         $productStock = [
             'productStockId' => $productStock->product_stock_id,

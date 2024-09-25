@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Mgmt\Product;
 
+use Illuminate\Database\Eloquent\Collection;
 use App\Models\ProductStockType as ModelProductStockType;
 
 /**
@@ -18,9 +19,9 @@ class ProductStockType
     /**
      * 取得商品庫存類型Collection
      * 
-     * @return \Illuminate\Database\Eloquent\Collection 商品庫存類型Collection
+     * @return Collection 商品庫存類型Collection
      */
-    public function getProductStockTypeColl()
+    public function getProductStockTypeColl(): Collection
     {
         $productStockType = $this->productStockType->all();
 

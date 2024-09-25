@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api\Mgmt\Product;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
 use App\Http\Service\Mgmt\Product\Product as SrcProduct;
 
 /**
@@ -20,16 +20,17 @@ class Product extends Controller
     /**
      * 取得商品列表
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getProductPage()
+    public function getProductPage(): JsonResponse
     {
         // 取得搜尋資料
         $searchData = [
             'keyword' => request()->get('keyword'),
         ];
 
-        $productPage = $this->srcProduct->getProductPage($searchData);
+        $productPage = $this->srcProduct
+            ->getProductPage($searchData);
 
         $response = $this->toolResponseJson()
             ->setMessage('成功取得商品分頁資料')
@@ -44,15 +45,16 @@ class Product extends Controller
     /**
      * 取得商品
      * 
-     * @param int $productId
+     * @param int $productId 商品ID
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getProduct(int $productId)
+    public function getProduct(int $productId): JsonResponse
     {
-        $product = $this->srcProduct->getProduct($productId);
+        $product = $this->srcProduct
+            ->getProduct($productId);
 
-        if (!$product) {
+        if ($product === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(404)
                 ->setMessage('取得商品資料失敗')
@@ -74,15 +76,16 @@ class Product extends Controller
     /**
      * 上傳商品圖片
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function uploadProductPhoto()
+    public function uploadProductPhoto(): JsonResponse
     {
         $photo = request()->file('photo');
 
-        $result = $this->srcProduct->validatePhoto($photo);
+        $result = $this->srcProduct
+            ->validatePhoto($photo);
 
-        if (!$result->status) {
+        if ($result->status === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage($result->message)
@@ -91,7 +94,8 @@ class Product extends Controller
             return $response;
         }
 
-        $fileInfo = $this->srcProduct->uploadProductPhoto($photo);
+        $fileInfo = $this->srcProduct
+            ->uploadProductPhoto($photo);
 
         if (!$fileInfo) {
             $response = $this->toolResponseJson()
@@ -116,15 +120,16 @@ class Product extends Controller
     /**
      * 新增商品
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function addProduct()
+    public function addProduct(): JsonResponse
     {
         $productData = $this->setProductData();
 
-        $result = $this->srcProduct->validateData($productData);
+        $result = $this->srcProduct
+            ->validateData($productData);
 
-        if (!$result->status) {
+        if ($result->status === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setData(['errorList' => $result->error])
@@ -133,9 +138,10 @@ class Product extends Controller
             return $response;
         }
 
-        $productId = $this->srcProduct->addProduct($productData);
+        $productId = $this->srcProduct
+            ->addProduct($productData);
 
-        if (!$productId) {
+        if ($productId === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('新增商品失敗')
@@ -160,15 +166,16 @@ class Product extends Controller
      * 
      * @param int $productId 商品ID
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function editProduct(int $productId)
+    public function editProduct(int $productId): JsonResponse
     {
         $productData = $this->setProductData();
 
-        $result = $this->srcProduct->validateData($productData);
+        $result = $this->srcProduct
+            ->validateData($productData);
 
-        if (!$result->status) {
+        if ($result->status === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setData(['errorList' => $result->error])
@@ -179,9 +186,8 @@ class Product extends Controller
 
         DB::beginTransaction();
 
-        $isEdit = $this->srcProduct->editProduct($productId, $productData);
-
-        DB::commit();
+        $isEdit = $this->srcProduct
+            ->editProduct($productId, $productData);
 
         if (!$isEdit) {
             $response = $this->toolResponseJson()
@@ -191,6 +197,8 @@ class Product extends Controller
 
             return $response;
         }
+
+        DB::commit();
 
         $response = $this->toolResponseJson()
             ->setHttpCode(200)
@@ -205,15 +213,14 @@ class Product extends Controller
      * 
      * @param int $productId 商品ID
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function deleteProduct(int $productId)
+    public function deleteProduct(int $productId): JsonResponse
     {
         DB::beginTransaction();
 
-        $isDelete = $this->srcProduct->deletePeoduct($productId);
-
-        DB::commit();
+        $isDelete = $this->srcProduct
+            ->deleteProduct($productId);
 
         if (!$isDelete) {
             $response = $this->toolResponseJson()
@@ -223,6 +230,8 @@ class Product extends Controller
 
             return $response;
         }
+
+        DB::commit();
 
         $response = $this->toolResponseJson()
             ->setHttpCode(200)
@@ -237,17 +246,16 @@ class Product extends Controller
      * 
      * @param int $productId 商品ID
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function editProductStatus(int $productId)
+    public function editProductStatus(int $productId): JsonResponse
     {
         $status = request()->get('status');
 
         DB::beginTransaction();
 
-        $isEdit = $this->srcProduct->editProductStatus($productId, $status);
-
-        DB::commit();
+        $isEdit = $this->srcProduct
+            ->editProductStatus($productId, $status);
 
         if (!$isEdit) {
             $response = $this->toolResponseJson()
@@ -257,6 +265,8 @@ class Product extends Controller
 
             return $response;
         }
+
+        DB::commit();
 
         $response = $this->toolResponseJson()
             ->setHttpCode(200)
@@ -270,7 +280,7 @@ class Product extends Controller
      * 
      * @return array 商品資料
      */
-    private function setProductData()
+    private function setProductData(): array
     {
         $productData = [
             'name' => request()->get('name'),

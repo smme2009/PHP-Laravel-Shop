@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * 商品
@@ -25,14 +26,26 @@ class Product extends Model
     /**
      * 取得商品類型
      * 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo 商品類型
+     * @return BelongsTo 商品類型
      */
-    public function productType()
+    public function productType(): BelongsTo
     {
         $key = 'product_type_id';
 
         $productType = $this->belongsTo(ProductType::class, $key, $key);
 
         return $productType;
+    }
+
+    /**
+     * 取得商品圖片
+     * 
+     * @return BelongsTo
+     */
+    public function productPhoto(): BelongsTo
+    {
+        $productPhoto = $this->belongsTo(File::class, 'photo_fid', 'file_id');
+
+        return $productPhoto;
     }
 }

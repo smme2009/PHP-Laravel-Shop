@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Mgmt\Product;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-
 use App\Http\Service\Mgmt\Product\ProductType as SrcProductType;
 
 /**
@@ -19,9 +19,9 @@ class ProductType extends Controller
     /**
      * 取得商品類型列表
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getProductTypePage()
+    public function getProductTypePage(): JsonResponse
     {
         // 取得搜尋資料
         $searchData = [
@@ -46,14 +46,14 @@ class ProductType extends Controller
      * 
      * @param int $productTypeId
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getProductType(int $productTypeId)
+    public function getProductType(int $productTypeId): JsonResponse
     {
         $productType = $this->srcProductType
             ->getProductType($productTypeId);
 
-        if (!$productType) {
+        if ($productType === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(404)
                 ->setMessage('取得商品類型資料失敗')
@@ -75,19 +75,21 @@ class ProductType extends Controller
     /**
      * 新增商品類型
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function addProductType()
+    public function addProductType(): JsonResponse
     {
         $productTypeData = $this->setProductTypeData();
 
         $result = $this->srcProductType
             ->validateData($productTypeData);
 
-        if (!$result->status) {
+        if ($result->status === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
-                ->setData(['errorList' => $result->error])
+                ->setData([
+                    'errorList' => $result->error
+                ])
                 ->get();
 
             return $response;
@@ -96,7 +98,7 @@ class ProductType extends Controller
         $productTypeId = $this->srcProductType
             ->addProductType($productTypeData);
 
-        if (!$productTypeId) {
+        if ($productTypeId === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('新增商品類型失敗')
@@ -121,16 +123,16 @@ class ProductType extends Controller
      * 
      * @param int $productTypeId 商品類型ID
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function editProductType(int $productTypeId)
+    public function editProductType(int $productTypeId): JsonResponse
     {
         $productTypeData = $this->setProductTypeData();
 
         $result = $this->srcProductType
             ->validateData($productTypeData, $productTypeId);
 
-        if (!$result->status) {
+        if ($result->status === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setData(['errorList' => $result->error])
@@ -142,7 +144,7 @@ class ProductType extends Controller
         $isEdit = $this->srcProductType
             ->editProductType($productTypeId, $productTypeData);
 
-        if (!$isEdit) {
+        if ($isEdit === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('編輯商品類型失敗')
@@ -164,14 +166,14 @@ class ProductType extends Controller
      * 
      * @param int $productTypeId 商品類型ID
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function deleteProductType(int $productTypeId)
+    public function deleteProductType(int $productTypeId): JsonResponse
     {
         $isDelete = $this->srcProductType
             ->deletePeoductType($productTypeId);
 
-        if (!$isDelete) {
+        if ($isDelete === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('刪除商品類型失敗')
@@ -193,16 +195,16 @@ class ProductType extends Controller
      * 
      * @param int $productTypeId 商品類型ID
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function editProductTypeStatus(int $productTypeId)
+    public function editProductTypeStatus(int $productTypeId): JsonResponse
     {
         $status = request()->get('status');
 
         $isEdit = $this->srcProductType
             ->editProductTypeStatus($productTypeId, $status);
 
-        if (!$isEdit) {
+        if ($isEdit === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('編輯商品類型狀態失敗')
@@ -223,7 +225,7 @@ class ProductType extends Controller
      * 
      * @return array
      */
-    private function setProductTypeData()
+    private function setProductTypeData(): array
     {
         $productTypeData = [
             'name' => request()->get('name'),
