@@ -3,8 +3,9 @@
 namespace App\Http\Service\Mgmt\Order;
 
 use App\Http\Service\Service;
-
 use App\Http\Repository\Mgmt\Order\Order as RepoOrder;
+use App\Models\Order as ModelOrder;
+use App\Models\OrderProduct as ModelOrderProduct;
 
 /**
  * 訂單
@@ -23,9 +24,10 @@ class Order extends Service
      * 
      * @return array 訂單分頁資料
      */
-    public function getOrderPage(null|string $keyword)
+    public function getOrderPage(null|string $keyword): array
     {
-        $page = $this->repoOrder->getOrderPage($keyword);
+        $page = $this->repoOrder
+            ->getOrderPage($keyword);
 
         $data = [];
         foreach ($page as $order) {
@@ -45,19 +47,18 @@ class Order extends Service
      * 
      * @param int $orderId 訂單ID
      * 
-     * @return false|array
+     * @return bool|array 訂單
      */
-    public function getOrder(int $orderId)
+    public function getOrder(int $orderId): bool|array
     {
         $isSet = $this->repoOrder
             ->setOrder($orderId);
 
-        if (!$isSet) {
-            return $isSet;
+        if ($isSet === false) {
+            return false;
         }
 
         $orderModel = $this->repoOrder->order;
-
         $order = $this->getOrderData($orderModel);
 
         return $order;
@@ -66,15 +67,19 @@ class Order extends Service
     /**
      * 取得訂單資料
      * 
-     * @param object $orderModel 訂單Model
+     * @param ModelOrder $orderModel 訂單Model
      * 
      * @return array 訂單資料
      */
-    private function getOrderData(object $orderModel)
+    private function getOrderData(ModelOrder $orderModel): array
     {
+        // 新增時間
         $createTime = $orderModel->created_at;
-        $createTime = is_null($createTime) ? null : strtotime($createTime);
+        $createTime = is_null($createTime)
+            ? null
+            : strtotime($createTime);
 
+        // 訂單商品列表
         $orderProductList = [];
         foreach ($orderModel->orderProduct as $orderProductModel) {
             $orderProductList[] = $this->getOrderProductList($orderProductModel);
@@ -100,11 +105,11 @@ class Order extends Service
     /**
      * 取得訂單商品列表
      * 
-     * @param object $orderProductModel 訂單商品Model
+     * @param ModelOrderProduct $orderProductModel 訂單商品Model
      * 
-     * @return array
+     * @return array 訂單商品列表
      */
-    private function getOrderProductList(object $orderProductModel)
+    private function getOrderProductList(ModelOrderProduct $orderProductModel): array
     {
         $photoUrl = $this->toolFile()
             ->getFileUrl($orderProductModel->productPhoto->path);

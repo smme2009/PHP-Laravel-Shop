@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Mgmt\Order;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-
 use App\Http\Service\Mgmt\Order\Order as SrcOrder;
 
 /**
@@ -19,13 +19,14 @@ class Order extends Controller
     /**
      * 取得訂單列表
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getOrderPage()
+    public function getOrderPage(): JsonResponse
     {
         $keyword = request()->get('keyword');
 
-        $orderPage = $this->srcOrder->getOrderPage($keyword);
+        $orderPage = $this->srcOrder
+            ->getOrderPage($keyword);
 
         $response = $this->toolResponseJson()
             ->setMessage('成功取得訂單分頁資料')
@@ -42,14 +43,14 @@ class Order extends Controller
      * 
      * @param int $orderId 訂單ID
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getOrder(int $orderId)
+    public function getOrder(int $orderId): JsonResponse
     {
         $order = $this->srcOrder
             ->getOrder($orderId);
 
-        if (!$order) {
+        if ($order === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(404)
                 ->setMessage('取得訂單失敗')

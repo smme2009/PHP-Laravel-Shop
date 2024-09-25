@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Mgmt\Order;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Models\Order as ModelOrder;
 
 /**
@@ -20,9 +21,9 @@ class Order
      * 
      * @param null|string $keyword 關鍵字
      * 
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator 訂單分頁資料
+     * @return LengthAwarePaginator 訂單分頁資料
      */
-    public function getOrderPage(null|string $keyword)
+    public function getOrderPage(null|string $keyword): LengthAwarePaginator
     {
         $orderPage = $this->order
             ->when(
@@ -44,11 +45,11 @@ class Order
      * 
      * @return bool 是否設定成功
      */
-    public function setOrder(int $orderId)
+    public function setOrder(int $orderId): bool
     {
         $order = $this->order->find($orderId);
 
-        if (!$order) {
+        if ($order === false) {
             return false;
         }
 
