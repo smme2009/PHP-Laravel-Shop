@@ -3,24 +3,21 @@
 namespace App\Http\Service\Mgmt\Other;
 
 use App\Http\Service\Service;
+use App\Tool\Validation\Result;
 
 /**
  * 編輯器
  */
 class Editor extends Service
 {
-    public function __construct()
-    {
-    }
-
     /**  
      * 驗證照片
      * 
      * @param mixed $photo 照片
      * 
-     * @return \App\Tool\Validation\Result 驗證結果
+     * @return Result 驗證結果
      */
-    public function validatePhoto(mixed $photo)
+    public function validatePhoto(mixed $photo): Result
     {
         // 驗證資料
         $data = [
@@ -32,7 +29,8 @@ class Editor extends Service
             'photo' => ['required', 'image', 'max:10240'],
         ];
 
-        $result = $this->toolValidation()->validateData($data, $rule);
+        $result = $this->toolValidation()
+            ->validateData($data, $rule);
 
         return $result;
     }
@@ -42,11 +40,12 @@ class Editor extends Service
      * 
      * @param mixed $photo 照片
      * 
-     * @return array
+     * @return bool|array 照片資訊
      */
-    public function uploadEditorPhoto(mixed $photo)
+    public function uploadEditorPhoto(mixed $photo): bool|array
     {
-        $fileInfo = $this->toolFile()->uploadFile($photo, 'editor/photo');
+        $fileInfo = $this->toolFile()
+            ->uploadFile($photo, 'editor/photo');
 
         return $fileInfo;
     }

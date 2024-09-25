@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Mgmt\Other;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-
 use App\Http\Service\Mgmt\Other\Editor as SrcEditor;
 
 /**
@@ -19,15 +19,16 @@ class Editor extends Controller
     /**
      * 上傳商品圖片
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function uploadEditorPhoto()
+    public function uploadEditorPhoto(): JsonResponse
     {
         $photo = request()->file('photo');
 
-        $result = $this->srcEditor->validatePhoto($photo);
+        $result = $this->srcEditor
+            ->validatePhoto($photo);
 
-        if (!$result->status) {
+        if ($result->status === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage($result->message)
@@ -36,9 +37,10 @@ class Editor extends Controller
             return $response;
         }
 
-        $fileInfo = $this->srcEditor->uploadEditorPhoto($photo);
+        $fileInfo = $this->srcEditor
+            ->uploadEditorPhoto($photo);
 
-        if (!$fileInfo) {
+        if ($fileInfo === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('上傳圖片失敗')
