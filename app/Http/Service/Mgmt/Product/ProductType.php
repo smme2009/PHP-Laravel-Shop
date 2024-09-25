@@ -141,7 +141,7 @@ class ProductType extends Service
      * 
      * @return bool 是否刪除成功
      */
-    public function deletePeoductType(int $productTypeId): bool
+    public function deleteProductType(int $productTypeId): bool
     {
         $isSet = $this->repoProductType
             ->setProductType($productTypeId);

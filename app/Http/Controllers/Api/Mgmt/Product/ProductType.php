@@ -171,7 +171,7 @@ class ProductType extends Controller
     public function deleteProductType(int $productTypeId): JsonResponse
     {
         $isDelete = $this->srcProductType
-            ->deletePeoductType($productTypeId);
+            ->deleteProductType($productTypeId);
 
         if ($isDelete === false) {
             $response = $this->toolResponseJson()
