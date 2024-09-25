@@ -3,6 +3,7 @@
 namespace App\Http\Service\Mgmt\Admin;
 
 use App\Http\Service\Service;
+use App\Tool\Validation\Result;
 
 /**
  * 登入
@@ -14,9 +15,9 @@ class Login extends Service
      * 
      * @param array $data 資料
      * 
-     * @return \App\Tool\Validation\Result 驗證結果
+     * @return Result 驗證結果
      */
-    public function validateData(array $data)
+    public function validateData(array $data): Result
     {
         // 驗證規則
         $rule = [
@@ -24,7 +25,8 @@ class Login extends Service
             'password' => ['required', 'string'],
         ];
 
-        $result = $this->toolValidation()->validateData($data, $rule);
+        $result = $this->toolValidation()
+            ->validateData($data, $rule);
 
         return $result;
     }
@@ -35,9 +37,9 @@ class Login extends Service
      * @param string $account 帳號
      * @param string $password 密碼
      * 
-     * @return bool
+     * @return bool 是否登入成功
      */
-    public function login(string $account, string $password)
+    public function login(string $account, string $password): bool
     {
         $loginData = [
             'account' => $account,
@@ -53,13 +55,13 @@ class Login extends Service
     /**
      * 取得Jwt Token
      * 
-     * @return string
+     * @return string JWT Token
      */
-    public function getJwtToken()
+    public function getJwtToken(): string
     {
         $userId = auth('admin')->id();
 
-        if (!$userId) {
+        if (is_null($userId)) {
             return '';
         }
 
@@ -67,7 +69,8 @@ class Login extends Service
             'accountId' => $userId,
         ];
 
-        $jwtToken = $this->toolJwt()->encode($data);
+        $jwtToken = $this->toolJwt()
+            ->encode($data);
 
         return $jwtToken;
     }

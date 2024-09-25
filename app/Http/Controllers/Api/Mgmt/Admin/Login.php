@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Mgmt\Admin;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-
 use App\Http\Service\Mgmt\Admin\Login as SrcLogin;
 
 class Login extends Controller
@@ -16,9 +16,9 @@ class Login extends Controller
     /**
      * 登入
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function login()
+    public function login(): JsonResponse
     {
         $requestData = [
             'account' => request()->get('account'),
@@ -26,9 +26,10 @@ class Login extends Controller
         ];
 
         // 驗證資料
-        $result = $this->srcLogin->validateData($requestData);
+        $result = $this->srcLogin
+            ->validateData($requestData);
 
-        if (!$result->status) {
+        if ($result->status === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setData(['errorList' => $result->error])
@@ -38,9 +39,10 @@ class Login extends Controller
         }
 
         // 登入
-        $isLogin = $this->srcLogin->login($requestData['account'], $requestData['password']);
+        $isLogin = $this->srcLogin
+            ->login($requestData['account'], $requestData['password']);
 
-        if (!$isLogin) {
+        if ($isLogin === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('帳號或密碼錯誤')
@@ -50,9 +52,10 @@ class Login extends Controller
         }
 
         // 取得Jwt Token
-        $jwtToken = $this->srcLogin->getJwtToken();
+        $jwtToken = $this->srcLogin
+            ->getJwtToken();
 
-        if (!$jwtToken) {
+        if ($jwtToken === '') {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('登入失敗')
@@ -77,9 +80,9 @@ class Login extends Controller
     /**
      * 確認登入
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function checkLogin()
+    public function checkLogin(): JsonResponse
     {
         // 有確認登入中介層檢查後才會來這裡，所以直接回傳登入中資訊
         $response = $this->toolResponseJson()
