@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Mgmt\Banner;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-
 use App\Http\Service\Mgmt\Banner\Banner as SrcBanner;
 
 /**
@@ -17,18 +17,19 @@ class Banner extends Controller
     }
 
     /**
-     * 取得橫幅列表
+     * 取得橫幅分頁
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getBannerPage()
+    public function getBannerPage(): JsonResponse
     {
         // 取得搜尋資料
         $searchData = [
             'keyword' => request()->get('keyword'),
         ];
 
-        $bannerPage = $this->srcBanner->getBannerPage($searchData);
+        $bannerPage = $this->srcBanner
+            ->getBannerPage($searchData);
 
         $response = $this->toolResponseJson()
             ->setMessage('成功取得橫幅分頁資料')
@@ -43,15 +44,16 @@ class Banner extends Controller
     /**
      * 取得橫幅
      * 
-     * @param int $bannerId
+     * @param int $bannerId 橫幅ID
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getBanner(int $bannerId)
+    public function getBanner(int $bannerId): JsonResponse
     {
-        $banner = $this->srcBanner->getBanner($bannerId);
+        $banner = $this->srcBanner
+            ->getBanner($bannerId);
 
-        if (!$banner) {
+        if ($banner === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(404)
                 ->setMessage('取得橫幅資料失敗')
@@ -73,15 +75,16 @@ class Banner extends Controller
     /**
      * 上傳橫幅圖片
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function uploadBannerPhoto()
+    public function uploadBannerPhoto(): JsonResponse
     {
         $photo = request()->file('photo');
 
-        $result = $this->srcBanner->validatePhoto($photo);
+        $result = $this->srcBanner
+            ->validatePhoto($photo);
 
-        if (!$result->status) {
+        if ($result->status === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage($result->message)
@@ -90,9 +93,10 @@ class Banner extends Controller
             return $response;
         }
 
-        $fileInfo = $this->srcBanner->uploadBannerPhoto($photo);
+        $fileInfo = $this->srcBanner
+            ->uploadBannerPhoto($photo);
 
-        if (!$fileInfo) {
+        if ($fileInfo === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('上傳橫幅圖片失敗')
@@ -115,15 +119,16 @@ class Banner extends Controller
     /**
      * 新增橫幅
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function addBanner()
+    public function addBanner(): JsonResponse
     {
         $bannerData = $this->setBannerData();
 
-        $result = $this->srcBanner->validateData($bannerData);
+        $result = $this->srcBanner
+            ->validateData($bannerData);
 
-        if (!$result->status) {
+        if ($result->status === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setData(['errorList' => $result->error])
@@ -132,9 +137,10 @@ class Banner extends Controller
             return $response;
         }
 
-        $bannerId = $this->srcBanner->addBanner($bannerData);
+        $bannerId = $this->srcBanner
+            ->addBanner($bannerData);
 
-        if (!$bannerId) {
+        if ($bannerId === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('新增橫幅失敗')
@@ -159,15 +165,16 @@ class Banner extends Controller
      * 
      * @param int $bannerId 橫幅ID
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function editBanner(int $bannerId)
+    public function editBanner(int $bannerId): JsonResponse
     {
         $bannerData = $this->setBannerData();
 
-        $result = $this->srcBanner->validateData($bannerData);
+        $result = $this->srcBanner
+            ->validateData($bannerData);
 
-        if (!$result->status) {
+        if ($result->status === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setData(['errorList' => $result->error])
@@ -176,9 +183,10 @@ class Banner extends Controller
             return $response;
         }
 
-        $isEdit = $this->srcBanner->editBanner($bannerId, $bannerData);
+        $isEdit = $this->srcBanner
+            ->editBanner($bannerId, $bannerData);
 
-        if (!$isEdit) {
+        if ($isEdit === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('編輯橫幅失敗')
@@ -200,13 +208,14 @@ class Banner extends Controller
      * 
      * @param int $bannerId 橫幅ID
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function deleteBanner(int $bannerId)
+    public function deleteBanner(int $bannerId): JsonResponse
     {
-        $isDelete = $this->srcBanner->deletePeoduct($bannerId);
+        $isDelete = $this->srcBanner
+            ->deleteBanner($bannerId);
 
-        if (!$isDelete) {
+        if ($isDelete === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('刪除橫幅失敗')
@@ -228,15 +237,16 @@ class Banner extends Controller
      * 
      * @param int $bannerId 橫幅ID
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function editBannerStatus(int $bannerId)
+    public function editBannerStatus(int $bannerId): JsonResponse
     {
         $status = request()->get('status');
 
-        $isEdit = $this->srcBanner->editBannerStatus($bannerId, $status);
+        $isEdit = $this->srcBanner
+            ->editBannerStatus($bannerId, $status);
 
-        if (!$isEdit) {
+        if ($isEdit === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('編輯橫幅狀態失敗')
@@ -258,7 +268,7 @@ class Banner extends Controller
      * 
      * @return array 橫幅資料
      */
-    private function setBannerData()
+    private function setBannerData(): array
     {
         $bannerData = [
             'photoFileId' => request()->get('photoFileId'),

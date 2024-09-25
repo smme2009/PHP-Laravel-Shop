@@ -3,8 +3,9 @@
 namespace App\Http\Service\Mgmt\Banner;
 
 use App\Http\Service\Service;
-
 use App\Http\Repository\Mgmt\Banner\Banner as RepoBanner;
+use App\Models\Banner as ModelBanner;
+use App\Tool\Validation\Result;
 
 /**
  * 橫幅
@@ -21,20 +22,16 @@ class Banner extends Service
      * 
      * @param array $searchData 搜尋資料
      * 
-     * @return array
+     * @return array 橫幅分頁
      */
-    public function getBannerPage(array $searchData)
+    public function getBannerPage(array $searchData): array
     {
-        $page = $this->repoBanner->getBannerPage($searchData);
-
-        $photoFidList = $page->pluck('photo_fid')->all();
-        $fileInfoList = $this->toolFile()->getFileInfoList($photoFidList);
+        $page = $this->repoBanner
+            ->getBannerPage($searchData);
 
         $data = [];
         foreach ($page as $banner) {
-            $fileInfo = $fileInfoList[$banner->photo_fid];
-
-            $data[] = $this->setBanner($banner, $fileInfo);
+            $data[] = $this->setBanner($banner);
         }
 
         $bannerPage = [
@@ -50,21 +47,19 @@ class Banner extends Service
      * 
      * @param int $bannerId 橫幅ID
      * 
-     * @return false|array
+     * @return bool|array 橫幅
      */
-    public function getBanner(int $bannerId)
+    public function getBanner(int $bannerId): bool|array
     {
-        $isSet = $this->repoBanner->setBanner($bannerId);
+        $isSet = $this->repoBanner
+            ->setBanner($bannerId);
 
-        if (!$isSet) {
+        if ($isSet === false) {
             return false;
         }
 
         $bannerModel = $this->repoBanner->banner;
-
-        $fileInfo = $this->toolFile()->getFileInfo($bannerModel->photo_fid);
-
-        $banner = $this->setBanner($bannerModel, $fileInfo);
+        $banner = $this->setBanner($bannerModel);
 
         return $banner;
     }
@@ -74,9 +69,9 @@ class Banner extends Service
      * 
      * @param array $bannerData 橫幅資料
      * 
-     * @return \App\Tool\Validation\Result 驗證結果
+     * @return Result 驗證結果
      */
-    public function validateData(array $bannerData)
+    public function validateData(array $bannerData): Result
     {
         // 驗證規則
         $rule = [
@@ -89,7 +84,8 @@ class Banner extends Service
             'status' => ['required', 'boolean'],
         ];
 
-        $result = $this->toolValidation()->validateData($bannerData, $rule);
+        $result = $this->toolValidation()
+            ->validateData($bannerData, $rule);
 
         return $result;
     }
@@ -99,9 +95,9 @@ class Banner extends Service
      * 
      * @param mixed $photo 照片
      * 
-     * @return \App\Tool\Validation\Result 驗證結果
+     * @return Result 驗證結果
      */
-    public function validatePhoto(mixed $photo)
+    public function validatePhoto(mixed $photo): Result
     {
         // 驗證資料
         $data = [
@@ -113,7 +109,8 @@ class Banner extends Service
             'photo' => ['required', 'image', 'max:10240'],
         ];
 
-        $result = $this->toolValidation()->validateData($data, $rule);
+        $result = $this->toolValidation()
+            ->validateData($data, $rule);
 
         return $result;
     }
@@ -123,11 +120,12 @@ class Banner extends Service
      * 
      * @param mixed $photo 照片
      * 
-     * @return array
+     * @return bool|array 圖片資訊
      */
-    public function uploadBannerPhoto(mixed $photo)
+    public function uploadBannerPhoto(mixed $photo): bool|array
     {
-        $fileInfo = $this->toolFile()->uploadFile($photo, 'banner');
+        $fileInfo = $this->toolFile()
+            ->uploadFile($photo, 'banner');
 
         return $fileInfo;
     }
@@ -137,12 +135,13 @@ class Banner extends Service
      * 
      * @param array $bannerData 橫幅資料
      * 
-     * @return false|int 橫幅ID
+     * @return bool|int 橫幅ID
      */
-    public function addBanner(array $bannerData)
+    public function addBanner(array $bannerData): bool|int
     {
         // 新增橫幅
-        $banner_id = $this->repoBanner->addBanner($bannerData);
+        $banner_id = $this->repoBanner
+            ->addBanner($bannerData);
 
         return $banner_id;
     }
@@ -153,18 +152,20 @@ class Banner extends Service
      * @param int $bannerId 橫幅ID
      * @param array $bannerData 橫幅資料
      * 
-     * @return bool
+     * @return bool 是否編輯成功
      */
-    public function editBanner(int $bannerId, array $bannerData)
+    public function editBanner(int $bannerId, array $bannerData): bool
     {
-        $isSet = $this->repoBanner->setBanner($bannerId);
+        $isSet = $this->repoBanner
+            ->setBanner($bannerId);
 
-        if (!$isSet) {
+        if ($isSet === false) {
             return false;
         }
 
         // 編輯橫幅
-        $isEdit = $this->repoBanner->editBanner($bannerData);
+        $isEdit = $this->repoBanner
+            ->editBanner($bannerData);
 
         return $isEdit;
     }
@@ -174,18 +175,20 @@ class Banner extends Service
      * 
      * @param int $bannerId 橫幅ID
      * 
-     * @return bool
+     * @return bool 是否刪除成功
      */
-    public function deletePeoduct(int $bannerId)
+    public function deleteBanner(int $bannerId): bool
     {
-        $isSet = $this->repoBanner->setBanner($bannerId);
+        $isSet = $this->repoBanner
+            ->setBanner($bannerId);
 
-        if (!$isSet) {
+        if ($isSet === false) {
             return false;
         }
 
         // 刪除橫幅
-        $isDelete = $this->repoBanner->deleteBanner();
+        $isDelete = $this->repoBanner
+            ->deleteBanner();
 
         return $isDelete;
     }
@@ -198,15 +201,17 @@ class Banner extends Service
      * 
      * @return bool 是否編輯成功
      */
-    public function editBannerStatus(int $bannerId, bool $status)
+    public function editBannerStatus(int $bannerId, bool $status): bool
     {
-        $isSet = $this->repoBanner->setBanner($bannerId);
+        $isSet = $this->repoBanner
+            ->setBanner($bannerId);
 
-        if (!$isSet) {
+        if ($isSet === false) {
             return false;
         }
 
-        $isEdit = $this->repoBanner->editBannerStatus($status);
+        $isEdit = $this->repoBanner
+            ->editBannerStatus($status);
 
         return $isEdit;
     }
@@ -214,22 +219,32 @@ class Banner extends Service
     /**
      * 設定橫幅資料結構
      * 
-     * @param mixed $banner 橫幅資料
-     * @param array $fileInfo 橫幅照片檔案資訊
+     * @param ModelBanner $banner 橫幅資料
      * 
      * @return array 橫幅資料結構
      */
-    private function setBanner(mixed $banner, array $fileInfo)
+    private function setBanner(ModelBanner $banner): array
     {
+        // 上架時間
         $startTime = $banner->start_at;
-        $startTime = is_null($startTime) ? null : strtotime($startTime);
+        $startTime = is_null($startTime)
+            ? null
+            : strtotime($startTime);
+
+        // 下架時間
         $endTime = $banner->end_at;
-        $endTime = is_null($endTime) ? null : strtotime($endTime);
+        $endTime = is_null($endTime)
+            ? null
+            : strtotime($endTime);
+
+        // 圖片網址
+        $photoUrl = $this->toolFile()
+            ->getFileUrl($banner->bannerPhoto->path);
 
         $banner = [
             'bannerId' => $banner->banner_id,
             'photoFileId' => $banner->photo_fid,
-            'photoUrl' => $fileInfo['url'],
+            'photoUrl' => $photoUrl,
             'name' => $banner->name,
             'url' => $banner->url,
             'startTime' => $startTime,

@@ -3,6 +3,7 @@
 namespace App\Http\Repository\Mgmt\Banner;
 
 use App\Models\Banner as ModelBanner;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
  * 橫幅
@@ -20,9 +21,9 @@ class Banner
      * 
      * @param array $searchData 搜尋資料
      * 
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator 身品分頁資料
+     * @return LengthAwarePaginator 橫幅分頁
      */
-    public function getBannerPage(array $searchData)
+    public function getBannerPage(array $searchData): LengthAwarePaginator
     {
         $bannerPage = $this->banner
             ->when(
@@ -44,11 +45,11 @@ class Banner
      * 
      * @return bool 是否設定成功
      */
-    public function setBanner(int $bannerId)
+    public function setBanner(int $bannerId): bool
     {
         $banner = $this->banner->find($bannerId);
 
-        if (!$banner) {
+        if ($banner === false) {
             return false;
         }
 
@@ -62,13 +63,13 @@ class Banner
      * 
      * @param array $bannerData 橫幅資料
      * 
-     * @return false|int 橫幅ID
+     * @return bool|int 橫幅ID
      */
-    public function addBanner(array $bannerData)
+    public function addBanner(array $bannerData): bool|int
     {
         $isSave = $this->saveModel($bannerData);
 
-        if (!$isSave) {
+        if ($isSave === false) {
             return false;
         }
 
@@ -84,7 +85,7 @@ class Banner
      * 
      * @return bool 是否編輯成功
      */
-    public function editBanner(array $bannerData)
+    public function editBanner(array $bannerData): bool
     {
         $isSave = $this->saveModel($bannerData);
 
@@ -96,7 +97,7 @@ class Banner
      * 
      * @return bool 是否刪除成功
      */
-    public function deleteBanner()
+    public function deleteBanner(): bool
     {
         $isDelete = $this->banner->delete();
 
@@ -110,10 +111,9 @@ class Banner
      * 
      * @return bool 是否編輯成功
      */
-    public function editBannerStatus(bool $status)
+    public function editBannerStatus(bool $status): bool
     {
         $this->banner->status = $status;
-
         $isEdit = $this->banner->save();
 
         return $isEdit;
@@ -126,7 +126,7 @@ class Banner
      * 
      * @return bool 是否儲存成功
      */
-    private function saveModel(array $bannerData)
+    private function saveModel(array $bannerData): bool
     {
         $this->banner->photo_fid = $bannerData['photoFileId'];
         $this->banner->name = $bannerData['name'];
@@ -135,7 +135,6 @@ class Banner
         $this->banner->end_at = $bannerData['endTime'];
         $this->banner->sort = $bannerData['sort'];
         $this->banner->status = $bannerData['status'];
-
         $isSave = $this->banner->save();
 
         return $isSave;
