@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * 訂單
@@ -21,9 +23,9 @@ class Order extends Model
     /**
      * 取得訂單商品
      * 
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany 訂單商品
+     * @return HasMany 訂單商品
      */
-    public function orderProduct()
+    public function orderProduct(): HasMany
     {
         $key = 'order_id';
 
@@ -35,9 +37,9 @@ class Order extends Model
     /**
      * 取得訂單運送方式
      * 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo 訂單運送方式
+     * @return BelongsTo 訂單運送方式
      */
-    public function orderShip()
+    public function orderShip(): BelongsTo
     {
         $key = 'order_ship_id';
 
@@ -49,9 +51,9 @@ class Order extends Model
     /**
      * 取得訂單付款方式
      * 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo 訂單付款方式
+     * @return BelongsTo 訂單付款方式
      */
-    public function orderPayment()
+    public function orderPayment(): BelongsTo
     {
         $key = 'order_payment_id';
 
@@ -63,9 +65,9 @@ class Order extends Model
     /**
      * 取得訂單狀態
      * 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo 訂單狀態
+     * @return BelongsTo 訂單狀態
      */
-    public function orderStatus()
+    public function orderStatus(): BelongsTo
     {
         $key = 'order_status_id';
 

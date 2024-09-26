@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * 購物車
@@ -21,9 +22,9 @@ class Cart extends Model
     /**
      * 取得商品
      * 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo 商品
+     * @return BelongsTo 商品
      */
-    public function product()
+    public function product(): BelongsTo
     {
         $key = 'product_id';
 
