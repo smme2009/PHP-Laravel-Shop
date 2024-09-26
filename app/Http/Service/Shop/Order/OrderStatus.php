@@ -3,7 +3,6 @@
 namespace App\Http\Service\Shop\Order;
 
 use App\Http\Service\Service;
-
 use App\Http\Repository\Shop\Order\OrderStatus as RepoOrderStatus;
 
 /**
@@ -21,7 +20,7 @@ class OrderStatus extends Service
      * 
      * @return array 訂單狀態
      */
-    public function getOrderStatusList()
+    public function getOrderStatusList(): array
     {
         $list = $this->repoOrderStatus
             ->getOrderStatusList();

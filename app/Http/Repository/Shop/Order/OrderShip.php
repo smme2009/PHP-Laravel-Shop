@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Shop\Order;
 
+use Illuminate\Database\Eloquent\Collection;
 use App\Models\OrderShip as ModelOrderShip;
 
 /**
@@ -18,9 +19,9 @@ class OrderShip
     /**
      * 取得訂單運送方式列表
      * 
-     * @\Illuminate\Database\Eloquent\Collection
+     * @return Collection 訂單運送方式列表
      */
-    public function getOrderShipList()
+    public function getOrderShipList(): Collection
     {
         $orderShipList = $this->orderShip
             ->where('status', 1)

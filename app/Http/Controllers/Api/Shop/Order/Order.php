@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api\Shop\Order;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-
+use App\Http\Controllers\Controller;
 use App\Http\Service\Shop\Order\Order as SrcOrder;
 
 /**
@@ -20,13 +20,14 @@ class Order extends Controller
     /**
      * 取得訂單分頁
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getOrderPage()
+    public function getOrderPage(): JsonResponse
     {
         $keyword = request()->get('keyword');
 
-        $orderPage = $this->srcOrder->getOrderPage($keyword);
+        $orderPage = $this->srcOrder
+            ->getOrderPage($keyword);
 
         $response = $this->toolResponseJson()
             ->setHttpCode(200)
@@ -42,9 +43,9 @@ class Order extends Controller
     /**
      * 新增訂單
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function addOrder()
+    public function addOrder(): JsonResponse
     {
         $orderData = [
             'address' => request()->get('address'),
@@ -56,7 +57,7 @@ class Order extends Controller
         $result = $this->srcOrder
             ->validateData($orderData);
 
-        if (!$result->status) {
+        if ($result->status === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setData([
@@ -72,7 +73,7 @@ class Order extends Controller
         $isAdd = $this->srcOrder
             ->addFullOrder($orderData);
 
-        if (!$isAdd) {
+        if ($isAdd === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('新增訂單失敗')

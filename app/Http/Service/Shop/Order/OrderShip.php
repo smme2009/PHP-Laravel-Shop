@@ -3,7 +3,6 @@
 namespace App\Http\Service\Shop\Order;
 
 use App\Http\Service\Service;
-
 use App\Http\Repository\Shop\Order\OrderShip as RepoOrderShip;
 
 /**
@@ -21,7 +20,7 @@ class OrderShip extends Service
      * 
      * @return array 運送方式
      */
-    public function getOrderShipList()
+    public function getOrderShipList(): array
     {
         $list = $this->repoOrderShip
             ->getOrderShipList();

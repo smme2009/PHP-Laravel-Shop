@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Shop\Order;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Models\Order as ModelOrder;
 use App\Models\OrderProduct as ModelOrderProduct;
 
@@ -21,11 +22,13 @@ class Order
      * 
      * @param null|string $keyword 關鍵字
      * 
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator 訂單分頁
      */
-    public function getOrderPage(null|string $keyword)
+    public function getOrderPage(null|string $keyword): LengthAwarePaginator
     {
-        $memberId = auth()->user()->member_id;
+        $memberId = auth('member')
+            ->user()
+            ->member_id;
 
         $orderPage = $this->order
             ->where('member_id', $memberId)
@@ -43,9 +46,9 @@ class Order
      * 
      * @param string $Ymd 年月日
      * 
-     * @return string
+     * @return string 訂單編號
      */
-    public function getLastOrderCode(string $Ymd)
+    public function getLastOrderCode(string $Ymd): string
     {
         $lastOrderCode = $this->order
             ->where('code', 'REGEXP', '^cd' . $Ymd . '.{6}$')
@@ -62,9 +65,9 @@ class Order
      * 
      * @param array $orderData 訂單資料
      * 
-     * @return false|int
+     * @return bool|int
      */
-    public function addOrder(array $orderData)
+    public function addOrder(array $orderData): bool|int
     {
         $this->order->member_id = auth('member')->user()->member_id;
         $this->order->code = $orderData['code'];
@@ -75,10 +78,9 @@ class Order
         $this->order->order_product_total = $orderData['orderProductTotal'];
         $this->order->order_total = $orderData['orderTotal'];
         $this->order->order_status_id = 1;
-
         $isSave = $this->order->save();
 
-        if (!$isSave) {
+        if ($isSave === false) {
             return false;
         }
 
@@ -94,7 +96,7 @@ class Order
      * 
      * @return bool 是否新增成功
      */
-    public function addOrderProduct(array $orderProductList)
+    public function addOrderProduct(array $orderProductList): bool
     {
         $product = [];
         foreach ($orderProductList as $orderProduct) {

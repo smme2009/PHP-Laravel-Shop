@@ -2,14 +2,14 @@
 
 namespace App\Http\Service\Shop\Order;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Carbon\Carbon;
 use App\Http\Service\Service;
-
 use App\Http\Repository\Shop\Order\Order as RepoOrder;
 use App\Http\Repository\Shop\Order\OrderShip as RepoOrderShip;
 use App\Http\Repository\Shop\Cart\Cart as RepoCart;
 use App\Http\Repository\Shop\Product\Product as RepoProduct;
+use App\Tool\Validation\Result;
 
 /**
  * 訂單
@@ -34,7 +34,7 @@ class Order extends Service
      * 
      * @return array 訂單分頁
      */
-    public function getOrderPage(null|string $keyword)
+    public function getOrderPage(null|string $keyword): array
     {
         $page = $this->repoOrder
             ->getOrderPage($keyword);
@@ -42,7 +42,9 @@ class Order extends Service
         $orderPage = [];
         foreach ($page as $order) {
             $createdTime = $order->created_at;
-            $createdTime = is_null($createdTime) ? null : strtotime($createdTime);
+            $createdTime = is_null($createdTime)
+                ? null
+                : strtotime($createdTime);
 
             $orderPage[] = [
                 'code' => $order->code,
@@ -65,9 +67,9 @@ class Order extends Service
      * 
      * @param array $orderData 訂單資料
      * 
-     * @return \App\Tool\Validation\Result
+     * @return Result 驗證結果
      */
-    public function validateData(array $orderData)
+    public function validateData(array $orderData): Result
     {
         // 驗證資料
         $data = [
@@ -96,17 +98,17 @@ class Order extends Service
      * 
      * @return bool 是否新增成功
      */
-    public function addFullOrder(array $orderData)
+    public function addFullOrder(array $orderData): bool
     {
         $isSet = $this->setCartList($orderData['cartIdList']);
 
-        if (!$isSet) {
+        if ($isSet === false) {
             return false;
         }
 
         $isAdd = $this->addOrder($orderData);
 
-        if (!$isAdd) {
+        if ($isAdd === false) {
             return false;
         }
 
@@ -118,11 +120,11 @@ class Order extends Service
     /**
      * 取得訂單商品列表
      * 
-     * @param object $orderProductList
+     * @param object $orderProductList 訂單商品列表
      * 
      * @return array 訂單商品列表
      */
-    private function getOrderProductList(object $orderProductList)
+    private function getOrderProductList(object $orderProductList): array
     {
         $list = [];
         foreach ($orderProductList as $orderProduct) {
@@ -146,9 +148,9 @@ class Order extends Service
      * 
      * @param array $orderData 訂單資料
      * 
-     * @return bool
+     * @return bool 是否新增成功
      */
-    private function addOrder(array $orderData)
+    private function addOrder(array $orderData): bool
     {
         $orderShipPrice = $this->getOrderShipPrice($orderData['orderShipId']);
         $orderProductTotal = $this->getOrderProductTotal();
@@ -157,7 +159,6 @@ class Order extends Service
         $orderData['orderShipPrice'] = $orderShipPrice;
         $orderData['orderProductTotal'] = $orderProductTotal;
         $orderData['orderTotal'] = $orderShipPrice + $orderProductTotal;
-
         $isAdd = $this->repoOrder->addOrder($orderData);
 
         return $isAdd;
@@ -168,7 +169,7 @@ class Order extends Service
      * 
      * @return bool 是否新增成功
      */
-    private function addOrderProduct()
+    private function addOrderProduct(): bool
     {
         $orderProductList = [];
         foreach ($this->cartList as $cart) {
@@ -183,7 +184,7 @@ class Order extends Service
         $isAdd = $this->repoOrder
             ->addOrderProduct($orderProductList);
 
-        if (!$isAdd) {
+        if ($isAdd === false) {
             return false;
         }
 
@@ -191,11 +192,13 @@ class Order extends Service
         $isReduce = $this->repoProduct
             ->reduceProduct($orderProductList);
 
-        if (!$isReduce) {
+        if ($isReduce === false) {
             return false;
         }
 
-        $cartIdList = $this->cartList->pluck('cart_id')->all();
+        $cartIdList = $this->cartList
+            ->pluck('cart_id')
+            ->all();
 
         $isDelete = $this->repoCart
             ->deleteCartProduct($cartIdList);
@@ -210,7 +213,7 @@ class Order extends Service
      * 
      * @return bool 是否設定成功
      */
-    private function setCartList(array $cartIdList)
+    private function setCartList(array $cartIdList): bool
     {
         $cartList = $this->repoCart
             ->getCartProductList($cartIdList);
@@ -229,7 +232,7 @@ class Order extends Service
                 ->first();
 
             // 檢查商品狀態
-            if (!$originalProduct || !$originalProduct->status) {
+            if ($originalProduct === false || $originalProduct->status === false) {
                 return false;
             }
 
@@ -251,14 +254,17 @@ class Order extends Service
      * 
      * @return string 訂單編號
      */
-    private function getOrderCode()
+    private function getOrderCode(): string
     {
         $Ymd = Carbon::now()->format('Ymd');
 
         $lastOrderCode = $this->repoOrder
             ->getLastOrderCode($Ymd);
 
-        $num = ($lastOrderCode !== '') ? substr($lastOrderCode, -6) : '000000';
+        $num = ($lastOrderCode !== '')
+            ? substr($lastOrderCode, -6)
+            : '000000';
+
         $num++;
         $num = str_pad($num, 6, '0', STR_PAD_LEFT);
 
@@ -274,7 +280,7 @@ class Order extends Service
      * 
      * @return int 運費
      */
-    private function getOrderShipPrice(int $orderShipId)
+    private function getOrderShipPrice(int $orderShipId): int
     {
         $orderShipList = $this->repoOrderShip
             ->getOrderShipList();
@@ -292,7 +298,7 @@ class Order extends Service
      * 
      * @return int 訂單商品總額
      */
-    private function getOrderProductTotal()
+    private function getOrderProductTotal(): int
     {
         $total = 0;
         foreach ($this->cartList as $cart) {

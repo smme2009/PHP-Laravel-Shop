@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Shop\Order;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-
 use App\Http\Service\Shop\Order\OrderStatus as SrcOrderStatus;
 
 /**
@@ -19,9 +19,9 @@ class OrderStatus extends Controller
     /**
      * 取得訂單狀態列表
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getOrderStatusList()
+    public function getOrderStatusList(): JsonResponse
     {
         $orderStatusList = $this->srcOrderStatus
             ->getOrderStatusList();

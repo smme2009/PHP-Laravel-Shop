@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Shop\Order;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-
 use App\Http\Service\Shop\Order\OrderShip as SrcOrderShip;
 
 /**
@@ -19,9 +19,9 @@ class OrderShip extends Controller
     /**
      * 取得訂單運送方式列表
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getOrderShipList()
+    public function getOrderShipList(): JsonResponse
     {
         $orderShipList = $this->srcOrderShip
             ->getOrderShipList();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Shop\Order;
 
+use Illuminate\Database\Eloquent\Collection;
 use App\Models\OrderStatus as ModelOrderStatus;
 
 /**
@@ -18,9 +19,9 @@ class OrderStatus
     /**
      * 取得訂單狀態列表
      * 
-     * @\Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
-    public function getOrderStatusList()
+    public function getOrderStatusList(): Collection
     {
         $orderStatusList = $this->orderStatus
             ->where('status', 1)
