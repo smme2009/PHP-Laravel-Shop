@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Shop\Cart;
 
+use Illuminate\Database\Eloquent\Collection;
 use App\Models\Cart as ModelCart;
 
 /**
@@ -20,11 +21,13 @@ class Cart
      * 
      * @param null|array $cartId 購物車ID
      * 
-     * @return \Illuminate\Database\Eloquent\Collection 購物車商品列表
+     * @return Collection 購物車商品列表
      */
-    public function getCartProductList(null|array $cartId = null)
+    public function getCartProductList(null|array $cartId = null): Collection
     {
-        $memberId = auth('member')->user()->member_id;
+        $memberId = auth('member')
+            ->user()
+            ->member_id;
 
         $cartProductList = $this->cart
             ->where('member_id', $memberId)
@@ -44,9 +47,11 @@ class Cart
      *
      * @return bool 是否編輯成功
      */
-    public function editCartProduct(array $productList)
+    public function editCartProduct(array $productList): bool
     {
-        $memberId = auth('member')->user()->member_id;
+        $memberId = auth('member')
+            ->user()
+            ->member_id;
 
         $editData = [];
         foreach ($productList as $product) {
@@ -71,9 +76,11 @@ class Cart
      * 
      * @return bool 是否刪除成功
      */
-    public function deleteCartProduct(array $cartIdList)
+    public function deleteCartProduct(array $cartIdList): bool
     {
-        $memberId = auth('member')->user()->member_id;
+        $memberId = auth('member')
+            ->user()
+            ->member_id;
 
         $isDelete = $this->cart
             ->where('member_id', $memberId)

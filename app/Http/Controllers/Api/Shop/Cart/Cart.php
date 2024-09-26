@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Shop\Cart;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-
 use App\Http\Service\Shop\Cart\Cart as SrcCart;
 
 /**
@@ -19,11 +19,12 @@ class Cart extends Controller
     /**
      * 取得購物車商品列表
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getCartProductList()
+    public function getCartProductList(): JsonResponse
     {
-        $cartProductList = $this->srcCart->getCartProductList();
+        $cartProductList = $this->srcCart
+            ->getCartProductList();
 
         $response = $this->toolResponseJson()
             ->setMessage('成功取得購物車商品列表')
@@ -38,16 +39,16 @@ class Cart extends Controller
     /**
      * 編輯購物車商品
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function editCartProduct()
+    public function editCartProduct(): JsonResponse
     {
         $cartProductList = request()->get('cartProductList');
 
         $result = $this->srcCart
             ->validateData($cartProductList);
 
-        if (!$result->status) {
+        if ($result->status === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage($result->message)
@@ -59,7 +60,7 @@ class Cart extends Controller
         $isEdit = $this->srcCart
             ->editCartProduct($cartProductList);
 
-        if (!$isEdit) {
+        if ($isEdit === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('編輯購物車商品失敗')
@@ -79,16 +80,16 @@ class Cart extends Controller
     /**
      * 刪除購物車商品
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function deleteCartProduct()
+    public function deleteCartProduct(): JsonResponse
     {
         $cartIdList = request()->get('cartIdList');
 
         $isDelete = $this->srcCart
             ->deleteCartProduct($cartIdList);
 
-        if (!$isDelete) {
+        if ($isDelete === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('刪除購物車商品失敗')

@@ -3,8 +3,8 @@
 namespace App\Http\Service\Shop\Cart;
 
 use App\Http\Service\Service;
-
 use App\Http\Repository\Shop\Cart\Cart as RepoCart;
+use App\Tool\Validation\Result;
 
 /**
  * 購物車
@@ -19,27 +19,24 @@ class Cart extends Service
     /**  
      * 取得購物車商品列表
      * 
-     * @return array
+     * @return array 購物車商品列表
      */
-    public function getCartProductList()
+    public function getCartProductList(): array
     {
-        $list = $this->repoCart->getCartProductList();
-
-        $photoIdList = [];
-        foreach ($list as $cart) {
-            $photoIdList[] = $cart->product->photo_fid;
-        }
-
-        $fileInfoList = $this->toolFile()->getFileInfoList($photoIdList);
+        $list = $this->repoCart
+            ->getCartProductList();
 
         $cartProductList = [];
         foreach ($list as $cart) {
+            $productPhotoUrl = $this->toolFile()
+                ->getFileUrl($cart->product->productPhoto->path);
+
             $cartProductList[] = [
                 'cartId' => $cart->cart_id,
                 'quantity' => $cart->quantity,
                 'productId' => $cart->product->product_id,
                 'productName' => $cart->product->name,
-                'productPhotoUrl' => $fileInfoList[$cart->product->photo_fid]['url'],
+                'productPhotoUrl' => $productPhotoUrl,
                 'productPrice' => $cart->product->price,
                 'productQuantity' => $cart->product->quantity,
                 'productStatus' => $cart->product->status,
@@ -54,9 +51,9 @@ class Cart extends Service
      * 
      * @param array $cartProductList 購物車商品列表
      * 
-     * @return \App\Tool\Validation\Result
+     * @return Result
      */
-    public function validateData(array $cartProductList)
+    public function validateData(array $cartProductList): Result
     {
         // 驗證資料
         $data = [
@@ -70,7 +67,8 @@ class Cart extends Service
             'cartProductList.*.quantity' => ['required', 'integer'],
         ];
 
-        $result = $this->toolValidation()->validateData($data, $rule);
+        $result = $this->toolValidation()
+            ->validateData($data, $rule);
 
         return $result;
     }
@@ -78,11 +76,11 @@ class Cart extends Service
     /**
      * 編輯購物車商品
      * 
-     * @param array $cartProductList
+     * @param array $cartProductList 購屋車商品列表
      * 
      * @return bool 是否編輯成功
      */
-    public function editCartProduct(array $cartProductList)
+    public function editCartProduct(array $cartProductList): bool
     {
         $isEdit = $this->repoCart
             ->editCartProduct($cartProductList);
@@ -95,9 +93,9 @@ class Cart extends Service
      * 
      * @param array $cartIdList 購物車ID列表
      * 
-     * @return bool
+     * @return bool 是否刪除成功
      */
-    public function deleteCartProduct(array $cartIdList)
+    public function deleteCartProduct(array $cartIdList): bool
     {
         $isDelete = $this->repoCart
             ->deleteCartProduct($cartIdList);
