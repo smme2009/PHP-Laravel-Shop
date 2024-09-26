@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Shop\Banner;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-
 use App\Http\Service\Shop\Banner\Banner as SrcBanner;
 
 /**
@@ -19,11 +19,12 @@ class Banner extends Controller
     /**
      * 取得橫幅列表
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getBannerList()
+    public function getBannerList(): JsonResponse
     {
-        $bannerList = $this->srcBanner->getBannerList();
+        $bannerList = $this->srcBanner
+            ->getBannerList();
 
         $response = $this->toolResponseJson()
             ->setMessage('成功取得橫幅列表資料')

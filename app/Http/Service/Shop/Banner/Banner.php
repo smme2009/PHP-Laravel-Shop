@@ -3,8 +3,8 @@
 namespace App\Http\Service\Shop\Banner;
 
 use App\Http\Service\Service;
-
 use App\Http\Repository\Shop\Banner\Banner as RepoBanner;
+use App\Models\Banner as ModelBanner;
 
 /**
  * 橫幅
@@ -21,18 +21,14 @@ class Banner extends Service
      * 
      * @return array
      */
-    public function getBannerList()
+    public function getBannerList(): array
     {
-        $list = $this->repoBanner->getBannerList();
-
-        $photoFidList = $list->pluck('photo_fid')->all();
-        $fileInfoList = $this->toolFile()->getFileInfoList($photoFidList);
+        $list = $this->repoBanner
+            ->getBannerList();
 
         $bannerList = [];
         foreach ($list as $banner) {
-            $fileInfo = $fileInfoList[$banner->photo_fid];
-
-            $bannerList[] = $this->setBanner($banner, $fileInfo);
+            $bannerList[] = $this->setBanner($banner);
         }
 
         return $bannerList;
@@ -41,16 +37,18 @@ class Banner extends Service
     /**
      * 設定橫幅資料結構
      * 
-     * @param mixed $banner 橫幅資料
-     * @param array $fileInfo 橫幅照片檔案資訊
+     * @param ModelBanner $banner 橫幅資料
      * 
      * @return array 橫幅資料結構
      */
-    private function setBanner(mixed $banner, array $fileInfo)
+    private function setBanner(ModelBanner $banner): array
     {
+        $photoUrl = $this->toolFile()
+            ->getFileUrl($banner->bannerPhoto->path);
+
         $banner = [
             'bannerId' => $banner->banner_id,
-            'photoUrl' => $fileInfo['url'],
+            'photoUrl' => $photoUrl,
             'name' => $banner->name,
             'url' => $banner->url,
         ];

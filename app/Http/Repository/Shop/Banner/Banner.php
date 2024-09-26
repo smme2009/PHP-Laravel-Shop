@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Shop\Banner;
 
+use Illuminate\Database\Eloquent\Collection;
 use App\Models\Banner as ModelBanner;
 
 /**
@@ -18,9 +19,9 @@ class Banner
     /**
      * 取得橫幅列表
      * 
-     * @return \Illuminate\Database\Eloquent\Collection 橫幅列表資料
+     * @return Collection 橫幅列表資料
      */
-    public function getBannerList()
+    public function getBannerList(): Collection
     {
         $bannerList = $this->banner
             ->where(function ($query) {
