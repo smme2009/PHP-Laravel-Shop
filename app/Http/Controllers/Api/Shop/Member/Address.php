@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Shop\Member;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Service\Shop\Member\Address as SrcMemberAddress;
 
@@ -18,9 +19,9 @@ class Address extends Controller
     /**
      * 取得會員地址列表
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getMemberAddressList()
+    public function getMemberAddressList(): JsonResponse
     {
         $memberAddressList = $this->srcMemberAddress
             ->getMemberAddressList();
@@ -38,16 +39,16 @@ class Address extends Controller
     /**
      * 新增會員地址
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function addMemberAddress()
+    public function addMemberAddress(): JsonResponse
     {
         $address = request()->get('address');
 
         $result = $this->srcMemberAddress
             ->validateData($address);
 
-        if (!$result->status) {
+        if ($result->status === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setData([
@@ -61,7 +62,7 @@ class Address extends Controller
         $memberAddressId = $this->srcMemberAddress
             ->addMemberAddress($address);
 
-        if (!$memberAddressId) {
+        if ($memberAddressId === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('新增會員地址失敗')

@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Shop\Member;
 
+use Illuminate\Database\Eloquent\Collection;
 use App\Models\MemberAddress as ModelMemberAddress;
 
 /**
@@ -18,11 +19,13 @@ class Address
     /**
      * 取得會員地址列表
      * 
-     * @return \Illuminate\Database\Eloquent\Collection 購物車商品列表
+     * @return Collection 購物車商品列表
      */
-    public function getMamberAddressList()
+    public function getMamberAddressList(): Collection
     {
-        $memberId = auth('member')->user()->member_id;
+        $memberId = auth('member')
+            ->user()
+            ->member_id;
 
         $memberAddressList = $this->memberAddress
             ->where('member_id', $memberId)
@@ -37,15 +40,21 @@ class Address
      * 
      * @param string $address 地址
      * 
-     * @return int 會員地址ID
+     * @return bool|int 會員地址ID
      */
-    public function addMemberAddress(string $address)
+    public function addMemberAddress(string $address): bool|int
     {
-        $memberId = auth('member')->user()->member_id;
+        $memberId = auth('member')
+            ->user()
+            ->member_id;
 
         $this->memberAddress->member_id = $memberId;
         $this->memberAddress->address = $address;
-        $this->memberAddress->save();
+        $isSave = $this->memberAddress->save();
+
+        if ($isSave === false) {
+            return false;
+        }
 
         $memberAddressId = $this->memberAddress->member_address_id;
 

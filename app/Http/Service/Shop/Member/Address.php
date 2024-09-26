@@ -4,6 +4,7 @@ namespace App\Http\Service\Shop\Member;
 
 use App\Http\Service\Service;
 use App\Http\Repository\Shop\Member\Address as RepoMemberAddress;
+use App\Tool\Validation\Result;
 
 /**
  * 會員地址
@@ -20,7 +21,7 @@ class Address extends Service
      * 
      * @return array
      */
-    public function getMemberAddressList()
+    public function getMemberAddressList(): array
     {
         $list = $this->repoMemberAddress
             ->getMamberAddressList();
@@ -41,9 +42,9 @@ class Address extends Service
      * 
      * @param null|string $address 地址
      * 
-     * @return \App\Tool\Validation\Result
+     * @return Result
      */
-    public function validateData(null|string $address)
+    public function validateData(null|string $address): Result
     {
         // 驗證資料
         $data = [
@@ -66,16 +67,12 @@ class Address extends Service
      * 
      * @param string $address
      * 
-     * @return false|int 是否新增成功
+     * @return bool|int 是否新增成功
      */
-    public function addMemberAddress(string $address)
+    public function addMemberAddress(string $address): bool|int
     {
         $memberAddressId = $this->repoMemberAddress
             ->addMemberAddress($address);
-
-        if (!$memberAddressId) {
-            return false;
-        }
 
         return $memberAddressId;
     }
