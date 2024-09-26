@@ -2,9 +2,10 @@
 
 namespace App\Http\Repository\Shop\Product;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
 use App\Models\Product as ModelProduct;
 
 /**
@@ -23,9 +24,9 @@ class Product
      * 
      * @param array $searchData 搜尋資料
      * 
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator 商品分頁資料
+     * @return LengthAwarePaginator 商品分頁資料
      */
-    public function getProductPage(array $searchData)
+    public function getProductPage(array $searchData): LengthAwarePaginator
     {
         $productPage = $this->getBasicQuery()
             ->when($searchData['productTypeId'], function ($query) use ($searchData) {
@@ -46,9 +47,9 @@ class Product
      * @param int|array $productId 商品ID
      * @param bool $lock 是否鎖表
      * 
-     * @return null|ModelProduct|\Illuminate\Database\Eloquent\Collection
+     * @return null|ModelProduct|Collection
      */
-    public function getProduct(int|array $productId, bool $lock = false)
+    public function getProduct(int|array $productId, bool $lock = false): null|ModelProduct|Collection
     {
         $query = $this->getBasicQuery();
 

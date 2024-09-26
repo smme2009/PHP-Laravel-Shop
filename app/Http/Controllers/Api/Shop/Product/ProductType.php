@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Shop\Product;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-
 use App\Http\Service\Shop\Product\ProductType as SrcProductType;
 
 /**
@@ -19,11 +19,12 @@ class ProductType extends Controller
     /**
      * 取得商品分類列表
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getProductTypeList()
+    public function getProductTypeList(): JsonResponse
     {
-        $productTypeList = $this->srcProductType->getProductTypeList();
+        $productTypeList = $this->srcProductType
+            ->getProductTypeList();
 
         $response = $this->toolResponseJson()
             ->setMessage('成功取得商品分類列表資料')

@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Shop\Product;
 
+use Illuminate\Database\Eloquent\Collection;
 use App\Models\ProductType as ModelProductType;
 
 /**
@@ -18,9 +19,9 @@ class ProductType
     /**
      * 取得商品分類列表
      * 
-     * @return \Illuminate\Database\Eloquent\Collection 商品分類列表資料
+     * @return Collection 商品分類列表資料
      */
-    public function getProductTypeList()
+    public function getProductTypeList(): Collection
     {
         $productTypeList = $this->productType
             ->where('status', true)

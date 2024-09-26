@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Shop\Product;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-
 use App\Http\Service\Shop\Product\Product as SrcProduct;
 
 /**
@@ -19,16 +19,17 @@ class Product extends Controller
     /**
      * 取得商品分頁
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getProductPage()
+    public function getProductPage(): JsonResponse
     {
         $searchData = [
             'productTypeId' => request()->get('productTypeId'),
             'keyword' => request()->get('keyword'),
         ];
 
-        $productPage = $this->srcProduct->getProductPage($searchData);
+        $productPage = $this->srcProduct
+            ->getProductPage($searchData);
 
         $response = $this->toolResponseJson()
             ->setMessage('成功取得商品分頁資料')
@@ -45,13 +46,14 @@ class Product extends Controller
      * 
      * @param int $productId 商品ID
      * 
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getProduct(int $productId)
+    public function getProduct(int $productId): JsonResponse
     {
-        $product = $this->srcProduct->getProduct($productId);
+        $product = $this->srcProduct
+            ->getProduct($productId);
 
-        if (!$product) {
+        if ($product === false) {
             $response = $this->toolResponseJson()
                 ->setHttpCode(400)
                 ->setMessage('取得商品失敗')

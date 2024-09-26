@@ -3,7 +3,6 @@
 namespace App\Http\Service\Shop\Product;
 
 use App\Http\Service\Service;
-
 use App\Http\Repository\Shop\Product\ProductType as RepoProductType;
 
 /**
@@ -19,11 +18,12 @@ class ProductType extends Service
     /**  
      * 取得商品分類列表
      * 
-     * @return array
+     * @return array 商品分類列表
      */
-    public function getProductTypeList()
+    public function getProductTypeList(): array
     {
-        $list = $this->repoProductType->getProductTypeList();
+        $list = $this->repoProductType
+            ->getProductTypeList();
 
         $productTypeList = [];
         foreach ($list as $productType) {
@@ -40,7 +40,7 @@ class ProductType extends Service
      * 
      * @return array 商品分類資料結構
      */
-    private function setProductType(mixed $productType)
+    private function setProductType(mixed $productType): array
     {
         $productType = [
             'productTypeId' => $productType->product_type_id,

@@ -3,8 +3,8 @@
 namespace App\Http\Service\Shop\Product;
 
 use App\Http\Service\Service;
-
 use App\Http\Repository\Shop\Product\Product as RepoProduct;
+use App\Models\Product as ModelProduct;
 
 /**
  * 商品
@@ -21,20 +21,16 @@ class Product extends Service
      * 
      * @param array $searchData 搜尋資料
      * 
-     * @return array
+     * @return array 商品分頁
      */
-    public function getProductPage(array $searchData)
+    public function getProductPage(array $searchData): array
     {
-        $page = $this->repoProduct->getProductPage($searchData);
-
-        $photoFidList = $page->pluck('photo_fid')->all();
-        $fileInfoList = $this->toolFile()->getFileInfoList($photoFidList);
+        $page = $this->repoProduct
+            ->getProductPage($searchData);
 
         $data = [];
         foreach ($page as $product) {
-            $fileInfo = $fileInfoList[$product->photo_fid];
-
-            $data[] = $this->setProduct($product, $fileInfo);
+            $data[] = $this->setProduct($product);
         }
 
         $productPage = [
@@ -50,19 +46,18 @@ class Product extends Service
      * 
      * @param int $productId 商品ID
      * 
-     * @return false|array
+     * @return bool|array 商品
      */
-    public function getProduct(int $productId)
+    public function getProduct(int $productId): bool|array
     {
-        $productData = $this->repoProduct->getProduct($productId);
+        $productData = $this->repoProduct
+            ->getProduct($productId);
 
-        if (!$productData) {
+        if ($productData === false) {
             return false;
         }
 
-        $fileInfo = $this->toolFile()->getFileInfo($productData->photo_fid);
-
-        $product = $this->setProduct($productData, $fileInfo);
+        $product = $this->setProduct($productData);
 
         return $product;
     }
@@ -70,16 +65,18 @@ class Product extends Service
     /**
      * 設定商品資料結構
      * 
-     * @param mixed $product 商品資料
-     * @param array $fileInfo 商品照片檔案資訊
+     * @param ModelProduct $product 商品資料
      * 
      * @return array 商品資料結構
      */
-    private function setProduct(mixed $product, array $fileInfo)
+    private function setProduct(ModelProduct $product): array
     {
+        $photoUrl = $this->toolFile()
+            ->getFileUrl($product->productPhoto->path);
+
         $product = [
             'productId' => $product->product_id,
-            'photoUrl' => $fileInfo['url'],
+            'photoUrl' => $photoUrl,
             'name' => $product->name,
             'price' => $product->price,
             'quantity' => $product->quantity,
