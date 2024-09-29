@@ -17,7 +17,7 @@ class ProductType extends Controller
     }
 
     /**
-     * 取得商品類型列表
+     * 取得商品類型分頁
      * 
      * @return JsonResponse
      */

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Repository\Shop\Product;
+namespace App\Http\Repository\Public\Product;
 
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\ProductType as ModelProductType;

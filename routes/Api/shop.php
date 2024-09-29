@@ -7,7 +7,6 @@ use App\Http\Controllers\Api\Shop\Member\Login;
 use App\Http\Controllers\Api\Shop\Member\Address;
 use App\Http\Controllers\Api\Shop\Banner\Banner;
 use App\Http\Controllers\Api\Shop\Product\Product;
-use App\Http\Controllers\Api\Shop\Product\ProductType;
 use App\Http\Controllers\Api\Shop\Cart\Cart;
 use App\Http\Controllers\Api\Shop\Order\Order;
 use App\Http\Controllers\Api\Shop\Order\OrderShip;
@@ -35,8 +34,6 @@ Route::controller(Product::class)
         Route::get('', 'getProductPage');
         Route::get('{productId}', 'getProduct')->whereNumber('productId');
     });
-
-Route::get('product/type', [ProductType::class, 'getProductTypeList']);
 
 Route::middleware('accountAuth:member')->group(function () {
     Route::controller(Cart::class)

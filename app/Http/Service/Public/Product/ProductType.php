@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Service\Shop\Product;
+namespace App\Http\Service\Public\Product;
 
 use App\Http\Service\Service;
-use App\Http\Repository\Shop\Product\ProductType as RepoProductType;
+use App\Http\Repository\Public\Product\ProductType as RepoProductType;
 
 /**
  * 商品分類

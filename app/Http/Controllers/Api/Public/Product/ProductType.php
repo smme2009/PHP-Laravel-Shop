@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\Shop\Product;
+namespace App\Http\Controllers\Api\Public\Product;
 
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Service\Shop\Product\ProductType as SrcProductType;
+use App\Http\Service\Public\Product\ProductType as SrcProductType;
 
 /**
  * 商品分類
