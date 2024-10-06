@@ -55,7 +55,7 @@ class ProductStock extends Service
         // 驗證規則
         $rule = [
             'productStockTypeId' => ['required', 'integer', 'exists:product_stock_type,product_stock_type_id'],
-            'quantity' => ['required', 'integer'],
+            'quantity' => ['required', 'integer', 'min:1'],
         ];
 
         $result = $this->toolValidation()
