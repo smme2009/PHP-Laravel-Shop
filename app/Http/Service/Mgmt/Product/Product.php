@@ -84,7 +84,7 @@ class Product extends Service
             'status' => ['required', 'boolean'],
             'startTime' => ['nullable', 'date', 'date_format:Y-m-d H:i:s'],
             'endTime' => ['nullable', 'date', 'date_format:Y-m-d H:i:s', 'after:startTime'],
-            'productTypeId' => ['nullable', 'integer', 'exists:App\Models\ProductType,product_type_id'],
+            'productTypeId' => ['required', 'integer', 'exists:App\Models\ProductType,product_type_id'],
         ];
 
         $result = $this->toolValidation()

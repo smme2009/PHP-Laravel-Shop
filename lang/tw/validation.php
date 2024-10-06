@@ -197,6 +197,7 @@ return [
         'phone' => '手機號碼',
         'checkPassword' => '確認密碼',
         'address' => '地址',
+        'productTypeId' => '商品類型',
     ],
 
 ];
