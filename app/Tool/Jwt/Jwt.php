@@ -12,6 +12,13 @@ use Firebase\JWT\Key;
  */
 class Jwt
 {
+    private string $key;
+
+    public function __construct()
+    {
+        $this->key = env('APP_KEY');
+    }
+
     /**
      * JWT編碼
      * 
@@ -19,10 +26,8 @@ class Jwt
      * 
      * @return string
      */
-    public function encode(array $data)
+    public function encode(array $data): string
     {
-        $key = env('APP_KEY');
-
         $timeNow = time();
         $timeLimit = $timeNow + 86400;
 
@@ -35,7 +40,12 @@ class Jwt
             ...$data,
         ];
 
-        $jwtToken = FirebaseJwt::encode($payload, $key, 'HS256');
+        $jwtToken = '';
+        try {
+            $jwtToken = FirebaseJwt::encode($payload, $this->key, 'HS256');
+        } catch (Exception $e) {
+            // 編碼錯誤，暫不處理，先回傳空字串
+        }
 
         return $jwtToken;
     }
@@ -47,13 +57,11 @@ class Jwt
      * 
      * @return array
      */
-    public function decode(string $jwtToken)
+    public function decode(string $jwtToken): array
     {
-        $key = env('APP_KEY');
-
         $data = [];
         try {
-            $data = (array) FirebaseJwt::decode($jwtToken, new Key($key, 'HS256'));
+            $data = (array) FirebaseJwt::decode($jwtToken, new Key($this->key, 'HS256'));
         } catch (Exception $e) {
             // 解碼錯誤，暫不處理，先回傳空陣列
         }

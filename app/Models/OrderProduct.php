@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * 訂單商品
@@ -32,9 +33,9 @@ class OrderProduct extends Model
     /**
      * 取得商品圖片
      * 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function productPhoto()
+    public function productPhoto(): BelongsTo
     {
         $productPhoto = $this->belongsTo(File::class, 'photo_fid', 'file_id');
 

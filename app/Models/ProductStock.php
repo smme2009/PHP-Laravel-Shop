@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * 商品庫存單
@@ -25,9 +26,9 @@ class ProductStock extends Model
     /**
      * 取得商品庫存單類型
      * 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo 商品庫存單類型
+     * @return BelongsTo 商品庫存單類型
      */
-    public function productStockType()
+    public function productStockType(): BelongsTo
     {
         $key = 'product_stock_type_id';
 
