@@ -78,7 +78,6 @@ class Product extends Service
             'name' => ['required', 'string'],
             'photoFileId' => ['required', 'integer', 'exists:file,file_id'],
             'price' => ['required', 'integer'],
-            'quantity' => ['required', 'integer'],
             'description' => ['required', 'string'],
             'pageHtml' => ['nullable', 'string'],
             'status' => ['required', 'boolean'],

@@ -290,7 +290,6 @@ class Product extends Controller
             'name' => request()->get('name'),
             'photoFileId' => request()->get('photoFileId'),
             'price' => request()->get('price'),
-            'quantity' => request()->get('quantity'),
             'description' => request()->get('description'),
             'pageHtml' => request()->get('pageHtml'),
             'status' => request()->get('status'),

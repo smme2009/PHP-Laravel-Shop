@@ -162,7 +162,6 @@ class Product
         $this->product->name = $productData['name'];
         $this->product->photo_fid = $productData['photoFileId'];
         $this->product->price = $productData['price'];
-        $this->product->quantity = $productData['quantity'];
         $this->product->description = $productData['description'];
         $this->product->page_html = $productData['pageHtml'];
         $this->product->status = $productData['status'];
