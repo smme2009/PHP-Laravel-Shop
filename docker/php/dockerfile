@@ -1,0 +1,22 @@
+FROM php:8.3-fpm
+
+# 更新apt
+RUN apt update
+
+# 安裝ZIP套件
+RUN apt install -y libzip-dev
+RUN docker-php-ext-install zip
+
+# 安裝GD套件
+RUN apt install -y libpng-dev
+RUN docker-php-ext-install gd
+
+# 安裝CURL套件
+RUN apt install -y libcurl4-openssl-dev
+RUN docker-php-ext-install curl
+
+# 安裝SQL套件
+RUN docker-php-ext-install pdo_mysql
+
+# 安裝Composer
+COPY --from=composer /usr/bin/composer /usr/bin/composer
