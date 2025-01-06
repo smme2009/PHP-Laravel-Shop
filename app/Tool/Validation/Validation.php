@@ -2,8 +2,6 @@
 
 namespace App\Tool\Validation;
 
-use App\Tool\Validation\Result;
-
 /**
  * 驗證資料
  */
@@ -17,15 +15,13 @@ class Validation
      * 
      * @return Result
      */
-    public function validateData(array $data, array $rule): Result
+    public static function validate(array $data, array $rule): Result
     {
         $validator = validator($data, $rule);
 
         $status = !$validator->fails();
-        $error = $validator->errors()->toArray();
+        $errorList = $validator->errors()->toArray();
 
-        $result = new Result($status, $error);
-
-        return $result;
+        return new Result($status, $errorList);
     }
 }
