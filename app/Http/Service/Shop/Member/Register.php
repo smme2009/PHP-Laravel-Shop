@@ -2,11 +2,11 @@
 
 namespace App\Http\Service\Shop\Member;
 
-use App\Http\Service\Service;
-
 use Illuminate\Support\Facades\Hash;
-
+use App\Http\Service\Service;
 use App\Http\Repository\Shop\Member\Register as RepoRegister;
+use App\Tool\Validation\Validation as ToolValidation;
+use App\Tool\Validation\Result;
 
 /**
  * 會員註冊
@@ -24,9 +24,9 @@ class Register extends Service
      * 
      * @param array $memberData 會員資料
      * 
-     * @return \App\Tool\Validation\Result 驗證結果
+     * @return Result 驗證結果
      */
-    public function validateData(array $memberData)
+    public function validateData(array $memberData): Result
     {
         $modelPath = 'App\Models\Member';
 
@@ -39,7 +39,7 @@ class Register extends Service
             'phone' => ['required', 'string', 'regex:/^09\d{8}$/', 'unique:' . $modelPath]
         ];
 
-        $result = $this->toolValidation()->validateData($memberData, $rule);
+        $result = ToolValidation::validate($memberData, $rule);
 
         return $result;
     }
@@ -51,7 +51,7 @@ class Register extends Service
      * 
      * @return bool
      */
-    public function registerMember(array $memberData)
+    public function registerMember(array $memberData): bool
     {
         $memberData['password'] = Hash::make($memberData['password']);
 

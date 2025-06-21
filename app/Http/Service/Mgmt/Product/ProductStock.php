@@ -5,6 +5,7 @@ namespace App\Http\Service\Mgmt\Product;
 use App\Http\Service\Service;
 use App\Http\Repository\Mgmt\Product\Product as RepoProduct;
 use App\Http\Repository\Mgmt\Product\ProductStock as RepoProductStock;
+use App\Tool\Validation\Validation as ToolValidation;
 use App\Tool\Validation\Result;
 
 /**
@@ -58,8 +59,7 @@ class ProductStock extends Service
             'quantity' => ['required', 'integer', 'min:1'],
         ];
 
-        $result = $this->toolValidation()
-            ->validateData($productStockData, $rule);
+        $result = ToolValidation::validate($productStockData, $rule);
 
         return $result;
     }

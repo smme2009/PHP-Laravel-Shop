@@ -4,6 +4,7 @@ namespace App\Http\Service\Shop\Cart;
 
 use App\Http\Service\Service;
 use App\Http\Repository\Shop\Cart\Cart as RepoCart;
+use App\Tool\Validation\Validation as ToolValidation;
 use App\Tool\Validation\Result;
 
 /**
@@ -67,8 +68,7 @@ class Cart extends Service
             'cartProductList.*.quantity' => ['required', 'integer'],
         ];
 
-        $result = $this->toolValidation()
-            ->validateData($data, $rule);
+        $result = ToolValidation::validate($data, $rule);
 
         return $result;
     }

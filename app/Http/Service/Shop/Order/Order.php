@@ -9,6 +9,7 @@ use App\Http\Repository\Shop\Order\Order as RepoOrder;
 use App\Http\Repository\Shop\Order\OrderShip as RepoOrderShip;
 use App\Http\Repository\Shop\Cart\Cart as RepoCart;
 use App\Http\Repository\Shop\Product\Product as RepoProduct;
+use App\Tool\Validation\Validation as ToolValidation;
 use App\Tool\Validation\Result;
 
 /**
@@ -85,8 +86,7 @@ class Order extends Service
             'orderPaymentId' => ['required', 'integer', 'exists:order_payment,order_payment_id'],
         ];
 
-        $result = $this->toolValidation()
-            ->validateData($data, $rule);
+        $result = ToolValidation::validate($data, $rule);
 
         return $result;
     }

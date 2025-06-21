@@ -3,6 +3,7 @@
 namespace App\Http\Service\Mgmt\Other;
 
 use App\Http\Service\Service;
+use App\Tool\Validation\Validation as ToolValidation;
 use App\Tool\Validation\Result;
 
 /**
@@ -29,8 +30,7 @@ class Editor extends Service
             'photo' => ['required', 'image', 'max:10240'],
         ];
 
-        $result = $this->toolValidation()
-            ->validateData($data, $rule);
+        $result = ToolValidation::validate($data, $rule);
 
         return $result;
     }

@@ -4,6 +4,7 @@ namespace App\Http\Service\Shop\Member;
 
 use App\Http\Service\Service;
 use App\Http\Repository\Shop\Member\Address as RepoMemberAddress;
+use App\Tool\Validation\Validation as ToolValidation;
 use App\Tool\Validation\Result;
 
 /**
@@ -56,8 +57,7 @@ class Address extends Service
             'address' => ['required', 'string'],
         ];
 
-        $result = $this->toolValidation()
-            ->validateData($data, $rule);
+        $result = ToolValidation::validate($data, $rule);
 
         return $result;
     }
