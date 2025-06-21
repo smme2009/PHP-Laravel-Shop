@@ -3,6 +3,7 @@
 namespace App\Http\Service\Mgmt\Admin;
 
 use App\Http\Service\Service;
+use App\Tool\Validation\Validation as ToolValidation;
 use App\Tool\Validation\Result;
 
 /**
@@ -25,8 +26,7 @@ class Login extends Service
             'password' => ['required', 'string'],
         ];
 
-        $result = $this->toolValidation()
-            ->validateData($data, $rule);
+        $result = ToolValidation::validate($data, $rule);
 
         return $result;
     }

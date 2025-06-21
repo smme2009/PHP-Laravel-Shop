@@ -5,6 +5,7 @@ namespace App\Http\Service\Mgmt\Banner;
 use App\Http\Service\Service;
 use App\Http\Repository\Mgmt\Banner\Banner as RepoBanner;
 use App\Models\Banner as ModelBanner;
+use App\Tool\Validation\Validation as ToolValidation;
 use App\Tool\Validation\Result;
 
 /**
@@ -84,8 +85,7 @@ class Banner extends Service
             'status' => ['required', 'boolean'],
         ];
 
-        $result = $this->toolValidation()
-            ->validateData($bannerData, $rule);
+        $result = ToolValidation::validate($bannerData, $rule);
 
         return $result;
     }
@@ -109,8 +109,7 @@ class Banner extends Service
             'photo' => ['required', 'image', 'max:10240'],
         ];
 
-        $result = $this->toolValidation()
-            ->validateData($data, $rule);
+        $result = ToolValidation::validate($data, $rule);
 
         return $result;
     }

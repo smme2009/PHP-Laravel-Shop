@@ -5,6 +5,7 @@ namespace App\Http\Service\Mgmt\Product;
 use Illuminate\Validation\Rule;
 use App\Http\Service\Service;
 use App\Http\Repository\Mgmt\Product\ProductType as RepoProductType;
+use App\Tool\Validation\Validation as ToolValidation;
 use App\Tool\Validation\Result;
 
 /**
@@ -88,8 +89,7 @@ class ProductType extends Service
 
         $rule['name'][] = $ruleNameUnique;
 
-        $result = $this->toolValidation()
-            ->validateData($productTypeData, $rule);
+        $result = ToolValidation::validate($productTypeData, $rule);
 
         return $result;
     }

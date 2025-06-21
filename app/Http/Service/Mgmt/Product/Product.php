@@ -5,6 +5,7 @@ namespace App\Http\Service\Mgmt\Product;
 use App\Http\Service\Service;
 use App\Http\Repository\Mgmt\Product\Product as RepoProduct;
 use App\Models\Product as ModelProduct;
+use App\Tool\Validation\Validation as ToolValidation;
 use App\Tool\Validation\Result;
 
 /**
@@ -86,8 +87,7 @@ class Product extends Service
             'productTypeId' => ['required', 'integer', 'exists:App\Models\ProductType,product_type_id'],
         ];
 
-        $result = $this->toolValidation()
-            ->validateData($productData, $rule);
+        $result = ToolValidation::validate($productData, $rule);
 
         return $result;
     }
@@ -111,8 +111,7 @@ class Product extends Service
             'photo' => ['required', 'image', 'max:10240'],
         ];
 
-        $result = $this->toolValidation()
-            ->validateData($data, $rule);
+        $result = ToolValidation::validate($data, $rule);
 
         return $result;
     }

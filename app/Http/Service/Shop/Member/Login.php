@@ -5,6 +5,7 @@ namespace App\Http\Service\Shop\Member;
 use App\Http\Service\Service;
 
 use App\Tool\Validation\Validation as ToolValidation;
+use App\Tool\Validation\Result;
 
 /**
  * 登入
@@ -16,9 +17,9 @@ class Login extends Service
      * 
      * @param array $data 資料
      * 
-     * @return \App\Tool\Validation\Result 驗證結果
+     * @return Result 驗證結果
      */
-    public function validateData(array $data)
+    public function validateData(array $data): Result
     {
         // 驗證規則
         $rule = [
@@ -39,7 +40,7 @@ class Login extends Service
      * 
      * @return bool
      */
-    public function login(string $account, string $password)
+    public function login(string $account, string $password): bool
     {
         $loginData = [
             'account' => $account,
@@ -57,7 +58,7 @@ class Login extends Service
      * 
      * @return string
      */
-    public function getJwtToken()
+    public function getJwtToken(): string
     {
         $userId = auth('member')->id();
 
