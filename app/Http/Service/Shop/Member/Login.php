@@ -4,6 +4,8 @@ namespace App\Http\Service\Shop\Member;
 
 use App\Http\Service\Service;
 
+use App\Tool\Validation\Validation as ToolValidation;
+
 /**
  * 登入
  */
@@ -24,7 +26,7 @@ class Login extends Service
             'password' => ['required', 'string'],
         ];
 
-        $result = $this->toolValidation()->validateData($data, $rule);
+        $result = ToolValidation::validate($data, $rule);
 
         return $result;
     }
