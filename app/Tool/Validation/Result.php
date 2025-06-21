@@ -7,56 +7,30 @@ namespace App\Tool\Validation;
  */
 class Result
 {
-    // 驗證狀態
-    public bool $status;
-
-    // 完整錯誤
-    public array $error = [];
-
-    // 訊息
-    public array $message = [];
-
     /**
      * 建構子
      * 
      * @param bool $status 驗證狀態
-     * @param array $error 錯誤
+     * @param array $errorList 錯誤列表
      */
-    public function __construct(bool $status, array $error)
-    {
-        $this->status = $status;
-        $this->setErrorData($error);
-        $this->setMessage($error);
+    public function __construct(
+        // 驗證狀態
+        private bool $status,
+
+        // 錯誤列表
+        private array $errorList,
+    ) {
     }
 
     /**
-     * 設定錯誤資料(完整)
+     * 魔術方法(get)
      * 
-     * @param array $error 錯誤
+     * @param mixed $name 屬性名稱
      * 
-     * @return void
+     * @return mixed 值
      */
-    private function setErrorData(array $error)
+    public function __get($name): mixed
     {
-        foreach ($error as $name => $message) {
-            $this->error[] = [
-                'name' => $name,
-                'message' => $message,
-            ];
-        }
-    }
-
-    /**
-     * 設定錯誤訊息
-     * 
-     * @param array $error 錯誤
-     * 
-     * @return void
-     */
-    private function setMessage(array $error)
-    {
-        foreach ($error as $message) {
-            $this->message = array_merge($this->message, $message);
-        }
+        return $this->{$name};
     }
 }
