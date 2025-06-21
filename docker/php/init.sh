@@ -23,5 +23,5 @@ fi
 # 運行migration
 php artisan migrate
 
-# 啟動FPM
-php-fpm
+# 啟動FrankenPHP
+frankenphp php-server -r public/
