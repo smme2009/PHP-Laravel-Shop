@@ -11,13 +11,13 @@ class Result
      * 結果狀態
      * @var bool
      */
-    public private(set) bool $status;
+    public private(set) bool $status = false;
 
     /**
      * 訊息
      * @var string
      */
-    public private(set) string $message;
+    public private(set) string $message = '';
 
     /**
      * 資料
