@@ -64,4 +64,20 @@ class Result
         $this->data[$name] = $value;
         return $this;
     }
+
+    /**
+     * 批次新增資料
+     *
+     * @param array $dataList 資料列表
+     * 
+     * @return Result
+     */
+    public function addDataList(array $dataList): Result
+    {
+        foreach ($dataList as $key => $value) {
+            $this->addData($key, $value);
+        }
+
+        return $this;
+    }
 }
