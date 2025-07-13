@@ -7,7 +7,8 @@ namespace App\Enums;
  */
 enum Role: int
 {
-    case ADMIN = 1; // 管理者
+    case BUYER = 1; // 買家
+    case SELLER = 2; // 賣家
 
     /**
      * 取得角色名稱
@@ -17,7 +18,8 @@ enum Role: int
     public function label(): string
     {
         return match ($this) {
-            self::ADMIN => '管理者',
+            self::BUYER => '買家',
+            self::SELLER => '賣家',
         };
     }
 }
