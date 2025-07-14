@@ -40,7 +40,7 @@ class Register extends Service
             return $this->toolResult()
                 ->setStatus(false)
                 ->setMessage('註冊失敗，欄位填寫錯誤')
-                ->addDataList($validator->errorList);
+                ->bulkAddData($validator->errorList);
         }
 
         // 驗證帳號是否已被使用

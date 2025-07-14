@@ -66,15 +66,15 @@ class Result
     }
 
     /**
-     * 批次新增資料
+     * 批量新增資料
      *
-     * @param array $dataList 資料列表
+     * @param array $data 資料
      * 
      * @return Result
      */
-    public function addDataList(array $dataList): Result
+    public function bulkAddData(array $data): Result
     {
-        foreach ($dataList as $key => $value) {
+        foreach ($data as $key => $value) {
             $this->addData($key, $value);
         }
 
