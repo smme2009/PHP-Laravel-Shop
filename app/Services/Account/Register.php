@@ -3,10 +3,10 @@
 namespace App\Services\Account;
 
 use App\Enums\Role as EnumRole;
+use App\Services\Tool\Output\Result as OutputResult;
 use App\Repositories\Account\Account as RepoAccount;
 use App\Services\Service;
 use App\Services\Tool\Validator as SrcToolValidator;
-use App\Services\Tool\Result as SrcToolResult;
 
 /**
  * 服務層-帳號註冊
@@ -28,9 +28,9 @@ class Register extends Service
      *
      * @param array $data 註冊資料
      * 
-     * @return SrcToolResult
+     * @return OutputResult
      */
-    public function register($data): SrcToolResult
+    public function register($data): OutputResult
     {
         // 驗證註冊資料
         $validator = $this->getValidator($data);
@@ -40,7 +40,8 @@ class Register extends Service
             return $this->toolResult()
                 ->setStatus(false)
                 ->setMessage('註冊失敗，欄位填寫錯誤')
-                ->bulkAddData($validator->errorList);
+                ->bulkAddData($validator->errorList)
+                ->build();
         }
 
         // 驗證帳號是否已被使用
@@ -50,7 +51,8 @@ class Register extends Service
         if ($model !== null) {
             return $this->toolResult()
                 ->setStatus(false)
-                ->setMessage('註冊失敗，帳號已被使用');
+                ->setMessage('註冊失敗，帳號已被使用')
+                ->build();
         }
 
         // 註冊帳號，並設定預設角色(買家)
@@ -60,7 +62,8 @@ class Register extends Service
         if ($model === null) {
             return $this->toolResult()
                 ->setStatus(false)
-                ->setMessage('註冊失敗，系統異常');
+                ->setMessage('註冊失敗，系統異常')
+                ->build();
         }
 
         // 註冊成功，回傳帳號資料
@@ -68,7 +71,8 @@ class Register extends Service
             ->setStatus(true)
             ->setMessage('註冊成功')
             ->addData('account', $model->account)
-            ->addData('name', $model->name);
+            ->addData('name', $model->name)
+            ->build();
     }
 
     /**

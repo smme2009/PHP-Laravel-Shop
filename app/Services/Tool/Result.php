@@ -2,6 +2,8 @@
 
 namespace App\Services\Tool;
 
+use App\Services\Tool\Output\Result as OutputResult;
+
 /**
  * Service的通用結果物件建構工具
  */
@@ -79,5 +81,19 @@ class Result
         }
 
         return $this;
+    }
+
+    /**
+     * 取得結果物件
+     * 
+     * @return OutputResult
+     */
+    public function build(): OutputResult
+    {
+        return new OutputResult(
+            status: $this->status,
+            message: $this->message,
+            data: $this->data
+        );
     }
 }
