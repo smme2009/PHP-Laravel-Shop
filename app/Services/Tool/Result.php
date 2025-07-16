@@ -34,7 +34,7 @@ class Result
      * 
      * @return Result
      */
-    public function setStatus(bool $status): Result
+    public function setStatus(bool $status): self
     {
         $this->status = $status;
         return $this;
@@ -47,7 +47,7 @@ class Result
      * 
      * @return Result
      */
-    public function setMessage(string $message): Result
+    public function setMessage(string $message): self
     {
         $this->message = $message;
         return $this;
@@ -61,7 +61,7 @@ class Result
      * 
      * @return Result
      */
-    public function addData(string $name, mixed $value): Result
+    public function addData(string $name, mixed $value): self
     {
         $this->data[$name] = $value;
         return $this;
@@ -74,7 +74,7 @@ class Result
      * 
      * @return Result
      */
-    public function bulkAddData(array $data): Result
+    public function bulkAddData(array $data): self
     {
         foreach ($data as $key => $value) {
             $this->addData($key, $value);
