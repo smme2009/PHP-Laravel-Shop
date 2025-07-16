@@ -3,10 +3,10 @@
 namespace App\Services\Account;
 
 use App\Enums\Role as EnumRole;
-use App\Services\Tool\Output\Result as OutputResult;
 use App\Repositories\Account\Account as RepoAccount;
 use App\Services\Service;
-use App\Services\Tool\Validator as SrcToolValidator;
+use App\Services\Tool\Output\Result as OutputResult;
+use App\Services\Tool\Output\ValidationResult as OutputValidationResult;
 
 /**
  * 服務層-帳號註冊
@@ -28,19 +28,19 @@ class Register extends Service
      *
      * @param array $data 註冊資料
      * 
-     * @return OutputResult
+     * @return OutputResult 處理結果
      */
-    public function register($data): OutputResult
+    public function register(array $data): OutputResult
     {
         // 驗證註冊資料
-        $validator = $this->getValidator($data);
+        $validationResult = $this->getValidationResult($data);
 
         // 驗證失敗，回傳錯誤資料
-        if ($validator->status === false) {
+        if ($validationResult->status === false) {
             return $this->toolResult()
                 ->setStatus(false)
                 ->setMessage('註冊失敗，欄位填寫錯誤')
-                ->bulkAddData($validator->errorList)
+                ->bulkAddData($validationResult->errors)
                 ->build();
         }
 
@@ -76,20 +76,19 @@ class Register extends Service
     }
 
     /**
-     * 取得驗證器
+     * 取得驗證結果
      *
      * @param array $data 註冊資料
      * 
-     * @return SrcToolValidator
+     * @return OutputValidationResult 驗證結果
      */
-    private function getValidator($data): SrcToolValidator
+    private function getValidationResult(array $data): OutputValidationResult
     {
-        $ruleList = [
-            'account' => ['required', 'string', 'email'],
-            'password' => ['required', 'string', 'min:8', 'max:12'],
-            'name' => ['required', 'string'],
-        ];
-
-        return $this->toolValidator($data, $ruleList);
+        return $this->toolValidator()
+            ->bulkAddData($data)
+            ->addRule('account', ['required', 'string', 'email'])
+            ->addRule('password', ['required', 'string', 'min:8', 'max:12'])
+            ->addRule('name', ['required', 'string'])
+            ->build();
     }
 }

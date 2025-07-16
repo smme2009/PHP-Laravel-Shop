@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Services\Tool\Result as SrcToolResult;
-use App\Services\Tool\Validator as SrcToolValidator;
+use App\Services\Tool\ValidationResult as SrcToolValidationResult;
 
 /**
  * Service通用層，可以用來存放共用的工具和方法
@@ -21,15 +21,12 @@ class Service
     }
 
     /**
-     * 取得Service的通用驗證器
-     *
-     * @param array $data 驗證資料
-     * @param array $rule 規則
+     * 取得Service的通用驗證結果構建工具
      * 
-     * @return SrcToolValidator
+     * @return SrcToolValidationResult
      */
-    public function toolValidator(array $data, array $rule): SrcToolValidator
+    public function toolValidator(): SrcToolValidationResult
     {
-        return new SrcToolValidator($data, $rule);
+        return new SrcToolValidationResult();
     }
 }
