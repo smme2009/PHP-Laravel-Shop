@@ -13,19 +13,19 @@ class Result
      * 結果狀態
      * @var bool
      */
-    public private(set) bool $status = false;
+    private bool $status = false;
 
     /**
      * 訊息
      * @var string
      */
-    public private(set) string $message = '';
+    private string $message = '';
 
     /**
      * 資料
      * @var array
      */
-    public private(set) array $data = [];
+    private array $data = [];
 
     /**
      * 設定結果狀態
