@@ -11,14 +11,12 @@ class ValidationResult
 {
     /**
      * 資料
-     * 
      * @var bool
      */
     private array $data = [];
 
     /**
      * 規則
-     *
      * @var array
      */
     private array $rules = [];

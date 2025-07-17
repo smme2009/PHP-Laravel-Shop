@@ -32,7 +32,7 @@ class Result
      * 
      * @param bool $status 狀態
      * 
-     * @return Result
+     * @return self
      */
     public function setStatus(bool $status): self
     {
@@ -45,7 +45,7 @@ class Result
      * 
      * @param string $message 訊息
      * 
-     * @return Result
+     * @return self
      */
     public function setMessage(string $message): self
     {
@@ -59,7 +59,7 @@ class Result
      * @param string $name 名稱
      * @param mixed $value 值
      * 
-     * @return Result
+     * @return self
      */
     public function addData(string $name, mixed $value): self
     {
@@ -72,7 +72,7 @@ class Result
      *
      * @param array $data 資料
      * 
-     * @return Result
+     * @return self
      */
     public function bulkAddData(array $data): self
     {
