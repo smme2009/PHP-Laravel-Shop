@@ -43,6 +43,6 @@ class Register extends Controller
             ->setHttpCodeByStatus($result->status)
             ->setMessage($result->message)
             ->bulkAddData($result->data)
-            ->get();
+            ->build();
     }
 }

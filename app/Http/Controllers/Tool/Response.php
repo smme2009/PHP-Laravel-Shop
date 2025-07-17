@@ -101,7 +101,7 @@ class Response
      *
      * @return JsonResponse
      */
-    public function get(): JsonResponse
+    public function build(): JsonResponse
     {
         $data = [
             'message' => $this->message,
