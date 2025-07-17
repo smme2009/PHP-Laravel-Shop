@@ -32,9 +32,9 @@ class Response
      *
      * @param int $httpCode HTTP 狀態碼
      * 
-     * @return Response
+     * @return self
      */
-    public function setHttpCode(int $httpCode): Response
+    public function setHttpCode(int $httpCode): self
     {
         $this->httpCode = $httpCode;
         return $this;
@@ -45,9 +45,9 @@ class Response
      *
      * @param bool $status 狀態
      * 
-     * @return Response
+     * @return self
      */
-    public function setHttpCodeByStatus(bool $status): Response
+    public function setHttpCodeByStatus(bool $status): self
     {
         $this->httpCode = $status ? 200 : 400;
         return $this;
@@ -58,9 +58,9 @@ class Response
      *
      * @param string $message 訊息
      * 
-     * @return Response
+     * @return self
      */
-    public function setMessage(string $message): Response
+    public function setMessage(string $message): self
     {
         $this->message = $message;
         return $this;
@@ -72,9 +72,9 @@ class Response
      * @param string $name 名稱
      * @param mixed $value 值
      * 
-     * @return Response
+     * @return self
      */
-    public function addData(string $name, mixed $value): Response
+    public function addData(string $name, mixed $value): self
     {
         $this->data[$name] = $value;
         return $this;
@@ -85,9 +85,9 @@ class Response
      *
      * @param array $data 資料
      * 
-     * @return Response
+     * @return self
      */
-    public function bulkAddData(array $data): Response
+    public function bulkAddData(array $data): self
     {
         foreach ($data as $name => $value) {
             $this->addData($name, $value);
