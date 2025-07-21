@@ -5,80 +5,63 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Services\Account\Auth as SrcAuth;
+use App\Http\Controllers\Tool\Response as CtrlToolResponse;
 
-use App\Tool\Jwt\Jwt as ToolJwt;
-use App\Tool\Response\Json as ToolResponseJson;
-
+/**
+ * 中介層-帳號驗證
+ */
 class AccountAuth
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * 處理傳入的Request
+     * 
+     * @param Request $request 框架的Request物件
+     * @param Closure $next 將要被執行的控制層
+     * 
+     * @return Response 框架的Response物件
      */
-    public function handle(Request $request, Closure $next, string $guard): Response
+    public function handle(Request $request, Closure $next): Response
     {
-        // Response Json 工具
-        $toolResponseJson = new ToolResponseJson();
-
-        // Jwt 工具
-        $toolJwt = new ToolJwt();
+        // 依賴 
+        $srcAuth = app()->make(SrcAuth::class);
+        $ctrlToolResponse = app()->make(CtrlToolResponse::class);
 
         // 驗證Jwt Token
-        $jwtToken = $this->getJwtToken();
-        $data = $toolJwt->decode($jwtToken);
+        $result = $srcAuth->checkByJwtToken($this->getJwtToken());
 
-        if (!$data) {
-            $response = $toolResponseJson
+        // 驗證失敗，回傳錯誤資訊
+        if ($result->status === false) {
+            return $ctrlToolResponse
                 ->setHttpCode(401)
-                ->setMessage('Token驗證失敗')
-                ->get();
-
-            return $response;
+                ->setMessage($result->message)
+                ->build();
         }
 
-        // 登入帳號
-        $isLogin = auth($guard)->loginUsingId($data['accountId']);
+        // 帳號資訊
+        $accountAuth = [
+            'accountId' => $result->data['accountId'],
+            'roleIds' => $result->data['roleIds'],
+        ];
 
-        if (!$isLogin) {
-            $response = $toolResponseJson
-                ->setHttpCode(401)
-                ->setMessage('登入失敗')
-                ->get();
+        // 將帳號資訊寫入上下文
+        context()->add('accountAuth', $accountAuth);
 
-            return $response;
-        }
-
-        // 驗證帳號狀態
-        $user = auth($guard)->user();
-
-        if (!$user->status) {
-            $response = $toolResponseJson
-                ->setHttpCode(401)
-                ->setMessage('帳號已被關閉')
-                ->get();
-
-            return $response;
-        }
-
-        $response = $next($request);
-
-        return $response;
+        return $next($request);
     }
 
     /**
-     * 取得JwtToken
+     * 取得JWT Token
      * 
-     * @return string
+     * @return string JWT Token
      */
-    private function getJwtToken()
+    private function getJwtToken(): string
     {
-        $authorization = request()->header('Authorization');
+        $auth = request()->header('Authorization');
 
         $match = [];
-        preg_match('/^Bearer (.+)$/', $authorization, $match);
-        $jwtToken = $match[1] ?? '';
+        preg_match('/^Bearer (.+)$/', $auth, $match);
 
-        return $jwtToken;
+        return $match[1] ?? '';
     }
 }
