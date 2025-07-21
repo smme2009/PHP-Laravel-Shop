@@ -103,14 +103,14 @@ class Login extends Service
         $model = auth()->user();
 
         // 取得帳號角色
-        $roles = $model->role
+        $roleIds = $model->role
             ->pluck('role_id')
             ->toArray();
 
         // 設定JWT Token資料
         $data = [
             'accountId' => $model->account_id,
-            'rules' => $roles,
+            'roleIds' => $roleIds,
         ];
 
         // 編碼JWT Token
