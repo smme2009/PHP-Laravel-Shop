@@ -11,6 +11,18 @@ use App\Models\Account as ModelAccount;
 class Account
 {
     /**
+     * 透過帳號ID取得帳號資料
+     * 
+     * @param int $accountId 帳號ID
+     * 
+     * @return ?ModelAccount
+     */
+    public function findOneByAccountId(int $accountId): ?ModelAccount
+    {
+        return ModelAccount::find($accountId);
+    }
+
+    /**
      * 透過帳號取得帳號資料
      * 
      * @param string $account 帳號
