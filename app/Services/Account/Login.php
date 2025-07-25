@@ -25,15 +25,14 @@ class Login extends Service
     /**
      * 登入帳號
      * 
-     * @param string $account 帳號
-     * @param string $password 密碼
+     * @param array $data 登入資料
      * 
      * @return OutputResult 處理結果
      */
-    public function login(string $account, string $password): OutputResult
+    public function login(array $data): OutputResult
     {
         // 驗證登入資料
-        $validationResult = $this->getValidationResult($account, $password);
+        $validationResult = $this->getValidationResult($data);
 
         // 驗證失敗，回傳錯誤資料
         if ($validationResult->status === false) {
@@ -45,13 +44,27 @@ class Login extends Service
         }
 
         // 驗證登入身份
-        $authPass = auth()->once(['account' => $account, 'password' => $password]);
+        $authPass = auth()->once(['account' => $data['account'], 'password' => $data['password']]);
 
         // 驗證失敗，回傳錯誤資料
         if ($authPass === false) {
             return $this->toolResult()
                 ->setStatus(false)
                 ->setMessage('登入失敗，帳號或密碼錯誤')
+                ->build();
+        }
+
+        // 預載入角色資料，避免後續重複查詢
+        auth()->user()->load('role');
+
+        // 驗證是否具有角色
+        $hasRole = $this->hasRole($data['roleId']);
+
+        // 驗證失敗，回傳錯誤資料
+        if ($hasRole === false) {
+            return $this->toolResult()
+                ->setStatus(false)
+                ->setMessage('登入失敗，權限不足')
                 ->build();
         }
 
@@ -76,20 +89,33 @@ class Login extends Service
 
     /**
      * 取得驗證結果
-     * 
-     * @param string $account 帳號
-     * @param string $password 密碼
-     * 
+     *
+     * @param array $data 登入資料
+     *
      * @return OutputValidationResult 驗證結果物件，包含驗證狀態和錯誤訊息
      */
-    private function getValidationResult(string $account, string $password): OutputValidationResult
+    private function getValidationResult(array $data): OutputValidationResult
     {
         return $this->toolValidator()
-            ->addData('account', $account)
-            ->addData('password', $password)
+            ->bulkAddData($data)
             ->addRule('account', ['required', 'string', 'email'])
             ->addRule('password', ['required', 'string', 'min:8', 'max:12'])
+            ->addRule('roleId', ['required', 'integer'])
             ->build();
+    }
+
+    /**
+     * 檢查是否具有角色
+     *
+     * @param int $roleId 角色ID
+     * 
+     * @return bool 是否具有角色
+     */
+    private function hasRole(int $roleId): bool
+    {
+        return auth()->user()
+            ->role
+            ->contains('role_id', $roleId);
     }
 
     /**

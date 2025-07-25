@@ -27,12 +27,15 @@ class Login extends Controller
      */
     public function login(): JsonResponse
     {
-        // 接收請求的資料，為避免錯誤所以皆預設空字串
-        $account = request('account', '');
-        $password = request('password', '');
+        // 接收請求的資料
+        $request = [
+            'account' => request('account'), // 帳號
+            'password' => request('password'), // 密碼
+            'roleId' => request('roleId'), // 角色ID
+        ];
 
         // 登入帳號
-        $result = $this->srcLogin->login($account, $password);
+        $result = $this->srcLogin->login($request);
 
         // 回傳結果
         return $this->toolResponse()
