@@ -3,11 +3,12 @@
 namespace App\Services\Tool;
 
 use Exception;
+use Illuminate\Support\Facades\Redis;
 use Firebase\JWT\JWT as FirebaseJwt;
 use Firebase\JWT\Key;
 
 /**
- * JWT Token建構工具
+ * JWT Token工具
  */
 class Jwt
 {
@@ -75,5 +76,53 @@ class Jwt
         }
 
         return $data;
+    }
+
+    /**
+     * 將JWT Token加入白名單
+     *
+     * @param string $jwtToken JWT Token
+     *
+     * @return bool 是否加入成功
+     */
+    public function addToWhitelist(string $jwtToken): bool
+    {
+        // 取得儲存的key
+        $whitelistKey = $this->getWhitelistKey($jwtToken);
+
+        // 將JWT Token存入Redis
+        $result = Redis::setex($whitelistKey, 86400, $jwtToken);
+
+        // 回傳是否成功
+        return $result->getPayload() === 'OK';
+    }
+
+    /**
+     * 確認JWT Token是否存在白名單中
+     *
+     * @param string $jwtToken JWT Token
+     *
+     * @return bool 是否存在白名單中
+     */
+    public function isInWhitelist(string $jwtToken): bool
+    {
+        // 取得儲存的key
+        $whitelistKey = $this->getWhitelistKey($jwtToken);
+
+        // 確認是否存在白名單中
+        return $jwtToken === Redis::get($whitelistKey);
+    }
+
+    /**
+     * 取得白名單的key
+     *
+     * @param string $jwtToken JWT Token
+     *
+     * @return string 白名單的key
+     */
+    private function getWhitelistKey(string $jwtToken): string
+    {
+        $hashKey = hash('sha256', $jwtToken);
+        return "jwtToken:{$hashKey}";
     }
 }

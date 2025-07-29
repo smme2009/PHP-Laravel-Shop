@@ -79,6 +79,17 @@ class Login extends Service
                 ->build();
         }
 
+        // 將JWT Token加入白名單
+        $result = $this->toolJwt->addToWhitelist($jwtToken);
+
+        // 加入白名單失敗，回傳錯誤資料
+        if ($result === false) {
+            return $this->toolResult()
+                ->setStatus(false)
+                ->setMessage('登入失敗，取得JWT Token時發生異常')
+                ->build();
+        }
+
         // 登入成功，回傳JWT Token
         return $this->toolResult()
             ->setStatus(true)

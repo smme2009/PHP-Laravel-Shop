@@ -41,6 +41,17 @@ class Auth extends Service
                 ->build();
         }
 
+        // 驗證Jwt Token是否在白名單中
+        $isInWhitelist = $this->toolJwt->isInWhitelist($jwtToken);
+
+        // 驗證失敗，回傳錯誤資料
+        if ($isInWhitelist === false) {
+            return $this->toolResult()
+                ->setStatus(false)
+                ->setMessage('驗證失敗，Jwt Token無效')
+                ->build();
+        }
+
         // 解碼成功，回傳資料
         return $this->toolResult()
             ->setStatus(true)
