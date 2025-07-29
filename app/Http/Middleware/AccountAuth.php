@@ -27,8 +27,11 @@ class AccountAuth
         $srcAuth = app()->make(SrcAuth::class);
         $ctrlToolResponse = app()->make(CtrlToolResponse::class);
 
+        // 取得JWT Token
+        $jwtToken = $this->getJwtToken();
+
         // 驗證Jwt Token
-        $result = $srcAuth->checkByJwtToken($this->getJwtToken());
+        $result = $srcAuth->checkByJwtToken($jwtToken);
 
         // 驗證失敗，回傳錯誤資訊
         if ($result->status === false) {
@@ -40,6 +43,7 @@ class AccountAuth
 
         // 帳號資訊
         $accountAuth = [
+            'jwtToken' => $jwtToken,
             'accountId' => $result->data['accountId'],
             'roleIds' => $result->data['roleIds'],
         ];

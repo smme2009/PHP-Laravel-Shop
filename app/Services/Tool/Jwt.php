@@ -114,6 +114,22 @@ class Jwt
     }
 
     /**
+     * 將JWT Token從白名單中移除
+     *
+     * @param string $jwtToken JWT Token
+     *
+     * @return bool 是否移除成功
+     */
+    public function removeFromWhitelist(string $jwtToken): bool
+    {
+        // 取得儲存的key
+        $whitelistKey = $this->getWhitelistKey($jwtToken);
+
+        // 將JWT Token從Redis中移除
+        return Redis::del($whitelistKey) === 1;
+    }
+
+    /**
      * 取得白名單的key
      *
      * @param string $jwtToken JWT Token
