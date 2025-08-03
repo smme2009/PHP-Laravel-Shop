@@ -3,8 +3,7 @@
 namespace Tests\Unit\Services\Account;
 
 use Tests\TestCase;
-use Mockery;
-use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use App\Enums\Role as EnumRole;
 use App\Models\Account as ModelAccount;
 use App\Repositories\Account\Account as RepoAccount;
@@ -17,9 +16,9 @@ class RegisterTest extends TestCase
 {
     /**
      * 模擬資料存取層-帳號
-     * @var MockInterface
+     * @var MockObject
      */
-    private MockInterface $mockRepoAccount;
+    private MockObject $mockRepoAccount;
 
     /**
      * 服務層-帳號註冊
@@ -37,7 +36,7 @@ class RegisterTest extends TestCase
         parent::setUp();
 
         // 模擬資料存取層-帳號
-        $this->mockRepoAccount = Mockery::mock(RepoAccount::class);
+        $this->mockRepoAccount = $this->createMock(RepoAccount::class);
 
         // 服務層-帳號註冊
         $this->srcRegister = app()->make(
@@ -64,10 +63,10 @@ class RegisterTest extends TestCase
 
         // 模擬透過帳號取得帳號資料
         $this->mockRepoAccount
-            ->shouldReceive('findOneByAccount')
+            ->expects($this->once())
+            ->method('findOneByAccount')
             ->with($mockData['account'])
-            ->andReturn(null)
-            ->once();
+            ->willReturn(null);
 
         // 模擬註冊結果資料，只模擬需要的資料
         $mockModel = new ModelAccount();
@@ -76,10 +75,10 @@ class RegisterTest extends TestCase
 
         // 模擬新增帳號並設定角色
         $this->mockRepoAccount
-            ->shouldReceive('insertWithRole')
+            ->expects($this->once())
+            ->method('insertWithRole')
             ->with($mockData, EnumRole::BUYER->value)
-            ->andReturn($mockModel)
-            ->once();
+            ->willReturn($mockModel);
 
         // 執行註冊
         $result = $this->srcRegister->register($mockData);
@@ -136,10 +135,10 @@ class RegisterTest extends TestCase
 
         // 模擬透過帳號取得帳號資料
         $this->mockRepoAccount
-            ->shouldReceive('findOneByAccount')
+            ->expects($this->once())
+            ->method('findOneByAccount')
             ->with($mockData['account'])
-            ->andReturn(new ModelAccount())
-            ->once();
+            ->willReturn(new ModelAccount());
 
         // 執行註冊
         $result = $this->srcRegister->register($mockData);
