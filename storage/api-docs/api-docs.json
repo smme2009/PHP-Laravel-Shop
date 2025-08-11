@@ -144,6 +144,96 @@
                     }
                 ]
             }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "帳號"
+                ],
+                "summary": "註冊",
+                "description": "使用者註冊",
+                "operationId": "register",
+                "requestBody": {
+                    "description": "註冊資料",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "account",
+                                    "password",
+                                    "name"
+                                ],
+                                "properties": {
+                                    "account": {
+                                        "description": "帳號",
+                                        "type": "string",
+                                        "example": "test@test.com"
+                                    },
+                                    "password": {
+                                        "description": "密碼",
+                                        "type": "string",
+                                        "example": "password"
+                                    },
+                                    "name": {
+                                        "description": "姓名",
+                                        "type": "string",
+                                        "example": "測試帳號"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "註冊成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "註冊成功"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "account": {
+                                                    "type": "string",
+                                                    "example": "test@test.com"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "測試帳號"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "註冊失敗",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "註冊失敗，{錯誤資訊}"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
