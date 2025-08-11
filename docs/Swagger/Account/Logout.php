@@ -8,7 +8,7 @@ use OpenApi\Attributes as OA;
     path: '/api/logout',
     operationId: 'logout',
     summary: '登出',
-    description: '使用者登出',
+    description: '帳號登出',
     tags: ['帳號'],
     security: [
         ['jwtToken' => []],

@@ -8,7 +8,7 @@ use OpenApi\Attributes as OA;
     path: '/api/login',
     operationId: 'login',
     summary: '登入',
-    description: '使用者登入',
+    description: '帳號登入',
     tags: ['帳號'],
     requestBody: new OA\RequestBody(
         required: true,

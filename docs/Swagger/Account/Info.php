@@ -7,8 +7,8 @@ use OpenApi\Attributes as OA;
 #[OA\Get(
     path: '/api/account/profile',
     operationId: 'accountProfile',
-    summary: '使用者資訊',
-    description: '取得使用者資訊',
+    summary: '帳號資訊',
+    description: '取得帳號資訊',
     tags: ['帳號'],
     security: [
         ['jwtToken' => []],

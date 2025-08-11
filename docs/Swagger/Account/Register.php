@@ -8,7 +8,7 @@ use OpenApi\Attributes as OA;
     path: '/api/register',
     operationId: 'register',
     summary: '註冊',
-    description: '使用者註冊',
+    description: '帳號註冊',
     tags: ['帳號'],
     requestBody: new OA\RequestBody(
         required: true,
