@@ -28,9 +28,13 @@ class Address extends Controller
      */
     public function create(): JsonResponse
     {
+        // 取得帳號資料
+        $accountAuth = context()->get('accountAuth');
+
         // 接收請求資料
         $data = [
             'address' => request('address'),
+            'account_id' => $accountAuth['accountId']
         ];
 
         // 新增帳號地址
@@ -51,8 +55,11 @@ class Address extends Controller
      */
     public function getList(): JsonResponse
     {
+        // 取得帳號資料
+        $accountAuth = context()->get('accountAuth');
+
         // 取得帳號地址列表
-        $result = $this->srcAddress->getList();
+        $result = $this->srcAddress->getList($accountAuth['accountId']);
 
         // 回傳結果
         return $this->toolResponse()
@@ -71,8 +78,11 @@ class Address extends Controller
      */
     public function delete(int $accountAddressId): JsonResponse
     {
+        // 取得帳號資料
+        $accountAuth = context()->get('accountAuth');
+
         // 刪除帳號地址
-        $result = $this->srcAddress->delete($accountAddressId);
+        $result = $this->srcAddress->delete($accountAuth['accountId'], $accountAddressId);
 
         // 回傳結果
         return $this->toolResponse()

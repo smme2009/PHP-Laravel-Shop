@@ -44,14 +44,8 @@ class Address extends Service
                 ->build();
         }
 
-        // 取得帳號資料
-        $accountAuth = context()->get('accountAuth');
-
         // 新增帳號地址
-        $model = $this->repoAddress->insert([
-            'account_id' => $accountAuth['accountId'],
-            ...$data
-        ]);
+        $model = $this->repoAddress->insert($data);
 
         // 新增失敗，回傳錯誤資料
         if ($model === null) {
@@ -72,15 +66,14 @@ class Address extends Service
     /**
      * 取得帳號地址
      * 
+     * @param int $accountId 帳號ID
+     * 
      * @return OutputResult 處理結果
      */
-    public function getList(): OutputResult
+    public function getList(int $accountId): OutputResult
     {
-        // 取得帳號資料
-        $accountAuth = context()->get('accountAuth');
-
         // 取得帳號地址Model
-        $models = $this->repoAddress->findAllByAccountid($accountAuth['accountId']);
+        $models = $this->repoAddress->findAllByAccountid($accountId);
 
         // 格式化帳號地址資料
         $addresses = $models
@@ -98,20 +91,18 @@ class Address extends Service
     /**
      * 刪除帳號地址
      * 
+     * @param int $accountId 帳號ID
      * @param int $accountAddressId 帳號地址ID
      * 
      * @return OutputResult 處理結果
      */
-    public function delete(int $accountAddressId): OutputResult
+    public function delete(int $accountId, int $accountAddressId): OutputResult
     {
-        // 取得帳號資料
-        $accountAuth = context()->get('accountAuth');
-
         // 取得帳號地址Model
         $model = $this->repoAddress->findOneByAccountAddressId($accountAddressId);
 
         // 取得資料失敗，回傳錯誤資料
-        if ($model === null || $model->account_id !== $accountAuth['accountId']) {
+        if ($model === null || $model->account_id !== $accountId) {
             return $this->toolResult()
                 ->setStatus(false)
                 ->setMessage('刪除地址失敗，查無資料')
