@@ -64,7 +64,7 @@ class Address extends Service
     }
 
     /**
-     * 取得帳號地址
+     * 取得帳號地址列表
      * 
      * @param int $accountId 帳號ID
      * 
@@ -83,7 +83,7 @@ class Address extends Service
         // 回傳結果
         return $this->toolResult()
             ->setStatus(true)
-            ->setMessage('取得地址成功')
+            ->setMessage('取得帳號地址列表成功')
             ->bulkAddData($addresses)
             ->build();
     }
