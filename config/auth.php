@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'member',
-        'passwords' => 'member',
+        'guard' => 'account',
+        'passwords' => 'account',
     ],
 
     /*
@@ -36,14 +36,9 @@ return [
     */
 
     'guards' => [
-        'admin' => [
+        'account' => [
             'driver' => 'session',
-            'provider' => 'admin',
-        ],
-
-        'member' => [
-            'driver' => 'session',
-            'provider' => 'member',
+            'provider' => 'account',
         ],
     ],
 
@@ -65,20 +60,10 @@ return [
     */
 
     'providers' => [
-        'admin' => [
+        'account' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Admin::class,
+            'model' => App\Models\Account::class,
         ],
-
-        'member' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Member::class,
-        ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
@@ -101,15 +86,8 @@ return [
     */
 
     'passwords' => [
-        'admin' => [
-            'provider' => 'admin',
-            'table' => 'password_reset_tokens',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-
-        'member' => [
-            'provider' => 'member',
+        'account' => [
+            'provider' => 'account',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
