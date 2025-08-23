@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -11,6 +12,9 @@ use Illuminate\Database\Eloquent\Model;
 class AccountAddress extends Model
 {
     use HasFactory;
+
+    // 軟刪除
+    use SoftDeletes;
 
     // 資料表名稱
     protected $table = 'account_address';
