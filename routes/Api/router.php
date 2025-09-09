@@ -6,6 +6,7 @@ use App\Http\Controllers\Account\Login;
 use App\Http\Controllers\Account\Info;
 use App\Http\Controllers\Account\Logout;
 use App\Http\Controllers\Account\Address;
+use App\Http\Controllers\Banner\Banner;
 
 // 註冊
 Route::post('register', [Register::class, 'register']);
@@ -34,5 +35,11 @@ Route::middleware('accountAuth')->group(function () {
             // 刪除帳號地址
             Route::delete('{accountAddressId}', [Address::class, 'delete']);
         });
+    });
+
+    // 橫幅相關
+    Route::prefix('banner')->group(function () {
+        // 新增橫幅
+        Route::post('', [Banner::class, 'create']);
     });
 });
