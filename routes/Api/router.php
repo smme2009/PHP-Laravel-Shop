@@ -6,6 +6,7 @@ use App\Http\Controllers\Account\Login;
 use App\Http\Controllers\Account\Info;
 use App\Http\Controllers\Account\Logout;
 use App\Http\Controllers\Account\Address;
+use App\Http\Controllers\Banner\File;
 use App\Http\Controllers\Banner\Banner;
 
 // 註冊
@@ -39,6 +40,9 @@ Route::middleware('accountAuth')->group(function () {
 
     // 橫幅相關
     Route::prefix('banner')->group(function () {
+        // 上傳橫幅圖片
+        Route::post('photo', [File::class, 'uploadPhoto']);
+
         // 新增橫幅
         Route::post('', [Banner::class, 'create']);
     });
