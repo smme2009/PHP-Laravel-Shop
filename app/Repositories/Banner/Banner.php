@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Banner;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\Banner as ModelBanner;
 
 /**
@@ -36,5 +37,17 @@ class Banner
         }
 
         return $model;
+    }
+
+    /**
+     * 透過帳號ID取得橫幅分頁
+     * 
+     * @param int $accountId 帳號ID
+     * 
+     * @return LengthAwarePaginator 橫幅資料
+     */
+    public function findPagedByAccountId(int $accountId): LengthAwarePaginator
+    {
+        return ModelBanner::where('account_id', $accountId)->paginate();
     }
 }

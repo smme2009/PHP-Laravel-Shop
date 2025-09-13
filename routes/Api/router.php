@@ -45,5 +45,8 @@ Route::middleware('accountAuth')->group(function () {
 
         // 新增橫幅
         Route::post('', [Banner::class, 'create']);
+
+        // 取得橫幅分頁
+        Route::get('', [Banner::class, 'getPaged']);
     });
 });

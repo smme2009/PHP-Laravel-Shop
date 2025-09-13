@@ -2,6 +2,7 @@
 
 namespace App\Services\Banner;
 
+use App\Models\Banner as ModelBanner;
 use App\Repositories\Banner\Banner as RepoBanner;
 use App\Services\Service;
 use App\Services\Tool\Output\Result as OutputResult;
@@ -58,14 +59,32 @@ class Banner extends Service
         return $this->toolResult()
             ->setStatus(true)
             ->setMessage('新增橫幅成功')
-            ->addData('bannerId', $model->banner_id)
-            ->addData('photoFileId', (int) $model->photo_file_id)
-            ->addData('name', $model->name)
-            ->addData('url', $model->url ?? '')
-            ->addData('startAt', $model->start_at)
-            ->addData('endAt', $model->end_at)
-            ->addData('sort', (int) $model->sort)
-            ->addData('status', (bool) $model->status)
+            ->bulkAddData($this->formatData($model))
+            ->build();
+    }
+
+    /**
+     * 取得橫幅分頁
+     * 
+     * @param int $accountId 帳號ID
+     * 
+     * @return OutputResult 處理結果
+     */
+    public function getPaged(int $accountId): OutputResult
+    {
+        // 取得橫幅分頁
+        $models = $this->repoBanner->findPagedByAccountId($accountId);
+
+        // 格式化橫幅分頁
+        $data = $models
+            ->map(fn($item) => $this->formatData($item))
+            ->toArray();
+
+        // 取得成功，回傳橫幅分頁
+        return $this->toolResult()
+            ->setStatus(true)
+            ->setMessage('取得橫幅分頁成功')
+            ->bulkAddData($data)
             ->build();
     }
 
@@ -88,5 +107,26 @@ class Banner extends Service
             ->addRule('sort', ['required', 'integer', 'min:1', 'max:100'])
             ->addRule('status', ['required', 'boolean'])
             ->build();
+    }
+
+    /**
+     * 格式化橫幅資料
+     * 
+     * @param ModelBanner $model Model
+     * 
+     * @return array 格式化後的橫幅資料
+     */
+    public function formatData(ModelBanner $model): array
+    {
+        return [
+            'bannerId' => $model->banner_id,
+            'photoFileId' => (int) $model->photo_file_id,
+            'name' => $model->name,
+            'url' => $model->url ?? '',
+            'startAt' => $model->start_at,
+            'endAt' => $model->end_at,
+            'sort' => (int) $model->sort,
+            'status' => (bool) $model->status,
+        ];
     }
 }

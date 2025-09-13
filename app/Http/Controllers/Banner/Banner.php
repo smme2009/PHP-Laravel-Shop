@@ -53,4 +53,25 @@ class Banner extends Controller
             ->bulkAddData($result->data)
             ->build();
     }
+
+    /**
+     * 取得橫幅分頁
+     * 
+     * @return JsonResponse
+     */
+    public function getPaged(): JsonResponse
+    {
+        // 取得帳號資料
+        $accountAuth = context()->get('accountAuth');
+
+        // 取得橫幅分頁
+        $result = $this->srcBanner->getPaged($accountAuth['accountId']);
+
+        // 回傳結果
+        return $this->toolResponse()
+            ->setHttpCodeByStatus($result->status)
+            ->setMessage($result->message)
+            ->bulkAddData($result->data)
+            ->build();
+    }
 }
