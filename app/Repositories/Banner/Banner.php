@@ -90,4 +90,16 @@ class Banner
 
         return $model;
     }
+
+    /**
+     * 刪除橫幅
+     * 
+     * @param ModelBanner $model Model
+     * 
+     * @return bool 是否刪除
+     */
+    public function delete(ModelBanner $model): bool
+    {
+        return $model->delete();
+    }
 }

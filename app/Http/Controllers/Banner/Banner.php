@@ -131,4 +131,27 @@ class Banner extends Controller
             ->bulkAddData($result->data)
             ->build();
     }
+
+    /**
+     * 移除橫幅
+     * 
+     * @param int $bannerId 橫幅ID
+     * 
+     * @return JsonResponse
+     */
+    public function remove(int $bannerId): JsonResponse
+    {
+        // 取得帳號資料
+        $accountAuth = context()->get('accountAuth');
+
+        // 移除橫幅
+        $result = $this->srcBanner->remove($accountAuth['accountId'], $bannerId);
+
+        // 回傳結果
+        return $this->toolResponse()
+            ->setHttpCodeByStatus($result->status)
+            ->setMessage($result->message)
+            ->bulkAddData($result->data)
+            ->build();
+    }
 }

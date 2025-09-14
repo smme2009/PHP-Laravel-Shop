@@ -159,6 +159,45 @@ class Banner extends Service
     }
 
     /**
+     * 移除橫幅
+     * 
+     * @param int $accountId 帳號ID
+     * @param int $bannerId 橫幅ID
+     * 
+     * @return OutputResult 處理結果
+     */
+    public function remove(int $accountId, int $bannerId): OutputResult
+    {
+        // 取得橫幅Model
+        $model = $this->repoBanner->findOneByBannerId($bannerId);
+
+        // 取得橫幅失敗，回傳錯誤資料
+        if ($model === null || $model->account_id !== $accountId) {
+            return $this->toolResult()
+                ->setStatus(false)
+                ->setMessage('移除橫幅失敗，橫幅不存在')
+                ->build();
+        }
+
+        // 刪除橫幅
+        $result = $this->repoBanner->delete($model);
+
+        // 刪除失敗，回傳錯誤資料
+        if ($result === false) {
+            return $this->toolResult()
+                ->setStatus(false)
+                ->setMessage('移除橫幅失敗，系統異常')
+                ->build();
+        }
+
+        // 刪除成功，回傳成功資料
+        return $this->toolResult()
+            ->setStatus(true)
+            ->setMessage('移除橫幅成功')
+            ->build();
+    }
+
+    /**
      * 取得驗證結果
      *
      * @param array $data 橫幅資料

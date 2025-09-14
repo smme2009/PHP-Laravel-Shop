@@ -54,5 +54,8 @@ Route::middleware('accountAuth')->group(function () {
 
         // 修改橫幅
         Route::put('{bannerId}', [Banner::class, 'modify']);
+
+        // 移除橫幅
+        Route::delete('{bannerId}', [Banner::class, 'remove']);
     });
 });
