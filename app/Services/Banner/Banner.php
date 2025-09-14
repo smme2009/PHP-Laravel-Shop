@@ -142,7 +142,7 @@ class Banner extends Service
         // 更新橫幅
         $model = $this->repoBanner->update($model, $data);
 
-        // 修改失敗，回傳錯誤資料
+        // 更新失敗，回傳錯誤資料
         if ($model === null) {
             return $this->toolResult()
                 ->setStatus(false)
@@ -150,7 +150,7 @@ class Banner extends Service
                 ->build();
         }
 
-        // 修改成功，回傳橫幅資料
+        // 更新成功，回傳橫幅資料
         return $this->toolResult()
             ->setStatus(true)
             ->setMessage('修改橫幅成功')

@@ -69,7 +69,7 @@ class Banner
      * @param ModelBanner $model Model
      * @param array $data 橫幅資料
      * 
-     * @return ?ModelBanner
+     * @return ?ModelBanner Model
      */
     public function update(ModelBanner $model, array $data): ?ModelBanner
     {
