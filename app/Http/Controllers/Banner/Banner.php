@@ -74,4 +74,27 @@ class Banner extends Controller
             ->bulkAddData($result->data)
             ->build();
     }
+
+    /**
+     * 取得橫幅
+     * 
+     * @param int $bannerId 橫幅ID
+     * 
+     * @return JsonResponse
+     */
+    public function get(int $bannerId): JsonResponse
+    {
+        // 取得帳號資料
+        $accountAuth = context()->get('accountAuth');
+
+        // 取得橫幅
+        $result = $this->srcBanner->get($accountAuth['accountId'], $bannerId);
+
+        // 回傳結果
+        return $this->toolResponse()
+            ->setHttpCodeByStatus($result->status)
+            ->setMessage($result->message)
+            ->bulkAddData($result->data)
+            ->build();
+    }
 }

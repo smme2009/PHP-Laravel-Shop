@@ -48,5 +48,8 @@ Route::middleware('accountAuth')->group(function () {
 
         // 取得橫幅分頁
         Route::get('', [Banner::class, 'getPaged']);
+
+        // 取得橫幅
+        Route::get('{bannerId}', [Banner::class, 'get']);
     });
 });

@@ -50,4 +50,16 @@ class Banner
     {
         return ModelBanner::where('account_id', $accountId)->paginate();
     }
+
+    /**
+     * 透過橫幅ID取得橫幅資料
+     * 
+     * @param int $bannerId 橫幅ID
+     * 
+     * @return ?ModelBanner Model
+     */
+    public function findOneByBannerId(int $bannerId): ?ModelBanner
+    {
+        return ModelBanner::where('banner_id', $bannerId)->first();
+    }
 }

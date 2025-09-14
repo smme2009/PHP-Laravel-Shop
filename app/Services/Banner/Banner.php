@@ -89,6 +89,35 @@ class Banner extends Service
     }
 
     /**
+     * 取得橫幅
+     * 
+     * @param int $accountId 帳號ID
+     * @param int $bannerId 橫幅ID
+     * 
+     * @return OutputResult 處理結果
+     */
+    public function get(int $accountId, int $bannerId): OutputResult
+    {
+        // 取得橫幅Model
+        $model = $this->repoBanner->findOneByBannerId($bannerId);
+
+        // 取得橫幅失敗，回傳錯誤資料
+        if ($model === null || $model->account_id !== $accountId) {
+            return $this->toolResult()
+                ->setStatus(false)
+                ->setMessage('取得橫幅失敗，橫幅不存在')
+                ->build();
+        }
+
+        // 取得成功，回傳橫幅資料
+        return $this->toolResult()
+            ->setStatus(true)
+            ->setMessage('取得橫幅成功')
+            ->bulkAddData($this->formatData($model))
+            ->build();
+    }
+
+    /**
      * 取得驗證結果
      *
      * @param array $data 橫幅資料
@@ -116,7 +145,7 @@ class Banner extends Service
      * 
      * @return array 格式化後的橫幅資料
      */
-    public function formatData(ModelBanner $model): array
+    private function formatData(ModelBanner $model): array
     {
         return [
             'bannerId' => $model->banner_id,
