@@ -62,4 +62,32 @@ class Banner
     {
         return ModelBanner::where('banner_id', $bannerId)->first();
     }
+
+    /**
+     * 更新橫幅
+     * 
+     * @param ModelBanner $model Model
+     * @param array $data 橫幅資料
+     * 
+     * @return ?ModelBanner
+     */
+    public function update(ModelBanner $model, array $data): ?ModelBanner
+    {
+        // 新增橫幅
+        $model->name = $data['name'];
+        $model->photo_file_id = $data['photoFileId'];
+        $model->url = $data['url'];
+        $model->start_at = $data['startAt'];
+        $model->end_at = $data['endAt'];
+        $model->sort = $data['sort'];
+        $model->status = $data['status'];
+        $result = $model->save();
+
+        // 更新失敗
+        if ($result === false) {
+            return null;
+        }
+
+        return $model;
+    }
 }

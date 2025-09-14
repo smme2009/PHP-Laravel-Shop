@@ -51,5 +51,8 @@ Route::middleware('accountAuth')->group(function () {
 
         // 取得橫幅
         Route::get('{bannerId}', [Banner::class, 'get']);
+
+        // 修改橫幅
+        Route::put('{bannerId}', [Banner::class, 'modify']);
     });
 });

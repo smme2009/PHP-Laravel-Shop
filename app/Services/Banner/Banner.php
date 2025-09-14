@@ -118,6 +118,47 @@ class Banner extends Service
     }
 
     /**
+     * 修改橫幅
+     * 
+     * @param int $accountId 帳號ID
+     * @param int $bannerId 橫幅ID
+     * @param array $data 橫幅資料
+     * 
+     * @return OutputResult 處理結果
+     */
+    public function modify(int $accountId, int $bannerId, array $data): OutputResult
+    {
+        // 取得橫幅Model
+        $model = $this->repoBanner->findOneByBannerId($bannerId);
+
+        // 取得橫幅失敗，回傳錯誤資料
+        if ($model === null || $model->account_id !== $accountId) {
+            return $this->toolResult()
+                ->setStatus(false)
+                ->setMessage('修改橫幅失敗，橫幅不存在')
+                ->build();
+        }
+
+        // 更新橫幅
+        $model = $this->repoBanner->update($model, $data);
+
+        // 修改失敗，回傳錯誤資料
+        if ($model === null) {
+            return $this->toolResult()
+                ->setStatus(false)
+                ->setMessage('修改橫幅失敗，系統異常')
+                ->build();
+        }
+
+        // 修改成功，回傳橫幅資料
+        return $this->toolResult()
+            ->setStatus(true)
+            ->setMessage('修改橫幅成功')
+            ->bulkAddData($this->formatData($model))
+            ->build();
+    }
+
+    /**
      * 取得驗證結果
      *
      * @param array $data 橫幅資料

@@ -97,4 +97,38 @@ class Banner extends Controller
             ->bulkAddData($result->data)
             ->build();
     }
+
+    /**
+     * 修改橫幅
+     * 
+     * @param int $bannerId 橫幅ID
+     * 
+     * @return JsonResponse
+     */
+    public function modify(int $bannerId): JsonResponse
+    {
+        // 取得帳號資料
+        $accountAuth = context()->get('accountAuth');
+
+        // 接收請求資料
+        $data = [
+            'name' => request('name'),
+            'photoFileId' => request('photoFileId'),
+            'url' => request('url'),
+            'startAt' => request('startAt'),
+            'endAt' => request('endAt'),
+            'sort' => request('sort'),
+            'status' => request('status'),
+        ];
+
+        // 修改橫幅
+        $result = $this->srcBanner->modify($accountAuth['accountId'], $bannerId, $data);
+
+        // 回傳結果
+        return $this->toolResponse()
+            ->setHttpCodeByStatus($result->status)
+            ->setMessage($result->message)
+            ->bulkAddData($result->data)
+            ->build();
+    }
 }
