@@ -55,11 +55,15 @@ class Banner extends Service
                 ->build();
         }
 
+        // 取得檔案資訊
+        $fileInfo = $this->toolFile()->getFileInfo($model->photo_file_id);
+
         // 新增成功，回傳橫幅資料
         return $this->toolResult()
             ->setStatus(true)
             ->setMessage('新增橫幅成功')
             ->bulkAddData($this->formatData($model))
+            ->addData('photoUrl', $fileInfo->url)
             ->build();
     }
 
@@ -75,9 +79,19 @@ class Banner extends Service
         // 取得橫幅分頁
         $models = $this->repoBanner->findPagedByAccountId($accountId);
 
+        // 取得檔案資訊
+        $photoFileIds = $models->pluck('photo_file_id')->toArray();
+        $fileInfos = $this->toolFile()->getFileInfos($photoFileIds);
+
         // 格式化橫幅分頁
         $data = $models
+            // 格式化橫幅資料
             ->map(fn($item) => $this->formatData($item))
+            // 設定商品圖片網址
+            ->map(fn($item) => [
+                ...$item,
+                'photoUrl' => $fileInfos[$item['photoFileId']]->url,
+            ])
             ->toArray();
 
         // 取得成功，回傳橫幅分頁
@@ -109,11 +123,15 @@ class Banner extends Service
                 ->build();
         }
 
+        // 取得檔案資訊
+        $fileInfo = $this->toolFile()->getFileInfo($model->photo_file_id);
+
         // 取得成功，回傳橫幅資料
         return $this->toolResult()
             ->setStatus(true)
             ->setMessage('取得橫幅成功')
             ->bulkAddData($this->formatData($model))
+            ->addData('photoUrl', $fileInfo->url)
             ->build();
     }
 
@@ -150,11 +168,15 @@ class Banner extends Service
                 ->build();
         }
 
+        // 取得檔案資訊
+        $fileInfo = $this->toolFile()->getFileInfo($model->photo_file_id);
+
         // 更新成功，回傳橫幅資料
         return $this->toolResult()
             ->setStatus(true)
             ->setMessage('修改橫幅成功')
             ->bulkAddData($this->formatData($model))
+            ->addData('photoUrl', $fileInfo->url)
             ->build();
     }
 
