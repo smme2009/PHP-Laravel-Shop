@@ -33,7 +33,7 @@ class File
     public function upload(mixed $file, string $path = ''): ?OutputFile
     {
         // 儲存檔案
-        $publicPath = 'public/' . $path;
+        $publicPath = 'public' . ($path === '' ? '' : "/{$path}");
         $filePath = Storage::putFile($publicPath, $file);
 
         // 儲存失敗
