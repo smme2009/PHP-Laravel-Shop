@@ -81,8 +81,15 @@ class File
      */
     public function getFileInfos(array $fileIds): array
     {
+        // 取得檔案資料
         $models = $this->repoFile->findAllByFileIds($fileIds);
-        return array_map(fn($model) => $this->formatData($model), $models);
+
+        return $models
+            // 格式化檔案資訊資料
+            ->map(fn($model) => $this->formatData($model))
+            // 將檔案ID設定為Key
+            ->keyBy('fileId')
+            ->toArray();
     }
 
     /**
