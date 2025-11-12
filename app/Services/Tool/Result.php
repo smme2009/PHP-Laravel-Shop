@@ -10,10 +10,10 @@ use App\Services\Tool\Output\Result as OutputResult;
 class Result
 {
     /**
-     * 結果狀態
-     * @var bool
+     * HTTP Code
+     * @var int
      */
-    private bool $status = false;
+    private int $httpCode = 0;
 
     /**
      * 訊息
@@ -28,15 +28,15 @@ class Result
     private array $data = [];
 
     /**
-     * 設定結果狀態
+     * 設定HTTP Code
      * 
-     * @param bool $status 狀態
+     * @param int $httpCode HTTP Code
      * 
      * @return self
      */
-    public function setStatus(bool $status): self
+    public function setHttpCode(int $httpCode): self
     {
-        $this->status = $status;
+        $this->httpCode = $httpCode;
         return $this;
     }
 
@@ -91,7 +91,7 @@ class Result
     public function build(): OutputResult
     {
         return new OutputResult(
-            status: $this->status,
+            httpCode: $this->httpCode,
             message: $this->message,
             data: $this->data
         );
