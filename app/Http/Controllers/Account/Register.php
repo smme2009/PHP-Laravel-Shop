@@ -39,10 +39,6 @@ class Register extends Controller
         $result = $this->srcRegister->register($request);
 
         // 回傳結果
-        return $this->toolResponse()
-            ->setHttpCodeByStatus($result->status)
-            ->setMessage($result->message)
-            ->bulkAddData($result->data)
-            ->build();
+        return $this->getJsonResponse($result);
     }
 }
