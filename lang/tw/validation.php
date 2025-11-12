@@ -91,7 +91,7 @@ return [
     'max' => [
         'array' => 'The :attribute field must not have more than :max items.',
         'file' => ':attribute 檔案大小不可超過 :max KB',
-        'numeric' => 'The :attribute field must not be greater than :max.',
+        'numeric' => ':attribute 需小於等於 :max',
         'string' => 'The :attribute field must not be greater than :max characters.',
     ],
     'max_digits' => 'The :attribute field must not have more than :max digits.',
@@ -100,7 +100,7 @@ return [
     'min' => [
         'array' => 'The :attribute field must have at least :min items.',
         'file' => 'The :attribute field must be at least :min kilobytes.',
-        'numeric' => ':attribute 需大於 :min',
+        'numeric' => ':attribute 需大於等於 :min',
         'string' => 'The :attribute field must be at least :min characters.',
     ],
     'min_digits' => 'The :attribute field must have at least :min digits.',
@@ -199,6 +199,8 @@ return [
         'address' => '地址',
         'productTypeId' => '商品類型',
         'roleId' => '角色',
+        'startAt' => '開始時間',
+        'endAt' => '結束時間',
+        'sort' => '排序',
     ],
-
 ];

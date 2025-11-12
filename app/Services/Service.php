@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Services\Tool\Result as SrcToolResult;
 use App\Services\Tool\ValidationResult as SrcToolValidationResult;
+use App\Services\Tool\File as SrcToolFile;
 
 /**
  * Service通用層，可以用來存放共用的工具和方法
@@ -28,5 +29,15 @@ class Service
     public function toolValidator(): SrcToolValidationResult
     {
         return new SrcToolValidationResult();
+    }
+
+    /**
+     * 取得檔案管理工具
+     * 
+     * @return SrcToolFile
+     */
+    public function toolFile(): SrcToolFile
+    {
+        return app(SrcToolFile::class);
     }
 }
