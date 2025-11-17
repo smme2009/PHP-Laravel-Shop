@@ -24,6 +24,7 @@ class Controller extends BaseController
         $responseData = [
             'message' => $result->message,
             'data' => $result->data,
+            'errors' => $result->errors,
         ];
 
         return response()->json($responseData, $result->httpCode);
