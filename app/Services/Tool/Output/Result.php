@@ -13,11 +13,13 @@ class Result
      * @param int $httpCode HTTP Code
      * @param string $message 訊息
      * @param array $data 資料
+     * @param array $errors 錯誤資料
      */
     public function __construct(
         public readonly int $httpCode, // HTTP Code
         public readonly string $message, // 訊息
         public readonly array $data, // 資料
+        public readonly array $errors, // 錯誤資料
     ) {
     }
 }

@@ -28,6 +28,12 @@ class Result
     private array $data = [];
 
     /**
+     * 錯誤資料
+     * @var array
+     */
+    private array $errors = [];
+
+    /**
      * 設定HTTP Code
      * 
      * @param int $httpCode HTTP Code
@@ -84,6 +90,36 @@ class Result
     }
 
     /**
+     * 新增錯誤資料
+     * 
+     * @param string $name 名稱
+     * @param mixed $value 值
+     * 
+     * @return self
+     */
+    public function addError(string $name, mixed $value): self
+    {
+        $this->errors[$name] = $value;
+        return $this;
+    }
+
+    /**
+     * 批量新增錯誤資料
+     *
+     * @param array $errors 錯誤資料
+     * 
+     * @return self
+     */
+    public function bulkAddErrors(array $errors): self
+    {
+        foreach ($errors as $key => $value) {
+            $this->addError($key, $value);
+        }
+
+        return $this;
+    }
+
+    /**
      * 取得結果物件
      * 
      * @return OutputResult
@@ -93,7 +129,8 @@ class Result
         return new OutputResult(
             httpCode: $this->httpCode,
             message: $this->message,
-            data: $this->data
+            data: $this->data,
+            errors: $this->errors,
         );
     }
 }
