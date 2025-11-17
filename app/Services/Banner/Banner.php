@@ -40,7 +40,7 @@ class Banner extends Service
             return $this->toolResult()
                 ->setHttpCode(422)
                 ->setMessage('新增橫幅失敗，欄位填寫錯誤')
-                ->bulkAddData($validationResult->errors)
+                ->bulkAddErrors($validationResult->errors)
                 ->build();
         }
 

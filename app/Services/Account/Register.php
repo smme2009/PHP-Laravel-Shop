@@ -40,7 +40,7 @@ class Register extends Service
             return $this->toolResult()
                 ->setHttpCode(422)
                 ->setMessage('註冊失敗，欄位填寫錯誤')
-                ->bulkAddData($validationResult->errors)
+                ->bulkAddErrors($validationResult->errors)
                 ->build();
         }
 
