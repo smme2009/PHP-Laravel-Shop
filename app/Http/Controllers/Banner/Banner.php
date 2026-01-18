@@ -47,11 +47,7 @@ class Banner extends Controller
         $result = $this->srcBanner->create($data);
 
         // 回傳結果
-        return $this->toolResponse()
-            ->setHttpCodeByStatus($result->status)
-            ->setMessage($result->message)
-            ->bulkAddData($result->data)
-            ->build();
+        return $this->getJsonResponse($result);
     }
 
     /**
@@ -68,11 +64,7 @@ class Banner extends Controller
         $result = $this->srcBanner->getPaged($accountAuth['accountId']);
 
         // 回傳結果
-        return $this->toolResponse()
-            ->setHttpCodeByStatus($result->status)
-            ->setMessage($result->message)
-            ->bulkAddData($result->data)
-            ->build();
+        return $this->getJsonResponse($result);
     }
 
     /**
@@ -91,11 +83,7 @@ class Banner extends Controller
         $result = $this->srcBanner->get($accountAuth['accountId'], $bannerId);
 
         // 回傳結果
-        return $this->toolResponse()
-            ->setHttpCodeByStatus($result->status)
-            ->setMessage($result->message)
-            ->bulkAddData($result->data)
-            ->build();
+        return $this->getJsonResponse($result);
     }
 
     /**
@@ -125,11 +113,7 @@ class Banner extends Controller
         $result = $this->srcBanner->modify($accountAuth['accountId'], $bannerId, $data);
 
         // 回傳結果
-        return $this->toolResponse()
-            ->setHttpCodeByStatus($result->status)
-            ->setMessage($result->message)
-            ->bulkAddData($result->data)
-            ->build();
+        return $this->getJsonResponse($result);
     }
 
     /**
@@ -148,10 +132,6 @@ class Banner extends Controller
         $result = $this->srcBanner->remove($accountAuth['accountId'], $bannerId);
 
         // 回傳結果
-        return $this->toolResponse()
-            ->setHttpCodeByStatus($result->status)
-            ->setMessage($result->message)
-            ->bulkAddData($result->data)
-            ->build();
+        return $this->getJsonResponse($result);
     }
 }

@@ -38,9 +38,9 @@ class Banner extends Service
         // 驗證失敗，回傳錯誤資料
         if ($validationResult->status === false) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(422)
                 ->setMessage('新增橫幅失敗，欄位填寫錯誤')
-                ->bulkAddData($validationResult->errors)
+                ->bulkAddErrors($validationResult->errors)
                 ->build();
         }
 
@@ -50,7 +50,7 @@ class Banner extends Service
         // 新增失敗，回傳錯誤資料
         if ($model === null) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(500)
                 ->setMessage('新增橫幅失敗，系統異常')
                 ->build();
         }
@@ -60,7 +60,7 @@ class Banner extends Service
 
         // 新增成功，回傳橫幅資料
         return $this->toolResult()
-            ->setStatus(true)
+            ->setHttpCode(200)
             ->setMessage('新增橫幅成功')
             ->bulkAddData($this->formatData($model))
             ->addData('photoUrl', $fileInfo->url)
@@ -96,7 +96,7 @@ class Banner extends Service
 
         // 取得成功，回傳橫幅分頁
         return $this->toolResult()
-            ->setStatus(true)
+            ->setHttpCode(200)
             ->setMessage('取得橫幅分頁成功')
             ->bulkAddData($data)
             ->build();
@@ -118,7 +118,7 @@ class Banner extends Service
         // 取得橫幅失敗，回傳錯誤資料
         if ($model === null || $model->account_id !== $accountId) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(404)
                 ->setMessage('取得橫幅失敗，橫幅不存在')
                 ->build();
         }
@@ -128,7 +128,7 @@ class Banner extends Service
 
         // 取得成功，回傳橫幅資料
         return $this->toolResult()
-            ->setStatus(true)
+            ->setHttpCode(200)
             ->setMessage('取得橫幅成功')
             ->bulkAddData($this->formatData($model))
             ->addData('photoUrl', $fileInfo->url)
@@ -152,7 +152,7 @@ class Banner extends Service
         // 取得橫幅失敗，回傳錯誤資料
         if ($model === null || $model->account_id !== $accountId) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(404)
                 ->setMessage('修改橫幅失敗，橫幅不存在')
                 ->build();
         }
@@ -163,7 +163,7 @@ class Banner extends Service
         // 更新失敗，回傳錯誤資料
         if ($model === null) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(500)
                 ->setMessage('修改橫幅失敗，系統異常')
                 ->build();
         }
@@ -173,7 +173,7 @@ class Banner extends Service
 
         // 更新成功，回傳橫幅資料
         return $this->toolResult()
-            ->setStatus(true)
+            ->setHttpCode(200)
             ->setMessage('修改橫幅成功')
             ->bulkAddData($this->formatData($model))
             ->addData('photoUrl', $fileInfo->url)
@@ -196,7 +196,7 @@ class Banner extends Service
         // 取得橫幅失敗，回傳錯誤資料
         if ($model === null || $model->account_id !== $accountId) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(404)
                 ->setMessage('移除橫幅失敗，橫幅不存在')
                 ->build();
         }
@@ -207,14 +207,14 @@ class Banner extends Service
         // 刪除失敗，回傳錯誤資料
         if ($result === false) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(500)
                 ->setMessage('移除橫幅失敗，系統異常')
                 ->build();
         }
 
         // 刪除成功，回傳成功資料
         return $this->toolResult()
-            ->setStatus(true)
+            ->setHttpCode(200)
             ->setMessage('移除橫幅成功')
             ->build();
     }

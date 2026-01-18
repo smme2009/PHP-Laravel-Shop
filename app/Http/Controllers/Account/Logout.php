@@ -32,9 +32,6 @@ class Logout extends Controller
         $result = $this->srcLogout->logout();
 
         // 回傳結果
-        return $this->toolResponse()
-            ->setHttpCodeByStatus($result->status)
-            ->setMessage($result->message)
-            ->build();
+        return $this->getJsonResponse($result);
     }
 }

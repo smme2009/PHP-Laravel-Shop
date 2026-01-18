@@ -5,20 +5,28 @@ namespace App\Http\Controllers;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
-
-use App\Http\Controllers\Tool\Response as ToolResponse;
+use Illuminate\Http\JsonResponse;
+use App\Services\Tool\Output\Result as SvcResult;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
     /**
-     * 取得Controller的通用回應物件建構工具
-     *
-     * @return ToolResponse
+     * 取得JSON回應
+     * 
+     * @param SvcResult $result
+     * 
+     * @return JsonResponse JSON回應
      */
-    protected function toolResponse(): ToolResponse
+    protected function getJsonResponse(SvcResult $result): JsonResponse
     {
-        return new ToolResponse();
+        $responseData = [
+            'message' => $result->message,
+            'data' => $result->data,
+            'errors' => $result->errors,
+        ];
+
+        return response()->json($responseData, $result->httpCode);
     }
 }

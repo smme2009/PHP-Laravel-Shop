@@ -41,11 +41,7 @@ class Address extends Controller
         $result = $this->srcAddress->create($data);
 
         // 回傳結果
-        return $this->toolResponse()
-            ->setHttpCodeByStatus($result->status)
-            ->setMessage($result->message)
-            ->bulkAddData($result->data)
-            ->build();
+        return $this->getJsonResponse($result);
     }
 
     /**
@@ -62,11 +58,7 @@ class Address extends Controller
         $result = $this->srcAddress->getList($accountAuth['accountId']);
 
         // 回傳結果
-        return $this->toolResponse()
-            ->setHttpCodeByStatus($result->status)
-            ->setMessage($result->message)
-            ->bulkAddData($result->data)
-            ->build();
+        return $this->getJsonResponse($result);
     }
 
     /**
@@ -85,9 +77,6 @@ class Address extends Controller
         $result = $this->srcAddress->delete($accountAuth['accountId'], $accountAddressId);
 
         // 回傳結果
-        return $this->toolResponse()
-            ->setHttpCodeByStatus($result->status)
-            ->setMessage($result->message)
-            ->build();
+        return $this->getJsonResponse($result);
     }
 }

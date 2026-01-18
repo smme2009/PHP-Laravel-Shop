@@ -10,14 +10,16 @@ class Result
     /**
      * 建構子
      * 
-     * @param bool $status 狀態
+     * @param int $httpCode HTTP Code
      * @param string $message 訊息
      * @param array $data 資料
+     * @param array $errors 錯誤資料
      */
     public function __construct(
-        public readonly bool $status, // 結果狀態
+        public readonly int $httpCode, // HTTP Code
         public readonly string $message, // 訊息
         public readonly array $data, // 資料
+        public readonly array $errors, // 錯誤資料
     ) {
     }
 }

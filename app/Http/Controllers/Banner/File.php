@@ -35,10 +35,6 @@ class File extends Controller
         $result = $this->srcFile->uploadPhoto($file);
 
         // 回傳結果
-        return $this->toolResponse()
-            ->setHttpCodeByStatus($result->status)
-            ->setMessage($result->message)
-            ->bulkAddData($result->data)
-            ->build();
+        return $this->getJsonResponse($result);
     }
 }

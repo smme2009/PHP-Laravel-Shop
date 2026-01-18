@@ -36,10 +36,6 @@ class Info extends Controller
         $result = $this->srcInfo->getProfile($accountId);
 
         // 回傳結果
-        return $this->toolResponse()
-            ->setHttpCodeByStatus($result->status)
-            ->setMessage($result->message)
-            ->bulkAddData($result->data)
-            ->build();
+        return $this->getJsonResponse($result);
     }
 }

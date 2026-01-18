@@ -38,9 +38,9 @@ class Address extends Service
         // 驗證失敗，回傳錯誤資料
         if ($validationResult->status === false) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(422)
                 ->setMessage('新增失敗，欄位填寫錯誤')
-                ->bulkAddData($validationResult->errors)
+                ->bulkAddErrors($validationResult->errors)
                 ->build();
         }
 
@@ -50,14 +50,14 @@ class Address extends Service
         // 新增失敗，回傳錯誤資料
         if ($model === null) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(500)
                 ->setMessage('新增地址失敗，系統異常')
                 ->build();
         }
 
         // 回傳結果
         return $this->toolResult()
-            ->setStatus(true)
+            ->setHttpCode(200)
             ->setMessage('新增地址成功')
             ->bulkAddData($this->formatData($model))
             ->build();
@@ -82,7 +82,7 @@ class Address extends Service
 
         // 回傳結果
         return $this->toolResult()
-            ->setStatus(true)
+            ->setHttpCode(200)
             ->setMessage('取得帳號地址列表成功')
             ->bulkAddData($addresses)
             ->build();
@@ -104,7 +104,7 @@ class Address extends Service
         // 取得資料失敗，回傳錯誤資料
         if ($model === null || $model->account_id !== $accountId) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(404)
                 ->setMessage('刪除地址失敗，查無資料')
                 ->build();
         }
@@ -115,14 +115,14 @@ class Address extends Service
         // 刪除失敗，回傳錯誤資料
         if ($result === false) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(500)
                 ->setMessage('刪除地址失敗，系統異常')
                 ->build();
         }
 
         // 刪除成功，回傳成功資料
         return $this->toolResult()
-            ->setStatus(true)
+            ->setHttpCode(200)
             ->setMessage('刪除地址成功')
             ->build();
     }

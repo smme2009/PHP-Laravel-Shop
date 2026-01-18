@@ -37,9 +37,9 @@ class Login extends Service
         // 驗證失敗，回傳錯誤資料
         if ($validationResult->status === false) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(422)
                 ->setMessage('登入失敗，欄位填寫錯誤')
-                ->bulkAddData($validationResult->errors)
+                ->bulkAddErrors($validationResult->errors)
                 ->build();
         }
 
@@ -49,7 +49,7 @@ class Login extends Service
         // 驗證失敗，回傳錯誤資料
         if ($authPass === false) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(400)
                 ->setMessage('登入失敗，帳號或密碼錯誤')
                 ->build();
         }
@@ -63,7 +63,7 @@ class Login extends Service
         // 驗證失敗，回傳錯誤資料
         if ($hasRole === false) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(400)
                 ->setMessage('登入失敗，權限不足')
                 ->build();
         }
@@ -74,7 +74,7 @@ class Login extends Service
         // 取得JWT Token失敗，回傳錯誤資料
         if ($jwtToken === '') {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(500)
                 ->setMessage('登入失敗，取得JWT Token時發生異常')
                 ->build();
         }
@@ -85,14 +85,14 @@ class Login extends Service
         // 加入白名單失敗，回傳錯誤資料
         if ($result === false) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(500)
                 ->setMessage('登入失敗，取得JWT Token時發生異常')
                 ->build();
         }
 
         // 登入成功，回傳JWT Token
         return $this->toolResult()
-            ->setStatus(true)
+            ->setHttpCode(200)
             ->setMessage('登入成功')
             ->addData('jwtToken', $jwtToken)
             ->build();

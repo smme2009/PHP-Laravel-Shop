@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Services\Account\Auth as SrcAuth;
-use App\Http\Controllers\Tool\Response as CtrlToolResponse;
 
 /**
  * 中介層-帳號驗證
@@ -25,7 +24,6 @@ class AccountAuth
     {
         // 依賴 
         $srcAuth = app()->make(SrcAuth::class);
-        $ctrlToolResponse = app()->make(CtrlToolResponse::class);
 
         // 取得JWT Token
         $jwtToken = $this->getJwtToken();
@@ -34,11 +32,13 @@ class AccountAuth
         $result = $srcAuth->checkByJwtToken($jwtToken);
 
         // 驗證失敗，回傳錯誤資訊
-        if ($result->status === false) {
-            return $ctrlToolResponse
-                ->setHttpCode(401)
-                ->setMessage($result->message)
-                ->build();
+        if ($result->httpCode === 401) {
+            $responseData = [
+                'message' => $result->message,
+                'data' => $result->data,
+            ];
+
+            return response()->json($responseData, 401);
         }
 
         // 帳號資訊

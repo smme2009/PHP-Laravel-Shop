@@ -28,7 +28,7 @@ class File extends Service
         // 驗證失敗，回傳錯誤資料
         if ($validationResult->status === false) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(400)
                 ->setMessage('上傳橫幅圖片失敗，圖片格式不符')
                 ->bulkAddData($validationResult->errors)
                 ->build();
@@ -40,14 +40,14 @@ class File extends Service
         // 上傳失敗，回傳錯誤資料
         if ($fileInfo === null) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(500)
                 ->setMessage('上傳橫幅圖片失敗，系統異常')
                 ->build();
         }
 
         // 上傳成功，回傳檔案資料
         return $this->toolResult()
-            ->setStatus(true)
+            ->setHttpCode(200)
             ->setMessage('上傳橫幅圖片成功')
             ->addData('photoFileId', $fileInfo->fileId)
             ->build();

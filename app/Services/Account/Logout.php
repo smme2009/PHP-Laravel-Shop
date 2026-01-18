@@ -38,14 +38,14 @@ class Logout extends Service
         // 移除失敗，回傳錯誤資料
         if ($result === false) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(400)
                 ->setMessage('登出失敗，Jwt Token無效')
                 ->build();
         }
 
         // 登出成功，回傳成功資料
         return $this->toolResult()
-            ->setStatus(true)
+            ->setHttpCode(200)
             ->setMessage('登出成功')
             ->build();
     }

@@ -38,9 +38,9 @@ class Register extends Service
         // 驗證失敗，回傳錯誤資料
         if ($validationResult->status === false) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(422)
                 ->setMessage('註冊失敗，欄位填寫錯誤')
-                ->bulkAddData($validationResult->errors)
+                ->bulkAddErrors($validationResult->errors)
                 ->build();
         }
 
@@ -50,7 +50,7 @@ class Register extends Service
         // 驗證失敗，回傳錯誤資料
         if ($model !== null) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(409)
                 ->setMessage('註冊失敗，帳號已被使用')
                 ->build();
         }
@@ -61,14 +61,14 @@ class Register extends Service
         // 註冊失敗，回傳錯誤資料
         if ($model === null) {
             return $this->toolResult()
-                ->setStatus(false)
+                ->setHttpCode(500)
                 ->setMessage('註冊失敗，系統異常')
                 ->build();
         }
 
         // 註冊成功，回傳帳號資料
         return $this->toolResult()
-            ->setStatus(true)
+            ->setHttpCode(200)
             ->setMessage('註冊成功')
             ->addData('account', $model->account)
             ->addData('name', $model->name)
