@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 return new class extends Migration {
     /**
@@ -18,24 +17,6 @@ return new class extends Migration {
             $table->timestamps();
             $table->softDeletes();
         });
-
-        DB::table('order_payment')->insert([
-            [
-                'order_payment_id' => 1,
-                'name' => '貨到付款',
-                'status' => 1,
-            ],
-            [
-                'order_payment_id' => 2,
-                'name' => '信用卡',
-                'status' => 1,
-            ],
-            [
-                'order_payment_id' => 3,
-                'name' => '行動支付',
-                'status' => 1,
-            ],
-        ]);
     }
 
     /**
