@@ -1,22 +1,15 @@
-FROM dunglas/frankenphp:1.4-php8.3
+FROM dunglas/frankenphp:1.4-php8.4
 
-# 更新apt
-RUN apt update
 
-# 安裝ZIP套件
-RUN apt install -y libzip-dev
-RUN docker-php-ext-install zip
-
-# 安裝GD套件
-RUN apt install -y libpng-dev
-RUN docker-php-ext-install gd
-
-# 安裝CURL套件
-RUN apt install -y libssl-dev libcurl4-openssl-dev
-RUN docker-php-ext-install curl
-
-# 安裝SQL套件
-RUN docker-php-ext-install pdo_mysql
+# 安裝PHP需要的套件
+RUN install-php-extensions \
+    zip \
+    gd \
+    curl \
+    pdo_mysql \
+    pdo_pgsql \
+    intl \
+    opcache
 
 # 安裝Composer
 COPY --from=composer /usr/bin/composer /usr/bin/composer
