@@ -64,11 +64,11 @@ class AddressTest extends TestCase
         $result = $this->srcAddress->create($mockData);
 
         // 驗證結果狀態
-        $this->assertFalse($result->status);
+        $this->assertSame(422, $result->httpCode);
 
         // 驗證結果資料
-        $resultData = $result->data;
-        $this->assertArrayHasKey('address', $resultData);
+        $resultErrors = $result->errors;
+        $this->assertArrayHasKey('address', $resultErrors);
     }
 
     /**
@@ -95,7 +95,7 @@ class AddressTest extends TestCase
         $result = $this->srcAddress->create($mockData);
 
         // 驗證結果狀態
-        $this->assertFalse($result->status);
+        $this->assertSame(500, $result->httpCode);
     }
 
     /**
@@ -127,7 +127,7 @@ class AddressTest extends TestCase
         $result = $this->srcAddress->create($mockData);
 
         // 驗證結果狀態
-        $this->assertTrue($result->status);
+        $this->assertSame(200, $result->httpCode);
 
         // 驗證結果資料
         $resultData = $result->data;
@@ -176,7 +176,7 @@ class AddressTest extends TestCase
         $result = $this->srcAddress->getList($mockAccountId);
 
         // 驗證結果狀態
-        $this->assertTrue($result->status);
+        $this->assertSame(200, $result->httpCode);
 
         // 驗證結果資料
         foreach ($result->data as $key => $item) {
@@ -222,7 +222,7 @@ class AddressTest extends TestCase
         $result = $this->srcAddress->delete($mockAccountId, $mockAccountAddressId);
 
         // 驗證結果狀態
-        $this->assertFalse($result->status);
+        $this->assertSame(404, $result->httpCode);
     }
 
     /**
@@ -269,7 +269,7 @@ class AddressTest extends TestCase
         $result = $this->srcAddress->delete($mockAccountId, $mockAccountAddressId);
 
         // 驗證結果狀態
-        $this->assertFalse($result->status);
+        $this->assertSame(500, $result->httpCode);
     }
 
     /**
@@ -316,6 +316,6 @@ class AddressTest extends TestCase
         $result = $this->srcAddress->delete($mockAccountId, $mockAccountAddressId);
 
         // 驗證結果狀態
-        $this->assertTrue($result->status);
+        $this->assertSame(200, $result->httpCode);
     }
 }

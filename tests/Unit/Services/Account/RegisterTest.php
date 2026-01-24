@@ -84,7 +84,7 @@ class RegisterTest extends TestCase
         $result = $this->srcRegister->register($mockData);
 
         // 驗證結果狀態
-        $this->assertTrue($result->status);
+        $this->assertSame(200, $result->httpCode);
 
         // 驗證結果資料
         $resultData = $result->data;
@@ -110,13 +110,13 @@ class RegisterTest extends TestCase
         $result = $this->srcRegister->register($mockData);
 
         // 驗證結果狀態
-        $this->assertFalse($result->status);
+        $this->assertSame(422, $result->httpCode);
 
         // 驗證結果資料
-        $resultData = $result->data;
-        $this->assertArrayHasKey('account', $resultData);
-        $this->assertArrayHasKey('password', $resultData);
-        $this->assertArrayHasKey('name', $resultData);
+        $resultErrors = $result->errors;
+        $this->assertArrayHasKey('account', $resultErrors);
+        $this->assertArrayHasKey('password', $resultErrors);
+        $this->assertArrayHasKey('name', $resultErrors);
     }
 
     /**
@@ -144,7 +144,7 @@ class RegisterTest extends TestCase
         $result = $this->srcRegister->register($mockData);
 
         // 驗證結果狀態
-        $this->assertFalse($result->status);
+        $this->assertSame(409, $result->httpCode);
 
         // 驗證結果資料
         $this->assertEmpty($result->data);
