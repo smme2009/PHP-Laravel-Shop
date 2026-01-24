@@ -1,0 +1,80 @@
+name: "自動部署至GCE"
+
+# 觸發條件
+on:
+  push:
+    branches:
+      - "feature/2.0"
+# 執行工作
+jobs:
+  # 測試
+  test:
+    # 工作名稱
+    name: "測試"
+
+    # 作業系統
+    runs-on: "ubuntu-latest"
+
+    # 步驟
+    steps:
+      # 下載原始碼
+      - name: "下載原始碼"
+        uses: "actions/checkout@v4"
+
+      # 加入PHP環境
+      - name: "加入PHP環境"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          coverage: none
+
+      # 用Composer安裝套件
+      - name: "用Composer安裝套件"
+        run: composer install
+
+      # 執行測試
+      - name: "執行測試"
+        run: php artisan test
+  # 部署
+  build-and-deploy:
+    # 工作名稱
+    name: "部署"
+
+    # 作業系統
+    runs-on: "ubuntu-latest"
+
+    # 步驟
+    steps:
+      # 驗證GCP權限
+      - name: "驗證GCP權限"
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: "${{ secrets.GCP_KEY }}"
+
+      # 加入Gcloud CLI
+      - name: "加入Gcloud CLI"
+        uses: "google-github-actions/setup-gcloud@v2"
+
+      # 部署GCE中的專案
+      - name: "部署GCE中的專案"
+        run: |
+          gcloud compute ssh ${{ secrets.GCE_NAME }} --zone=${{ secrets.GCE_ZONE }} --command="
+            # 切換至專案目錄
+            cd /var/www/dev-api-shop-v2.coord.tw
+
+            # 更新程式
+            sudo git fetch origin feature/2.0
+            sudo git checkout -f feature/2.0
+            sudo git reset --hard origin/feature/2.0
+            
+            # 更新套件
+            sudo docker compose exec app composer install
+            
+            # 更新資料庫
+            sudo docker compose exec app php artisan migrate
+            
+            # 更新快取 
+            sudo docker compose exec app php artisan config:cache
+            sudo docker compose exec app php artisan route:cache
+            sudo docker compose exec app php artisan view:cache
+          "
