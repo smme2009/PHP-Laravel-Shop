@@ -77,7 +77,7 @@ class InfoTest extends TestCase
         $result = $this->srcInfo->getProfile($mockData['accountId']);
 
         // 驗證結果狀態
-        $this->assertTrue($result->status);
+        $this->assertSame(200, $result->httpCode);
 
         // 驗證結果資料
         $resultData = $result->data;
@@ -105,6 +105,6 @@ class InfoTest extends TestCase
         $result = $this->srcInfo->getProfile($accountId);
 
         // 驗證結果狀態
-        $this->assertFalse($result->status);
+        $this->assertSame(404, $result->httpCode);
     }
 }

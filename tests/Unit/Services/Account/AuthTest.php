@@ -80,7 +80,7 @@ class AuthTest extends TestCase
         $result = $this->srcAuth->checkByJwtToken($mockJwtToken);
 
         // 驗證結果狀態
-        $this->assertTrue($result->status);
+        $this->assertSame(200, $result->httpCode);
 
         // 驗證結果資料
         $resultData = $result->data;
@@ -109,7 +109,7 @@ class AuthTest extends TestCase
         $result = $this->srcAuth->checkByJwtToken($mockJwtToken);
 
         // 驗證結果狀態
-        $this->assertFalse($result->status);
+        $this->assertSame(401, $result->httpCode);
     }
 
     /**
@@ -146,6 +146,6 @@ class AuthTest extends TestCase
         $result = $this->srcAuth->checkByJwtToken($mockJwtToken);
 
         // 驗證結果狀態
-        $this->assertFalse($result->status);
+        $this->assertSame(401, $result->httpCode);
     }
 }
