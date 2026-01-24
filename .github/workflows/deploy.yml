@@ -34,7 +34,7 @@ jobs:
 
       # 執行測試
       - name: "執行測試"
-        run: php artisan test
+        run: php artisan test tests/Unit
   # 部署
   build-and-deploy:
     # 工作名稱
@@ -42,6 +42,9 @@ jobs:
 
     # 作業系統
     runs-on: "ubuntu-latest"
+
+    # 需完成步驟
+    needs: test
 
     # 步驟
     steps:
