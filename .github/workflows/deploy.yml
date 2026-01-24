@@ -43,6 +43,9 @@ jobs:
     # 作業系統
     runs-on: "ubuntu-latest"
 
+    # 需完成步驟
+    needs: test
+
     # 步驟
     steps:
       # 驗證GCP權限
