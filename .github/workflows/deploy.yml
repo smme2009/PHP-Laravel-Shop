@@ -63,7 +63,7 @@ jobs:
         run: |
           gcloud compute ssh ${{ secrets.GCE_NAME }} --zone=${{ secrets.GCE_ZONE }} --command="
             # 切換至專案目錄
-            cd /var/www/dev-api-shop-v2.coord.tw
+            cd /var/www/${{ secrets.APP_URL }}
 
             # 更新程式
             sudo git fetch origin feature/2.0
