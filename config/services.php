@@ -31,4 +31,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // Discord通知服務的設定
+    'discord' => [
+        'token' => env('DISCORD_BOT_TOKEN'),
+    ],
 ];
