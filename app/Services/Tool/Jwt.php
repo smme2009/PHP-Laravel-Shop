@@ -23,7 +23,7 @@ class Jwt
      */
     public function __construct()
     {
-        $this->key = env('APP_KEY');
+        $this->key = config('app.key');
     }
 
     /**
@@ -39,8 +39,7 @@ class Jwt
         $timeLimit = $timeNow + 86400;
 
         $payload = [
-            'iss' => env('APP_URL'), // 發行方
-            'aud' => env('FRONT_URL'), // 使用方
+            'iss' => config('app.url'), // 發行方
             'iat' => $timeNow, // 發行時間
             'nbf' => $timeNow, // 生效時間
             'exp' => $timeLimit, // 失效時間
