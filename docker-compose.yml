@@ -1,12 +1,13 @@
 services:
     app:
-        build: { dockerfile: ./docker/php/dockerfile }
-        container_name: ${DOCKER_NAME}_php
+        build: { dockerfile: ./docker/app/dockerfile }
+        container_name: ${DOCKER_NAME}_app
         networks:
             - network
         ports:
             - ${DOCKER_APP_PORT}:80
-        entrypoint: ["sh", "./docker/php/init.sh"]
+        working_dir: /app
+        entrypoint: ["sh", "./docker/app/init.sh"]
         volumes:
             - ./:/app
 networks:
