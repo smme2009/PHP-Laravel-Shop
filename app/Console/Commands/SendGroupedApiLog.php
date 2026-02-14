@@ -9,7 +9,7 @@ use App\Notifications\System\Api as NotificationSystemApi;
 /**
  * 指令-發送API紀錄統計通知
  */
-class sendGroupedApiLog extends Command
+class SendGroupedApiLog extends Command
 {
     /**
      * The name and signature of the console command.
@@ -23,7 +23,7 @@ class sendGroupedApiLog extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = '發送API紀錄統計通知';
 
     /**
      * Execute the console command.
