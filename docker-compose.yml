@@ -10,6 +10,17 @@ services:
         entrypoint: ["sh", "./docker/app/init.sh"]
         volumes:
             - ./:/app
+    scheduler:
+        build: { dockerfile: ./docker/scheduler/dockerfile }
+        container_name: ${DOCKER_NAME}_scheduler
+        networks:
+            - network
+        working_dir: /app
+        entrypoint: ["sh", "./docker/scheduler/init.sh"]
+        volumes:
+            - ./:/app
+        depends_on:
+            - app
 networks:
   network:
     external: true
