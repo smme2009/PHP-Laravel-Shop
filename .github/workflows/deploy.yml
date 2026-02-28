@@ -119,7 +119,7 @@ jobs:
                -d '{
                  "embeds": [{
                    "description": "# 📢 系統通知\n### 自動部署",
-                   "color": 3066993, # 綠色
+                   "color": 3066993,
                    "fields": [
                      {
                        "name": "** 🌐 環境 **",
@@ -145,7 +145,7 @@ jobs:
                -d '{
                  "embeds": [{
                    "description": "# 📢 系統通知\n### 自動部署",
-                   "color": 15158332, # 紅色
+                   "color": 15158332,
                    "fields": [
                      {
                        "name": "** 🌐 環境 **",
