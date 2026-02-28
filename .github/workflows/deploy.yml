@@ -81,6 +81,7 @@ jobs:
             sudo docker compose exec app php artisan route:cache
             sudo docker compose exec app php artisan view:cache
           "
+  # 檢查
   health-check:
     # 工作名稱
     name: "檢查"
@@ -96,13 +97,17 @@ jobs:
       # 檢查
       - name: "檢查"
         run: |
+          # 檢查最多嘗試5次
           for i in {1..5}; do
+            # 發送檢查請求
             HTTP_CODE=$(curl -w "%{http_code}" https://${{ secrets.APP_URL }}/api/health)
             
+            # 若檢查成功則離開
             if [ "$HTTP_CODE" = "204" ]; then
               exit 0
             fi
             
+            # 檢查失敗則10秒後重新嘗試
             sleep 10
           done
 
