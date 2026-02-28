@@ -116,7 +116,7 @@ jobs:
         if: success()
         run: |
           # 取得當前時間
-          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S")
+          TIMESTAMP=$(TZ='Asia/Taipei' date +"%Y-%m-%d %H:%M:%S")
 
           # 產生通知JSON
           # 如過不採用產生檔案的方式，會因為date指令導致錯誤
@@ -152,7 +152,7 @@ jobs:
         if: failure()
         run: |
           # 取得當前時間
-          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S")
+          TIMESTAMP=$(TZ='Asia/Taipei' date +"%Y-%m-%d %H:%M:%S")
 
           # 產生通知JSON
           # 如過不採用產生檔案的方式，會因為date指令導致錯誤
