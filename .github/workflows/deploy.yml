@@ -128,15 +128,15 @@ jobs:
               "fields": [
                 {
                   "name": "** 🌐 環境 **",
-                  "value": "`${{ secrets.APP_URL }}`"
+                  "value": "${{ secrets.APP_URL }}"
                 },
                 {
                   "name": "** ℹ️ 狀態 **",
-                  "value": "`成功`"
+                  "value": "成功"
                 },
                 {
                   "name": "** ⏰ 通知時間 **",
-                  "value": "`${TIMESTAMP}`"
+                  "value": "${TIMESTAMP}"
                 }
               ]
             }]
@@ -164,15 +164,15 @@ jobs:
               "fields": [
                 {
                   "name": "** 🌐 環境 **",
-                  "value": "`${{ secrets.APP_URL }}`"
+                  "value": "${{ secrets.APP_URL }}"
                 },
                 {
                   "name": "** ℹ️ 狀態 **",
-                  "value": "`失敗`"
+                  "value": "失敗"
                 },
                 {
                   "name": "** ⏰ 通知時間 **",
-                  "value": "`${TIMESTAMP}`"
+                  "value": "${TIMESTAMP}"
                 }
               ]
             }]
