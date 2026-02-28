@@ -81,3 +81,29 @@ jobs:
             sudo docker compose exec app php artisan route:cache
             sudo docker compose exec app php artisan view:cache
           "
+  health-check:
+    # 工作名稱
+    name: "檢查"
+
+    # 作業系統
+    runs-on: "ubuntu-latest"
+
+    # 需完成步驟
+    needs: build-and-deploy
+
+    # 步驟
+    steps:
+      # 檢查
+      - name: "檢查"
+        run: |
+          for i in {1..5}; do
+            HTTP_CODE=$(curl -w "%{http_code}" https://${{ secrets.APP_URL }}/api/health)
+            
+            if [ "$HTTP_CODE" = "204" ]; then
+              exit 0
+            fi
+            
+            sleep 10
+          done
+
+          exit 1
