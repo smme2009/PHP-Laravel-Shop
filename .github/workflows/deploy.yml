@@ -119,7 +119,7 @@ jobs:
                -d '{
                  "embeds": [{
                    "description": "# 📢 系統通知\n### 自動部署",
-                   "color": 0x2ecc71,
+                   "color": 3066993, # 綠色
                    "fields": [
                      {
                        "name": "** 🌐 環境 **",
@@ -127,11 +127,11 @@ jobs:
                      },
                      {
                        "name": "** ℹ️ 狀態 **",
-                       "value": "成功"
+                       "value": "`成功`"
                      },
                      {
                        "name": "** ⏰ 通知時間 **",
-                       "value": "'`$(date -u +%Y-%m-%d\ %H:%M:%S)`'"
+                       "value": "`$(date -u +%Y-%m-%d\ %H:%M:%S)`"
                      }
                    ]
                  }]
@@ -145,7 +145,7 @@ jobs:
                -d '{
                  "embeds": [{
                    "description": "# 📢 系統通知\n### 自動部署",
-                   "color": 0xe74c3c,
+                   "color": 15158332, # 紅色
                    "fields": [
                      {
                        "name": "** 🌐 環境 **",
@@ -153,11 +153,11 @@ jobs:
                      },
                      {
                        "name": "** ℹ️ 狀態 **",
-                       "value": "失敗"
+                       "value": "`失敗`"
                      },
                      {
                        "name": "** ⏰ 通知時間 **",
-                       "value": "'`$(date -u +%Y-%m-%d\ %H:%M:%S)`'"
+                       "value": "`$(date -u +%Y-%m-%d\ %H:%M:%S)`"
                      }
                    ]
                  }]
