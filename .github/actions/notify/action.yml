@@ -1,0 +1,71 @@
+# 名稱
+name: "通知"
+
+# 說明
+description: "發送通知，採用Discord"
+
+# 參數
+inputs:
+  webhookUrl:
+    description: "Webhook網址"
+    required: true
+  appUrl:
+    description: "應用程式網址"
+    required: true
+  environmentName:
+    description: "環境名稱"
+    required: true
+  stepName:
+    description: "步驟名稱"
+    required: true
+  status:
+    description: "狀態"
+    required: true
+
+# 執行
+runs:
+  using: "composite"
+  steps:
+    - name: "發送通知"
+      shell: bash
+      run: |
+        # 取得當前時間
+        TIMESTAMP=$(TZ='Asia/Taipei' date +"%Y-%m-%d %H:%M:%S")
+
+        # 根據成功狀態設定顏色
+        if [ "${{ inputs.status }}" == "true" ]; then
+          STATUS="${{ inputs.stepName }}成功"
+          COLOR=3066993
+        else
+          STATUS="${{ inputs.stepName }}失敗"
+          COLOR=15158332
+        fi
+
+        # 產生通知JSON
+        cat > payload.json <<EOF
+        {
+          "embeds": [{
+            "description": "# 📢 系統通知\n### 自動部署",
+            "color": ${COLOR},
+            "fields": [
+              {
+                "name": "** 🌐 環境 **",
+                "value": "[${{ inputs.environmentName }}](https://${{ inputs.appUrl }})"
+              },
+              {
+                "name": "** ℹ️ 狀態 **",
+                "value": "${STATUS}"
+              },
+              {
+                "name": "** ⏰ 通知時間 **",
+                "value": "${TIMESTAMP}"
+              }
+            ]
+          }]
+        }
+        EOF
+
+        # 發送通知
+        curl -H "Content-Type: application/json" \
+             -d @payload.json \
+             ${{ inputs.webhookUrl }}
