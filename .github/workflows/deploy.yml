@@ -35,6 +35,17 @@ jobs:
       # 執行測試
       - name: "執行測試"
         run: php artisan test tests/Unit
+
+      # 通知
+      - name: "通知"
+        if: failure()
+        uses: ./.github/actions/notify
+        with:
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          appUrl: ${{ secrets.APP_URL }}
+          environmentName: "測試環境(V2)"
+          stepName: "測試"
+          status: false
   # 部署
   build-and-deploy:
     # 工作名稱
@@ -48,6 +59,10 @@ jobs:
 
     # 步驟
     steps:
+      # 下載原始碼
+      - name: "下載原始碼"
+        uses: "actions/checkout@v4"
+
       # 驗證GCP權限
       - name: "驗證GCP權限"
         uses: "google-github-actions/auth@v2"
@@ -81,6 +96,17 @@ jobs:
             sudo docker compose exec app php artisan route:cache
             sudo docker compose exec app php artisan view:cache
           "
+
+      # 通知
+      - name: "通知"
+        if: failure()
+        uses: ./.github/actions/notify
+        with:
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          appUrl: ${{ secrets.APP_URL }}
+          environmentName: "測試環境(V2)"
+          stepName: "部署"
+          status: false
   # 檢查
   health-check:
     # 工作名稱
@@ -94,8 +120,13 @@ jobs:
 
     # 步驟
     steps:
+      # 下載原始碼
+      - name: "下載原始碼"
+        uses: "actions/checkout@v4"
+
       # 檢查
       - name: "檢查"
+        id: healthCheck
         run: |
           # 檢查最多嘗試5次
           for i in {1..5}; do
@@ -111,75 +142,14 @@ jobs:
             sleep 10
           done
           exit 1
-      # 成功通知
-      - name: "成功通知"
-        if: success()
-        run: |
-          # 取得當前時間
-          TIMESTAMP=$(TZ='Asia/Taipei' date +"%Y-%m-%d %H:%M:%S")
 
-          # 產生通知JSON
-          # 如過不採用產生檔案的方式，會因為date指令導致錯誤
-          cat > payload.json <<EOF
-          {
-            "embeds": [{
-              "description": "# 📢 系統通知\n### 自動部署",
-              "color": 3066993,
-              "fields": [
-                {
-                  "name": "** 🌐 環境 **",
-                  "value": "${{ secrets.APP_URL }}"
-                },
-                {
-                  "name": "** ℹ️ 狀態 **",
-                  "value": "成功"
-                },
-                {
-                  "name": "** ⏰ 通知時間 **",
-                  "value": "${TIMESTAMP}"
-                }
-              ]
-            }]
-          }
-          EOF
-
-          # 發送通知
-          curl -H "Content-Type: application/json" \
-               -d @payload.json \
-               ${{ secrets.DISCORD_WEBHOOK_URL }}
-      # 失敗通知
-      - name: "失敗通知"
-        if: failure()
-        run: |
-          # 取得當前時間
-          TIMESTAMP=$(TZ='Asia/Taipei' date +"%Y-%m-%d %H:%M:%S")
-
-          # 產生通知JSON
-          # 如過不採用產生檔案的方式，會因為date指令導致錯誤
-          cat > payload.json <<EOF
-          {
-            "embeds": [{
-              "description": "# 📢 系統通知\n### 自動部署",
-              "color": 15158332,
-              "fields": [
-                {
-                  "name": "** 🌐 環境 **",
-                  "value": "${{ secrets.APP_URL }}"
-                },
-                {
-                  "name": "** ℹ️ 狀態 **",
-                  "value": "失敗"
-                },
-                {
-                  "name": "** ⏰ 通知時間 **",
-                  "value": "${TIMESTAMP}"
-                }
-              ]
-            }]
-          }
-          EOF
-
-          # 發送通知
-          curl -H "Content-Type: application/json" \
-               -d @payload.json \
-               ${{ secrets.DISCORD_WEBHOOK_URL }}
+      # 通知
+      - name: "通知"
+        if: always()
+        uses: ./.github/actions/notify
+        with:
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          appUrl: ${{ secrets.APP_URL }}
+          environmentName: "測試環境(V2)"
+          stepName: "檢查"
+          status: ${{ steps.healthCheck.outcome == 'success' }}
