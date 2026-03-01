@@ -129,7 +129,7 @@ jobs:
               "fields": [
                 {
                   "name": "** 🌐 環境 **",
-                  "value": "${{ secrets.APP_URL }}"
+                  "value": "[測試環境(V2)](https://${{ secrets.APP_URL }})"
                 },
                 {
                   "name": "** ℹ️ 狀態 **",
