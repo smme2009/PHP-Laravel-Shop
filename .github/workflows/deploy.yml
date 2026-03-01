@@ -43,6 +43,7 @@ jobs:
           TIMESTAMP=$(TZ='Asia/Taipei' date +"%Y-%m-%d %H:%M:%S")
 
           # 產生通知JSON
+          # 如過不採用產生檔案的方式，會因為date指令導致錯誤
           cat > payload.json <<EOF
           {
             "embeds": [{
@@ -51,7 +52,7 @@ jobs:
               "fields": [
                 {
                   "name": "** 🌐 環境 **",
-                  "value": "[${{ secrets.APP_URL }}](https://${{ secrets.APP_URL }})"
+                  "value": "[測試環境(V2)](https://${{ secrets.APP_URL }})"
                 },
                 {
                   "name": "** ℹ️ 狀態 **",
@@ -116,6 +117,42 @@ jobs:
             sudo docker compose exec app php artisan route:cache
             sudo docker compose exec app php artisan view:cache
           "
+      # 通知
+      - name: "通知"
+        if: failure()
+        run: |
+          # 取得當前時間
+          TIMESTAMP=$(TZ='Asia/Taipei' date +"%Y-%m-%d %H:%M:%S")
+
+          # 產生通知JSON
+          # 如過不採用產生檔案的方式，會因為date指令導致錯誤
+          cat > payload.json <<EOF
+          {
+            "embeds": [{
+              "description": "# 📢 系統通知\n### 自動部署",
+              "color": 15158332,
+              "fields": [
+                {
+                  "name": "** 🌐 環境 **",
+                  "value": "[測試環境(V2)](https://${{ secrets.APP_URL }})"
+                },
+                {
+                  "name": "** ℹ️ 狀態 **",
+                  "value": "部署失敗"
+                },
+                {
+                  "name": "** ⏰ 通知時間 **",
+                  "value": "${TIMESTAMP}"
+                }
+              ]
+            }]
+          }
+          EOF
+
+          # 發送通知
+          curl -H "Content-Type: application/json" \
+               -d @payload.json \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}
   # 檢查
   health-check:
     # 工作名稱
