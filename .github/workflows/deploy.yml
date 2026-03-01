@@ -96,6 +96,7 @@ jobs:
     steps:
       # 檢查
       - name: "檢查"
+        id: healthCheck
         run: |
           # 檢查最多嘗試5次
           for i in {1..5}; do
@@ -111,9 +112,9 @@ jobs:
             sleep 10
           done
           exit 1
-      # 成功通知
-      - name: "成功通知"
-        if: success()
+      # 通知
+      - name: "通知"
+        if: always()
         run: |
           # 取得當前時間
           TIMESTAMP=$(TZ='Asia/Taipei' date +"%Y-%m-%d %H:%M:%S")
@@ -124,7 +125,7 @@ jobs:
           {
             "embeds": [{
               "description": "# 📢 系統通知\n### 自動部署",
-              "color": 3066993,
+              "color": ${{ steps.healthCheck.outcome == 'success' && 3066993 || 15158332 }},
               "fields": [
                 {
                   "name": "** 🌐 環境 **",
@@ -132,43 +133,7 @@ jobs:
                 },
                 {
                   "name": "** ℹ️ 狀態 **",
-                  "value": "成功"
-                },
-                {
-                  "name": "** ⏰ 通知時間 **",
-                  "value": "${TIMESTAMP}"
-                }
-              ]
-            }]
-          }
-          EOF
-
-          # 發送通知
-          curl -H "Content-Type: application/json" \
-               -d @payload.json \
-               ${{ secrets.DISCORD_WEBHOOK_URL }}
-      # 失敗通知
-      - name: "失敗通知"
-        if: failure()
-        run: |
-          # 取得當前時間
-          TIMESTAMP=$(TZ='Asia/Taipei' date +"%Y-%m-%d %H:%M:%S")
-
-          # 產生通知JSON
-          # 如過不採用產生檔案的方式，會因為date指令導致錯誤
-          cat > payload.json <<EOF
-          {
-            "embeds": [{
-              "description": "# 📢 系統通知\n### 自動部署",
-              "color": 15158332,
-              "fields": [
-                {
-                  "name": "** 🌐 環境 **",
-                  "value": "${{ secrets.APP_URL }}"
-                },
-                {
-                  "name": "** ℹ️ 狀態 **",
-                  "value": "失敗"
+                  "value": "${{ steps.healthCheck.outcome == 'success' && '成功' || '失敗' }}"
                 },
                 {
                   "name": "** ⏰ 通知時間 **",
