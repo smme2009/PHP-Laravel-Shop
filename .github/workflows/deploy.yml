@@ -35,6 +35,41 @@ jobs:
       # 執行測試
       - name: "執行測試"
         run: php artisan test tests/Unit
+      # 通知
+      - name: "通知"
+        if: failure()
+        run: |
+          # 取得當前時間
+          TIMESTAMP=$(TZ='Asia/Taipei' date +"%Y-%m-%d %H:%M:%S")
+
+          # 產生通知JSON
+          cat > payload.json <<EOF
+          {
+            "embeds": [{
+              "description": "# 📢 系統通知\n### 自動部署",
+              "color": 15158332,
+              "fields": [
+                {
+                  "name": "** 🌐 環境 **",
+                  "value": "[${{ secrets.APP_URL }}](https://${{ secrets.APP_URL }})"
+                },
+                {
+                  "name": "** ℹ️ 狀態 **",
+                  "value": "測試失敗"
+                },
+                {
+                  "name": "** ⏰ 通知時間 **",
+                  "value": "${TIMESTAMP}"
+                }
+              ]
+            }]
+          }
+          EOF
+
+          # 發送通知
+          curl -H "Content-Type: application/json" \
+               -d @payload.json \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}
   # 部署
   build-and-deploy:
     # 工作名稱
