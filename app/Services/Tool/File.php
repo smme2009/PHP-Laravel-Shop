@@ -101,9 +101,8 @@ class File
      */
     private function formatData(ModelFile $model): OutputFile
     {
-        // 取得檔案網址
-        $url = Storage::url($model->path);
-        $url = asset($url);
+        // 生成檔案網址(有效期限1天)
+        $url = Storage::temporaryUrl($model->path, now()->addDays(1));
 
         // 格式化資料
         return new OutputFile(
