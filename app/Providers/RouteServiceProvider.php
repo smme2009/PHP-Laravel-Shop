@@ -29,9 +29,17 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $this->routes(function () {
+            $apiPrefix = 'api';
+
+            // 後台API路由
             Route::middleware('api')
-                ->prefix('api')
-                ->group(base_path('routes/Api/router.php'));
+                ->prefix("{$apiPrefix}/mgmt")
+                ->group(base_path('routes/Api/mgmt.php'));
+
+            // 系統API路由
+            Route::middleware('api')
+                ->prefix("{$apiPrefix}/system")
+                ->group(base_path('routes/Api/system.php'));
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
