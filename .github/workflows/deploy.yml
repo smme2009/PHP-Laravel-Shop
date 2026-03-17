@@ -131,7 +131,7 @@ jobs:
           # 檢查最多嘗試5次
           for i in {1..5}; do
             # 發送檢查請求
-            HTTP_CODE=$(curl -w "%{http_code}" https://${{ secrets.APP_URL }}/api/health)
+            HTTP_CODE=$(curl -w "%{http_code}" https://${{ secrets.APP_URL }}/api/system/health)
             
             # 若檢查成功則離開
             if [ "$HTTP_CODE" = "204" ]; then

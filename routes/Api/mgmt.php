@@ -8,16 +8,12 @@ use App\Http\Controllers\Account\Logout;
 use App\Http\Controllers\Account\Address;
 use App\Http\Controllers\Banner\File;
 use App\Http\Controllers\Banner\Banner;
-use App\Http\Controllers\Health\Health;
 
 // 註冊
 Route::post('register', [Register::class, 'register']);
 
 // 登入
 Route::post('login', [Login::class, 'login']);
-
-// 健康檢查
-Route::get('health', [Health::class, 'check']);
 
 // 帶有JWT Token驗證的路由
 Route::middleware('accountAuth')->group(function () {
