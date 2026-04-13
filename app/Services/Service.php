@@ -16,7 +16,7 @@ class Service
      *
      * @return SrcToolResult
      */
-    public function toolResult(): SrcToolResult
+    protected function toolResult(): SrcToolResult
     {
         return new SrcToolResult();
     }
@@ -26,7 +26,7 @@ class Service
      * 
      * @return SrcToolValidationResult
      */
-    public function toolValidator(): SrcToolValidationResult
+    protected function toolValidator(): SrcToolValidationResult
     {
         return new SrcToolValidationResult();
     }
@@ -36,7 +36,7 @@ class Service
      * 
      * @return SrcToolFile
      */
-    public function toolFile(): SrcToolFile
+    protected function toolFile(): SrcToolFile
     {
         return app(SrcToolFile::class);
     }
