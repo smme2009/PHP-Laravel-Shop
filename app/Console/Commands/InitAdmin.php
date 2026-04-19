@@ -84,25 +84,51 @@ class InitAdmin extends Command
     private function getInputData(): array
     {
         // 取得帳號
-        $account = $this->ask('請輸入管理員帳號');
+        while (true) {
+            $account = $this->ask('請輸入管理員帳號');
+            if ($this->validateStringLength($account) === true) break;
+            $this->error('帳號長度需為8～20個字，請重新輸入');
+        }
 
         // 取得密碼
-        $password = $this->secret('請輸入管理員密碼');
-        $confirmPassword = $this->secret('請再次輸入管理員密碼');
+        while (true) {
+            $password = $this->secret('請輸入管理員密碼');
+            if ($this->validateStringLength($password) === true) break;
+            $this->error('密碼長度需為8～20個字，請重新輸入');
+        }
 
-        // 確認密碼錯誤，回傳錯誤資料
-        if ($password !== $confirmPassword) {
-            $this->fail('密碼不一致');
+        // 再次確認密碼
+        while (true) {
+            $confirmPassword = $this->secret('請再次輸入管理員密碼');
+            if ($password === $confirmPassword) break;
+            $this->error('密碼不一致，請重新輸入');
         }
 
         // 取得帳號名稱
-        $name = $this->ask('請輸入管理員名稱');
+        while (true) {
+            $name = $this->ask('請輸入管理員名稱');
+            if ($this->validateStringLength($name) === true) break;
+            $this->error('名稱長度需為8～20個字，請重新輸入');
+        }
 
         return [
             'account' => $account,
             'password' => $password,
             'name' => $name,
         ];
+    }
+
+    /**
+     * 驗證字串長度
+     * 
+     * @param string $string 字串
+     * 
+     * @return bool 是否驗證成功
+     */
+    private function validateStringLength(string $string): bool
+    {
+        $strLength = mb_strlen($string);
+        return ($strLength >= 8 && $strLength <= 20);
     }
 
     /**
