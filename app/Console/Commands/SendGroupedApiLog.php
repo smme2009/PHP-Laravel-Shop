@@ -16,7 +16,7 @@ class SendGroupedApiLog extends Command
      *
      * @var string
      */
-    protected $signature = 'app:send-grouped-api-log';
+    protected $signature = 'send:grouped-api-log';
 
     /**
      * The console command description.
@@ -33,7 +33,7 @@ class SendGroupedApiLog extends Command
         $this->line('開始發送訊息...');
 
         try {
-            Notification::route('discord', config('services.discord.channel_id'))
+            Notification::route('webhook', config('services.discord.webhookUrl'))
                 ->notify(app(NotificationSystemApi::class));
 
             $this->info('訊息發送成功!');
