@@ -3,8 +3,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use App\Enums\Status as EnumStatus;
 use App\Services\Admin\Admin as SvcAdmin;
+use App\Notifications\Admin\Init as NotificationAdminInit;
 
 /**
  * 指令-初始化管理員帳號
@@ -30,6 +33,8 @@ class InitAdmin extends Command
      */
     public function handle()
     {
+        DB::beginTransaction();
+
         $this->line('開始初始化管理員帳號...');
 
         // 檢查是否不存在管理員帳號
@@ -41,7 +46,13 @@ class InitAdmin extends Command
         // 新增管理員帳號
         $this->createAdmin($inputData);
 
+        // 發送通知
+        Notification::route('webhook', config('services.discord.webhookUrl'))
+            ->notify(app(NotificationAdminInit::class));
+
         $this->info('管理員帳號初始化成功!');
+
+        DB::commit();
     }
 
     /**
@@ -60,7 +71,7 @@ class InitAdmin extends Command
         }
 
         // 管理員帳號已存在，回傳錯誤資料
-        if(count($result->data) > 0) {
+        if (count($result->data) > 0) {
             $this->fail('已存在管理員帳號');
         }
     }
@@ -80,7 +91,7 @@ class InitAdmin extends Command
         $confirmPassword = $this->secret('請再次輸入管理員密碼');
 
         // 確認密碼錯誤，回傳錯誤資料
-        if($password !== $confirmPassword) {
+        if ($password !== $confirmPassword) {
             $this->fail('密碼不一致');
         }
 

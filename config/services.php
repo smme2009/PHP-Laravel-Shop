@@ -35,5 +35,6 @@ return [
     'discord' => [
         'token' => env('DISCORD_BOT_TOKEN'),
         'channel_id' => env('DISCORD_CHANNEL_ID'),
+        'webhookUrl' => env('DISCORD_WEBHOOK_URL'),
     ],
 ];
