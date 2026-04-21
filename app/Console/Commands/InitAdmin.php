@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use App\Enums\Status as EnumStatus;
-use App\Services\Admin\Admin as SvcAdmin;
+use App\Repositories\Admin\Admin as RepoAdmin;
 use App\Notifications\Admin\Init as NotificationAdminInit;
 
 /**
@@ -63,15 +63,10 @@ class InitAdmin extends Command
     private function checkNoExistingAdmins(): void
     {
         // 取得所有管理員
-        $result = app(SvcAdmin::class)->getAll();
-
-        // 取得失敗，回傳錯誤資料
-        if ($result->httpCode !== 200) {
-            $this->fail($result->message);
-        }
+        $result = app(RepoAdmin::class)->findAll();
 
         // 管理員帳號已存在，回傳錯誤資料
-        if (count($result->data) > 0) {
+        if ($result->isNotEmpty() === true) {
             $this->fail('已存在管理員帳號');
         }
     }
@@ -141,7 +136,7 @@ class InitAdmin extends Command
     private function createAdmin(array $inputData): void
     {
         // 新增帳號
-        $result = app(SvcAdmin::class)->create([
+        $result = app(RepoAdmin::class)->insert([
             'account' => $inputData['account'],
             'password' => $inputData['password'],
             'name' => $inputData['name'],
@@ -149,8 +144,8 @@ class InitAdmin extends Command
         ]);
 
         // 新增失敗，回傳錯誤資料
-        if ($result->httpCode !== 200) {
-            $this->fail($result->message);
+        if ($result === null) {
+            $this->fail('新增管理員失敗，系統異常');
         }
     }
 }
