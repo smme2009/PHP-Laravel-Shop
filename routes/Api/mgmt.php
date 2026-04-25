@@ -3,9 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Enums\Role as EnumRole;
 use App\Http\Controllers\Admin\Login;
-use App\Http\Controllers\Account\Info;
 use App\Http\Controllers\Admin\Logout;
-use App\Http\Controllers\Account\Address;
 use App\Http\Controllers\Banner\File;
 use App\Http\Controllers\Banner\Banner;
 
@@ -18,24 +16,6 @@ Route::post('login', [Login::class, 'login']);
 Route::middleware('accountAuth:' . $role)->group(function () {
     // 登出
     Route::post('logout', [Logout::class, 'logout']);
-
-    // 帳號相關
-    Route::prefix('account')->group(function () {
-        // 取得帳號資訊
-        Route::get('profile', [Info::class, 'getProfile']);
-
-        // 帳號地址相關
-        Route::prefix('address')->group(function () {
-            // 新增帳號地址
-            Route::post('', [Address::class, 'create']);
-
-            // 取得帳號地址列表
-            Route::get('', [Address::class, 'getList']);
-
-            // 刪除帳號地址
-            Route::delete('{accountAddressId}', [Address::class, 'delete']);
-        });
-    });
 
     // 橫幅相關
     Route::prefix('banner')->group(function () {
