@@ -1,18 +1,21 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Enums\Role as EnumRole;
 use App\Http\Controllers\Admin\Login;
 use App\Http\Controllers\Account\Info;
-use App\Http\Controllers\Account\Logout;
+use App\Http\Controllers\Admin\Logout;
 use App\Http\Controllers\Account\Address;
 use App\Http\Controllers\Banner\File;
 use App\Http\Controllers\Banner\Banner;
+
+$role = EnumRole::Admin->value;
 
 // 登入
 Route::post('login', [Login::class, 'login']);
 
 // 帶有JWT Token驗證的路由
-Route::middleware('accountAuth')->group(function () {
+Route::middleware('accountAuth:' . $role)->group(function () {
     // 登出
     Route::post('logout', [Logout::class, 'logout']);
 

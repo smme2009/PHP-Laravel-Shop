@@ -2,6 +2,7 @@
 
 namespace App\Services\Admin;
 
+use App\Enums\Role as EnumRole;
 use App\Services\Service;
 use App\Services\Tool\Jwt;
 use App\Services\Tool\Output\Result as OutputResult;
@@ -43,7 +44,8 @@ class Login extends Service
         }
 
         // 驗證登入身份
-        $authPass = auth('admin')->once([
+        $role = EnumRole::Admin->value;
+        $authPass = auth($role)->once([
             'account' => $data['account'],
             'password' => $data['password']
         ]);
@@ -109,9 +111,12 @@ class Login extends Service
      */
     private function getJwtToken(): string
     {
+        $role = EnumRole::Admin->value;
+
         // 設定JWT Token資料
         $data = [
-            'adminId' => auth('admin')->user()->admin_id
+            'role' => $role,
+            'id' => auth($role)->user()->admin_id
         ];
 
         // 編碼JWT Token
