@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Services\Account\Auth as SrcAuth;
 
 /**
  * 中介層-帳號驗證
@@ -17,18 +16,19 @@ class AccountAuth
      * 
      * @param Request $request 框架的Request物件
      * @param Closure $next 將要被執行的控制層
+     * @param string $role 角色
      * 
      * @return Response 框架的Response物件
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, string $role): Response
     {
-        // 依賴 
-        $srcAuth = app()->make(SrcAuth::class);
-
         // 取得JWT Token
         $jwtToken = $this->getJwtToken();
 
         // 驗證Jwt Token
+        $ucfRole = ucfirst($role);
+        $class = 'App\Services\\' . $ucfRole . '\\Auth';
+        $srcAuth = app()->make($class);
         $result = $srcAuth->checkByJwtToken($jwtToken);
 
         // 驗證失敗，回傳錯誤資訊
@@ -42,14 +42,14 @@ class AccountAuth
         }
 
         // 帳號資訊
-        $accountAuth = [
+        $authData = [
             'jwtToken' => $jwtToken,
-            'accountId' => $result->data['accountId'],
-            'roleIds' => $result->data['roleIds'],
+            'role' => $result->data['role'],
+            'id' => $result->data['id'],
         ];
 
         // 將帳號資訊寫入上下文
-        context()->add('accountAuth', $accountAuth);
+        context()->add('authData', $authData);
 
         return $next($request);
     }

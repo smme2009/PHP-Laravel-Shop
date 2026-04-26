@@ -5,8 +5,8 @@ namespace App\Notifications\System;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
-use NotificationChannels\Discord\DiscordChannel;
-use NotificationChannels\Discord\DiscordMessage;
+use NotificationChannels\Webhook\WebhookChannel;
+use NotificationChannels\Webhook\WebhookMessage;
 use App\Repositories\Log\Api as RepoLogApi;
 
 /**
@@ -21,8 +21,7 @@ class Api extends Notification implements ShouldQueue
      */
     public function __construct(
         private readonly RepoLogApi $repoLogApi, // 資料存取層-紀錄-API
-    ) {
-    }
+    ) {}
 
     /**
      * 頻道
@@ -31,15 +30,15 @@ class Api extends Notification implements ShouldQueue
      */
     public function via(): array
     {
-        return [DiscordChannel::class];
+        return [WebhookChannel::class];
     }
 
     /**
-     * Discord訊息
-     * 
-     * @return DiscordMessage Discord訊息
+     * Webhook訊息
+     *
+     * @return WebhookMessage Webhook訊息
      */
-    public function toDiscord(): DiscordMessage
+    public function toWebhook()
     {
         // 取得統計時間區間
         $timeRange = $this->getRangeTime();
@@ -52,23 +51,27 @@ class Api extends Notification implements ShouldQueue
         // 取得發送時間
         $sendTime = now()->toDateTimeString();
 
-        // 組合Discord訊息
-        return DiscordMessage::create()
-            ->embed([
-                'description' => "# 📢 系統通知\n### API呼叫紀錄",
-                'color' => 0x3498db,
-                'fields' => [
+        return WebhookMessage::create()
+            ->header('Content-Type', 'application/json')
+            ->data([
+                'embeds' => [
                     [
-                        'name' => '** 🕒 統計時間 **',
-                        'value' => "`{$startTime} ~ {$endTime}`",
-                    ],
-                    [
-                        'name' => '** 📝 呼叫紀錄 **',
-                        'value' => "```fix\n{$log}\n```",
-                    ],
-                    [
-                        'name' => '** ⏰ 通知時間 **',
-                        'value' => "`{$sendTime}`",
+                        'description' => "# 📢 系統通知\n### API呼叫紀錄",
+                        'color' => 0x3498DB,
+                        'fields' => [
+                            [
+                                'name' => '** 🕒 統計時間 **',
+                                'value' => "`{$startTime} ~ {$endTime}`",
+                            ],
+                            [
+                                'name' => '** 📝 呼叫紀錄 **',
+                                'value' => "```fix\n{$log}\n```",
+                            ],
+                            [
+                                'name' => '** ⏰ 通知時間 **',
+                                'value' => "`{$sendTime}`",
+                            ],
+                        ],
                     ],
                 ],
             ]);

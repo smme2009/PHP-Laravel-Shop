@@ -1,36 +1,35 @@
 <?php
 
-namespace App\Services\Account;
+namespace App\Services\Admin;
 
 use App\Services\Service;
 use App\Services\Tool\Jwt;
 use App\Services\Tool\Output\Result as OutputResult;
 
 /**
- * 服務層-帳號登出
+ * 服務層-管理員登出
  */
 class Logout extends Service
 {
     /**
      * 建構子
-     * 
+     *
      * @param Jwt $toolJwt 工具-JWT Token
      */
     public function __construct(
         private readonly Jwt $toolJwt,
-    ) {
-    }
+    ) {}
 
     /**
-     * 登出帳號
-     * 
+     * 登出管理員
+     *
      * @return OutputResult 處理結果
      */
     public function logout(): OutputResult
     {
         // 取得JWT Token
-        $accountAuth = context()->get('accountAuth');
-        $jwtToken = $accountAuth['jwtToken'];
+        $authData = context()->get('authData');
+        $jwtToken = $authData['jwtToken'];
 
         // 將JWT Token從白名單中移除
         $result = $this->toolJwt->removeFromWhitelist($jwtToken);

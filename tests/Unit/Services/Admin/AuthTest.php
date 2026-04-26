@@ -1,16 +1,17 @@
 <?php
 
-namespace Tests\Unit\Services\Account;
+namespace Tests\Unit\Services\Admin;
 
-use Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Tests\TestCase;
 use App\Enums\Role as EnumRole;
-use App\Services\Account\Auth as SrcAuth;
+use App\Services\Admin\Auth as SrcAuth;
 use App\Services\Tool\Jwt as SrcToolJwt;
 
 /*
- * 單元測試-服務層-帳號驗證
+ * 單元測試-服務層-管理員驗證
  */
+
 class AuthTest extends TestCase
 {
     /**
@@ -56,10 +57,10 @@ class AuthTest extends TestCase
         // 設定模擬JWT Token
         $mockJwtToken = 'mock.jwt.token';
 
-        // 設定模擬資料
-        $mockData = [
-            'accountId' => 1,
-            'roleIds' => EnumRole::BUYER->value,
+        // 設定模擬JWT資料
+        $mockJwtData = [
+            'id' => 1,
+            'role' => EnumRole::Admin->value,
         ];
 
         // 模擬解碼JWT Token
@@ -67,7 +68,7 @@ class AuthTest extends TestCase
             ->expects($this->once())
             ->method('decode')
             ->with($mockJwtToken)
-            ->willReturn($mockData);
+            ->willReturn($mockJwtData);
 
         // 模擬驗證JWT Token是否在白名單中
         $this->mockSrcToolJwt
@@ -84,8 +85,8 @@ class AuthTest extends TestCase
 
         // 驗證結果資料
         $resultData = $result->data;
-        $this->assertEquals($mockData['accountId'], $resultData['accountId']);
-        $this->assertEquals($mockData['roleIds'], $resultData['roleIds']);
+        $this->assertEquals($mockJwtData['id'], $resultData['id']);
+        $this->assertEquals($mockJwtData['role'], $resultData['role']);
     }
 
     /**
@@ -122,10 +123,10 @@ class AuthTest extends TestCase
         // 設定模擬JWT Token
         $mockJwtToken = 'mock.jwt.token';
 
-        // 設定模擬資料
-        $mockData = [
-            'accountId' => 1,
-            'roleIds' => EnumRole::BUYER->value,
+        // 設定模擬JWT資料
+        $mockJwtData = [
+            'id' => 1,
+            'role' => EnumRole::Admin->value,
         ];
 
         // 模擬解碼JWT Token
@@ -133,7 +134,7 @@ class AuthTest extends TestCase
             ->expects($this->once())
             ->method('decode')
             ->with($mockJwtToken)
-            ->willReturn($mockData);
+            ->willReturn($mockJwtData);
 
         // 模擬驗證JWT Token是否在白名單中
         $this->mockSrcToolJwt
@@ -141,6 +142,43 @@ class AuthTest extends TestCase
             ->method('isInWhitelist')
             ->with($mockJwtToken)
             ->willReturn(false);
+
+        // 執行驗證帳號
+        $result = $this->srcAuth->checkByJwtToken($mockJwtToken);
+
+        // 驗證結果狀態
+        $this->assertSame(401, $result->httpCode);
+    }
+
+    /**
+     * 測試驗證角色失敗
+     * 
+     * @return void
+     */
+    public function testCheckRoleFail(): void
+    {
+        // 設定模擬JWT Token
+        $mockJwtToken = 'mock.jwt.token';
+
+        // 設定模擬JWT資料
+        $mockJwtData = [
+            'id' => 1,
+            'role' => EnumRole::Member->value,
+        ];
+
+        // 模擬解碼JWT Token
+        $this->mockSrcToolJwt
+            ->expects($this->once())
+            ->method('decode')
+            ->with($mockJwtToken)
+            ->willReturn($mockJwtData);
+
+        // 模擬驗證JWT Token是否在白名單中
+        $this->mockSrcToolJwt
+            ->expects($this->once())
+            ->method('isInWhitelist')
+            ->with($mockJwtToken)
+            ->willReturn(true);
 
         // 執行驗證帳號
         $result = $this->srcAuth->checkByJwtToken($mockJwtToken);

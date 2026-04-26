@@ -1,30 +1,30 @@
 <?php
 
-namespace App\Services\Account;
+namespace App\Services\Admin;
 
+use App\Enums\Role as EnumRole;
 use App\Services\Service;
 use App\Services\Tool\Jwt;
 use App\Services\Tool\Output\Result as OutputResult;
 use App\Services\Tool\Output\ValidationResult as OutputValidationResult;
 
 /**
- * 服務層-帳號登入
+ * 服務層-管理員登入
  */
 class Login extends Service
 {
     /**
      * 建構子
+     *
      * @param Jwt $toolJwt 工具-JWT Token
      */
     public function __construct(
         private readonly Jwt $toolJwt,
-    ) {
-
-    }
+    ) {}
 
     /**
-     * 登入帳號
-     * 
+     * 登入管理員
+     *
      * @param array $data 登入資料
      * 
      * @return OutputResult 處理結果
@@ -44,27 +44,17 @@ class Login extends Service
         }
 
         // 驗證登入身份
-        $authPass = auth()->once(['account' => $data['account'], 'password' => $data['password']]);
+        $role = EnumRole::Admin->value;
+        $authPass = auth($role)->once([
+            'account' => $data['account'],
+            'password' => $data['password']
+        ]);
 
         // 驗證失敗，回傳錯誤資料
         if ($authPass === false) {
             return $this->toolResult()
                 ->setHttpCode(400)
                 ->setMessage('登入失敗，帳號或密碼錯誤')
-                ->build();
-        }
-
-        // 預載入角色資料，避免後續重複查詢
-        auth()->user()->load('role');
-
-        // 驗證是否具有角色
-        $hasRole = $this->hasRole($data['roleId']);
-
-        // 驗證失敗，回傳錯誤資料
-        if ($hasRole === false) {
-            return $this->toolResult()
-                ->setHttpCode(400)
-                ->setMessage('登入失敗，權限不足')
                 ->build();
         }
 
@@ -102,31 +92,16 @@ class Login extends Service
      * 取得驗證結果
      *
      * @param array $data 登入資料
-     *
+     * 
      * @return OutputValidationResult 驗證結果物件，包含驗證狀態和錯誤訊息
      */
     private function getValidationResult(array $data): OutputValidationResult
     {
         return $this->toolValidator()
             ->bulkAddData($data)
-            ->addRule('account', ['required', 'string', 'email'])
+            ->addRule('account', ['required', 'string', 'min:8', 'max:12'])
             ->addRule('password', ['required', 'string', 'min:8', 'max:12'])
-            ->addRule('roleId', ['required', 'integer'])
             ->build();
-    }
-
-    /**
-     * 檢查是否具有角色
-     *
-     * @param int $roleId 角色ID
-     * 
-     * @return bool 是否具有角色
-     */
-    private function hasRole(int $roleId): bool
-    {
-        return auth()->user()
-            ->role
-            ->contains('role_id', $roleId);
     }
 
     /**
@@ -136,18 +111,12 @@ class Login extends Service
      */
     private function getJwtToken(): string
     {
-        // 取得帳號Model
-        $model = auth()->user();
-
-        // 取得帳號角色
-        $roleIds = $model->role
-            ->pluck('role_id')
-            ->toArray();
+        $role = EnumRole::Admin->value;
 
         // 設定JWT Token資料
         $data = [
-            'accountId' => $model->account_id,
-            'roleIds' => $roleIds,
+            'role' => $role,
+            'id' => auth($role)->user()->admin_id
         ];
 
         // 編碼JWT Token

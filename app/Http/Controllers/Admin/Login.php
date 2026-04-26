@@ -1,28 +1,28 @@
 <?php
 
-namespace App\Http\Controllers\Account;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\JsonResponse;
-use App\Services\Account\Login as SrcLogin;
+use App\Services\Admin\Login as SrcLogin;
 use App\Http\Controllers\Controller;
 
 /**
- * 控制層-帳號登入
+ * 控制層-管理員登入
  */
 class Login extends Controller
 {
     /**
      * 建構子
-     * @param SrcLogin $srcLogin 服務層-帳號登入
+     *
+     * @param SrcLogin $srcLogin 服務層-管理員登入
      */
     public function __construct(
         private readonly SrcLogin $srcLogin,
-    ) {
-    }
+    ) {}
 
     /**
-     * 登入帳號
-     * 
+     * 登入
+     *
      * @return JsonResponse 回傳結果
      */
     public function login(): JsonResponse
@@ -31,10 +31,9 @@ class Login extends Controller
         $request = [
             'account' => request('account'), // 帳號
             'password' => request('password'), // 密碼
-            'roleId' => request('roleId'), // 角色ID
         ];
 
-        // 登入帳號
+        // 登入管理員
         $result = $this->srcLogin->login($request);
 
         // 回傳結果
