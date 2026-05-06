@@ -12,8 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // 發送API紀錄統計通知(6小時一次)
-        $schedule->command('send:grouped-api-log')->everySixHours();
+        // 發送統計後的API紀錄通知(每分鐘一次)
+        $schedule->command('send:grouped-api-log')->everyMinute();
     }
 
     /**

@@ -12,19 +12,38 @@ use App\Models\LogApi as ModelLogApi;
 class Api
 {
     /**
-     * 透過時間區間取得統計後的API紀錄
-     * 
-     * @param string $startTime 開始時間
-     * @param string $endTime 結束時間
-     * 
-     * @return Collection 被統計的API紀錄
+     * 透過讀取狀態取得API紀錄（分組統計）
+     *
+     * @param bool $isRead 是否已讀
+     *
+     * @return Collection 統計後的API紀錄
      */
-    public function findGroupedByTimeRange(string $startTime, string $endTime): Collection
+    public function findGroupedByIsRead(bool $isRead): Collection
     {
         return ModelLogApi::select(['uri', 'method'])
             ->addSelect(DB::raw('COUNT(*) as count'))
-            ->whereBetween('created_at', [$startTime, $endTime])
+            ->addSelect(DB::raw('MIN(created_at) as start_time'))
+            ->addSelect(DB::raw('MAX(created_at) as end_time'))
+            ->addSelect(DB::raw('GROUP_CONCAT(log_api_id) as log_api_ids'))
+            ->where('is_read', $isRead)
             ->groupBy(['uri', 'method'])
+            ->orderByDesc('count')
             ->get();
+    }
+
+    /**
+     * 更新紀錄的讀取狀態
+     * 
+     * @param array $logApiIds 紀錄ID
+     * @param bool $isRead 是否已讀
+     * 
+     * @return bool 是否更新成功
+     */
+    public function updateIsRead(array $logApiIds, bool $isRead): bool
+    {
+        $updatedCount = ModelLogApi::whereIn('log_api_id', $logApiIds)
+            ->update(['is_read' => $isRead]);
+
+        return ($updatedCount === 0) ? false : true;
     }
 }
