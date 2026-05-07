@@ -16,11 +16,12 @@ services:
         networks:
             - network
         working_dir: /app
-        entrypoint: ["sh", "./docker/scheduler/init.sh"]
+        entrypoint: ["cron", "-f"]
         volumes:
             - ./:/app
+            - ./docker/scheduler/scheduler.cron:/etc/cron.d/scheduler:ro
         depends_on:
             - app
 networks:
-  network:
-    external: true
+    network:
+        external: true
