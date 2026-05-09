@@ -20,11 +20,15 @@ class Api
      */
     public function findGroupedByIsRead(bool $isRead): Collection
     {
+        $logApiIdsSQL = DB::connection()->getDriverName() === 'pgsql'
+            ? DB::raw("STRING_AGG(log_api_id::text, ',') as log_api_ids")
+            : DB::raw('GROUP_CONCAT(log_api_id) as log_api_ids');
+
         return ModelLogApi::select(['uri', 'method'])
             ->addSelect(DB::raw('COUNT(*) as count'))
             ->addSelect(DB::raw('MIN(created_at) as start_time'))
             ->addSelect(DB::raw('MAX(created_at) as end_time'))
-            ->addSelect(DB::raw('GROUP_CONCAT(log_api_id) as log_api_ids'))
+            ->addSelect($logApiIdsSQL)
             ->where('is_read', $isRead)
             ->groupBy(['uri', 'method'])
             ->orderByDesc('count')
