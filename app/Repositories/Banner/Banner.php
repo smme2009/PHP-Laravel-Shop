@@ -28,7 +28,7 @@ class Banner
         $model->end_at = $data['endAt'];
         $model->sort = $data['sort'];
         $model->status = $data['status'];
-        $model->account_id = $data['accountId'];
+        $model->admin_id = $data['adminId'];
         $result = $model->save();
 
         // 新增失敗
@@ -40,15 +40,15 @@ class Banner
     }
 
     /**
-     * 透過帳號ID取得橫幅分頁
+     * 透過管理員ID取得橫幅分頁
      * 
-     * @param int $accountId 帳號ID
+     * @param int $adminId 管理員ID
      * 
      * @return LengthAwarePaginator 橫幅資料
      */
-    public function findPagedByAccountId(int $accountId): LengthAwarePaginator
+    public function findPagedByAdminId(int $adminId): LengthAwarePaginator
     {
-        return ModelBanner::where('account_id', $accountId)->paginate();
+        return ModelBanner::where('admin_id', $adminId)->paginate();
     }
 
     /**

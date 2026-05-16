@@ -28,9 +28,6 @@ class Banner extends Controller
      */
     public function create(): JsonResponse
     {
-        // 取得帳號資料
-        $accountAuth = context()->get('accountAuth');
-
         // 接收請求資料
         $data = [
             'name' => request('name'),
@@ -40,7 +37,6 @@ class Banner extends Controller
             'endAt' => request('endAt'),
             'sort' => request('sort'),
             'status' => request('status'),
-            'accountId' => $accountAuth['accountId']
         ];
 
         // 新增橫幅
@@ -57,11 +53,8 @@ class Banner extends Controller
      */
     public function getPaged(): JsonResponse
     {
-        // 取得帳號資料
-        $accountAuth = context()->get('accountAuth');
-
         // 取得橫幅分頁
-        $result = $this->srcBanner->getPaged($accountAuth['accountId']);
+        $result = $this->srcBanner->getPaged();
 
         // 回傳結果
         return $this->getJsonResponse($result);
@@ -76,11 +69,8 @@ class Banner extends Controller
      */
     public function get(int $bannerId): JsonResponse
     {
-        // 取得帳號資料
-        $accountAuth = context()->get('accountAuth');
-
         // 取得橫幅
-        $result = $this->srcBanner->get($accountAuth['accountId'], $bannerId);
+        $result = $this->srcBanner->get($bannerId);
 
         // 回傳結果
         return $this->getJsonResponse($result);
@@ -95,9 +85,6 @@ class Banner extends Controller
      */
     public function modify(int $bannerId): JsonResponse
     {
-        // 取得帳號資料
-        $accountAuth = context()->get('accountAuth');
-
         // 接收請求資料
         $data = [
             'name' => request('name'),
@@ -110,7 +97,7 @@ class Banner extends Controller
         ];
 
         // 修改橫幅
-        $result = $this->srcBanner->modify($accountAuth['accountId'], $bannerId, $data);
+        $result = $this->srcBanner->modify($bannerId, $data);
 
         // 回傳結果
         return $this->getJsonResponse($result);
@@ -125,11 +112,8 @@ class Banner extends Controller
      */
     public function remove(int $bannerId): JsonResponse
     {
-        // 取得帳號資料
-        $accountAuth = context()->get('accountAuth');
-
         // 移除橫幅
-        $result = $this->srcBanner->remove($accountAuth['accountId'], $bannerId);
+        $result = $this->srcBanner->remove($bannerId);
 
         // 回傳結果
         return $this->getJsonResponse($result);

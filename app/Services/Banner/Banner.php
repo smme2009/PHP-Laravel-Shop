@@ -44,6 +44,10 @@ class Banner extends Service
                 ->build();
         }
 
+        // 加入管理員ID
+        $authData = context()->get('authData');
+        $data['adminId'] = $authData['id'];
+
         // 新增橫幅
         $model = $this->repoBanner->insert($data);
 
@@ -70,14 +74,15 @@ class Banner extends Service
     /**
      * 取得橫幅分頁
      * 
-     * @param int $accountId 帳號ID
-     * 
      * @return OutputResult 處理結果
      */
-    public function getPaged(int $accountId): OutputResult
+    public function getPaged(): OutputResult
     {
+        // 取得權限資料
+        $authData = context()->get('authData');
+
         // 取得橫幅分頁
-        $models = $this->repoBanner->findPagedByAccountId($accountId);
+        $models = $this->repoBanner->findPagedByAdminId($authData['id']);
 
         // 取得檔案資訊
         $photoFileIds = $models->pluck('photo_file_id')->toArray();
@@ -105,18 +110,20 @@ class Banner extends Service
     /**
      * 取得橫幅
      * 
-     * @param int $accountId 帳號ID
      * @param int $bannerId 橫幅ID
      * 
      * @return OutputResult 處理結果
      */
-    public function get(int $accountId, int $bannerId): OutputResult
+    public function get(int $bannerId): OutputResult
     {
+        // 取得權限資料
+        $authData = context()->get('authData');
+
         // 取得橫幅Model
         $model = $this->repoBanner->findOneByBannerId($bannerId);
 
         // 取得橫幅失敗，回傳錯誤資料
-        if ($model === null || $model->account_id !== $accountId) {
+        if ($model === null || $model->admin_id !== $authData['id']) {
             return $this->toolResult()
                 ->setHttpCode(404)
                 ->setMessage('取得橫幅失敗，橫幅不存在')
@@ -138,19 +145,21 @@ class Banner extends Service
     /**
      * 修改橫幅
      * 
-     * @param int $accountId 帳號ID
      * @param int $bannerId 橫幅ID
      * @param array $data 橫幅資料
      * 
      * @return OutputResult 處理結果
      */
-    public function modify(int $accountId, int $bannerId, array $data): OutputResult
+    public function modify(int $bannerId, array $data): OutputResult
     {
+        // 取得權限資料
+        $authData = context()->get('authData');
+
         // 取得橫幅Model
         $model = $this->repoBanner->findOneByBannerId($bannerId);
 
         // 取得橫幅失敗，回傳錯誤資料
-        if ($model === null || $model->account_id !== $accountId) {
+        if ($model === null || $model->admin_id !== $authData['id']) {
             return $this->toolResult()
                 ->setHttpCode(404)
                 ->setMessage('修改橫幅失敗，橫幅不存在')
@@ -183,18 +192,20 @@ class Banner extends Service
     /**
      * 移除橫幅
      * 
-     * @param int $accountId 帳號ID
      * @param int $bannerId 橫幅ID
      * 
      * @return OutputResult 處理結果
      */
-    public function remove(int $accountId, int $bannerId): OutputResult
+    public function remove(int $bannerId): OutputResult
     {
+        // 取得權限資料
+        $authData = context()->get('authData');
+
         // 取得橫幅Model
         $model = $this->repoBanner->findOneByBannerId($bannerId);
 
         // 取得橫幅失敗，回傳錯誤資料
-        if ($model === null || $model->account_id !== $accountId) {
+        if ($model === null || $model->admin_id !== $authData['id']) {
             return $this->toolResult()
                 ->setHttpCode(404)
                 ->setMessage('移除橫幅失敗，橫幅不存在')
