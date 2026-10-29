@@ -85,6 +85,7 @@ class Login extends Service
             ->setHttpCode(200)
             ->setMessage('登入成功')
             ->addData('jwtToken', $jwtToken)
+            ->addData('name', auth($role)->user()->name)
             ->build();
     }
 

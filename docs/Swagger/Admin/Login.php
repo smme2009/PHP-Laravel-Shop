@@ -51,6 +51,12 @@ use OpenApi\Attributes as OA;
                                 type: 'string',
                                 example: 'text.text.text',
                             ),
+                            new OA\Property(
+                                property: 'name',
+                                type: 'string',
+                                example: '管理員',
+                                description: '管理員名稱',
+                            ),
                         ],
                     ),
                     new OA\Property(
