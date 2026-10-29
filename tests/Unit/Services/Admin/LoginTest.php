@@ -77,6 +77,7 @@ class LoginTest extends TestCase
         // 模擬帳號資料
         $mockAccountData = [
             'admin_id' => 1,
+            'name' => '測試帳號',
         ];
 
         // 模擬權限資料
@@ -91,7 +92,7 @@ class LoginTest extends TestCase
         // 模擬管理員角色
         Auth::shouldReceive('guard')
             ->with($role)
-            ->twice()
+            ->times(3)
             ->andReturn($this->mockGuard);
 
         // 模擬驗證身份
@@ -103,7 +104,7 @@ class LoginTest extends TestCase
 
         // 模擬取得登入者資料
         $this->mockGuard
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('user')
             ->willReturn((object)$mockAccountData);
 
@@ -130,6 +131,7 @@ class LoginTest extends TestCase
         // 驗證結果資料
         $resultData = $result->data;
         $this->assertSame($mockJwtToken, $resultData['jwtToken']);
+        $this->assertSame($mockAccountData['name'], $resultData['name']);
     }
 
     /**
